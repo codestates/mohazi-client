@@ -1,6 +1,7 @@
-export const LOGIN = LOGIN
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
 
-export const userLogin = (data) => {
+export const login = (data) => {
     data = '';
 
     return {
@@ -10,3 +11,8 @@ export const userLogin = (data) => {
         }
     }
 }
+
+export const logout = () => {
+    return {
+        type: LOGOUT,
+    }

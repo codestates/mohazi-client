@@ -1,9 +1,32 @@
+/*global kakao*/ 
 import { withRouter, Route, useHistory } from "react-router-dom";
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
+
+const KakaoMap = styled.div`
+    width: 60vw;
+    height: 80vw;
+    position: fixed;
+    z-index: 1;
+    right: 0px;
+`;
 
 function RegisterPage() {
-    const history = useHistory();
+    useEffect(() => {
+        var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+        var options = { //지도를 생성할 때 필요한 기본 옵션
+            center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+            level: 3 //지도의 레벨(확대, 축소 정도)
+        };
+
+        var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+    })
     return (
-        <div> RegisterPage </div>
+        <>
+        <br/>
+        <br/>
+            <KakaoMap id="map" />
+        </>
     )
 }
 
