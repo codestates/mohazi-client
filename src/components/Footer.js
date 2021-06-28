@@ -11,6 +11,7 @@ const FixPosition = styled.div`
     position: fixed;
     bottom: 0px;
     width: 100%;
+    z-index: 2;
 `;
 
 const Background = styled.div`
