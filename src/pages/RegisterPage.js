@@ -1,10 +1,12 @@
 /*global kakao*/ 
 import { withRouter, Route, useHistory } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import oc from 'open-color';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import { createCard } from '../actions/actions';
 
 const { kakao } = window;
 
@@ -12,7 +14,7 @@ dotenv.config();
 
 const KakaoMap = styled.div`
     width: 100vw;
-    height: 500px;
+    height: 650px;
     border-radius: 10px;
     position: relative;
 `;
@@ -32,10 +34,10 @@ const Selections = styled.div`
     box-shadow: rgb(180 180 180) -1px 1px 8px;
     border-radius: 20px;
     width: 300px;
-    height: 430px;
+    height: 530px;
     border-radius: 10px;
     position: absolute;
-    padding: 40px;
+    padding: 20px;
     z-index: 9;
     color: ${oc.gray[8]};
     display: flex;
@@ -45,7 +47,8 @@ const Selections = styled.div`
 
 const ContentBox_Selections = styled.div`
     width: 270px;
-    height: 400px;
+    height: 500px;
+    margin: 20px;
     overflow-x: hidden;
     overflow-y: auto;
     -ms-overflow-style: none; /* IE and Edge */
@@ -58,7 +61,7 @@ const ContentBox_Selections = styled.div`
 
 const ContentBox_Places = styled.div`
     width: 140px;
-    height: 400px;
+    height: 500px;
     overflow-x: hidden;
     overflow-y: auto;
     -ms-overflow-style: none; /* IE and Edge */
@@ -75,7 +78,7 @@ const SearchResults = styled.div`
     box-shadow: rgb(180 180 180) -1px 1px 8px;
     border-radius: 20px;
     width: 160px;
-    height: 430px;
+    height: 530px;
     border-radius: 10px;
     position: absolute;
     padding: 40px;
@@ -104,6 +107,16 @@ const Place = styled.div`
     margin: 5px;
     padding: 5px;
     box-shadow: rgb(180 180 180) -1px 1px 8px;
+
+    display: flex;
+    flex-direction: column;
+    top: ${props => props.top}px;
+    transition: all 0.5s linear;
+    cursor: pointer;
+    &:hover {
+        transition: all 0.5s ease 0s;
+        transform: translateY(-15px);
+    }
 `;
 
 const Selection = styled.div`
@@ -116,7 +129,28 @@ const Selection = styled.div`
     box-shadow: rgb(180 180 180) -1px 1px 8px;
 `;
 
+const CreateCardButton = styled.button`
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: ${oc.gray[8]};
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: .2s all;
+
+    &:hover {
+        background: ${oc.gray[6]};
+        color: white;
+    }
+`;
+
 function RegisterPage() {
+    const state = useSelector(state => state);
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const { isLogin, userInfo } = state;
+
     const onDragStart = (event) => {
         event.dataTransfer.setData('text/plain', event.target.id);
         event.currentTarget.style.opacity = "0.5";
@@ -162,6 +196,7 @@ function RegisterPage() {
     const [isCategorySearch, setisCategorySearch] = useState(false)
     const [isKeywordSearch, setisKeywordSearch] = useState(false);
     const [inputText, setInputText] = useState('이태원 맛집');
+    const [inputDate, setInputDate] = useState('')
     const [keyword, setKeyword] = useState('');
     const categories = [["restaurant", "음식점", "FD6"], ["mall", "백화점", "MT1"], ["cafe", "카페", "CE7"], ["park", "공원", "AT4"], ["exhibition", "전시관", "CT1"]];
     const [category, setCategory] = useState(categories[0][2]);
@@ -170,9 +205,10 @@ function RegisterPage() {
     });
 
     const [places, setPlaces] = useState([{id:'1', place_name: '스타벅스'}, {id:'2', place_name: '현대백화점'}, {id:'3', place_name: 'Cafe Groovy'}, {id:'4', place_name: 'D Museum'}, {id:'5', place_name: '투썸플레이스'}])
-    const showPlaces = places.map(place => {
+    const showPlaces = places.map((place, index) => {
         return <Place
                 id={place.id}
+                top={index * 90}
                 draggable='true'
                 onDragStart={onDragStart}
                 onDragEnd={onDragEnd}
@@ -238,17 +274,46 @@ function RegisterPage() {
     //     }
     // }
 
-    const onChange = (event) => {
+    const onChangeKeyword = (event) => {
         setInputText(event.target.value);
         setisKeywordSearch(false);
     }
 
-    const handleSubmit = (event) => {
+    const onChangeDate = (event) => {
+        setInputDate(event.target.value);
+        console.log(inputDate)
+    }
+
+    const handleSearch = (event) => {
         event.preventDefault();
         setKeyword(inputText);
         setisKeywordSearch(true);
     }
 
+    const handleCreateCard = () => {
+        if(!isLogin) {
+            if (confirm("로그인 후 이용가능합니다. 로그인하시겠습니까?") === true) {
+                history.push('/login');
+            }
+        } else {
+            axios.get(`https://localhost:4000/createcard`,
+                {
+                    'Content-Type': 'application/json',
+                    withCredentials: true,
+                }, {
+                date: inputDate,
+                userId: userInfo.id,
+                selections: selections
+            })
+                .then(res => {
+                    dispatch(createCard(res.data.dailyCard));
+                    if (confirm("마이페이지로 이동하시겠습니까?") === true) {
+                        history.push('/mypage');
+                    }
+                })
+                .catch(err => console.log(err))
+        }
+    }
     //지도 관련
     useEffect(() => {
         var mapContainer = document.getElementById('map'),
@@ -318,9 +383,9 @@ function RegisterPage() {
                     id='keyword'
                     type='text'
                     placeholder='지역을 검색하세요'
-                    onChange={onChange}
+                    onChange={onChangeKeyword}
                     value={inputText} />
-                <button onClick={handleSubmit}>검색</button>
+                <button onClick={handleSearch}>검색</button>
             </SearchBar>
             <KakaoMap id="map">
                 <Selections>
@@ -334,6 +399,8 @@ function RegisterPage() {
                         >
                         {showSelections}
                     </ContentBox_Selections>
+                    날짜를 선택하세요<input type="date" value={inputDate} onChange={onChangeDate}/><br/>
+                    <CreateCardButton onClick={handleCreateCard}>일정을 등록하세요</CreateCardButton>
                 </Selections>
                 <SearchResults>
                     <SelectCategory onChange={(e) => handleCategory(e)}>
@@ -350,3 +417,9 @@ function RegisterPage() {
 }
 
 export default withRouter(RegisterPage);
+
+/* global history */
+/* global location */
+/* global window */
+
+/* eslint no-restricted-globals: ["off"] */
