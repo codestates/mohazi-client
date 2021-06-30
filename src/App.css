@@ -1,11 +1,23 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   margin: 0;
   padding: 0;
+  display: inline-block;
   font-family: 'Roboto Mono', monospace;
   box-sizing: border-box;
-  background: #f1f1f5;
+  background-color: #f1f1f5;
+  width: 100%;
+}
+
+#root {
+  margin: auto;
 }
 
 *, *:before, *:after {
   box-sizing: inherit;
 }
+

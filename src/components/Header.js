@@ -12,7 +12,6 @@ import axios from 'axios';
 const FixPosition = styled.div`
     display: flex;
     flex-direction: column;
-    position: fixed;
     top: 0px;
     width: 100%;
     z-index: 2;
@@ -31,7 +30,6 @@ const HeaderContents = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-
     padding-right: 1rem;
     padding-left: 1rem;
 `;
