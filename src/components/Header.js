@@ -14,7 +14,6 @@ const FixPosition = styled.div`
     flex-direction: column;
     top: 0px;
     width: 100%;
-    z-index: 2;
 `;
 
 const Background = styled.div`
@@ -105,7 +104,7 @@ function Header() {
     const dispatch = useDispatch();
     const state = useSelector(state => state);
     let { isLogin } = state;
-    //isLogin = true;
+    isLogin = true;
     
     function handleLogout() {
         if(confirm("로그아웃 하시겠습니까?") === true) {
