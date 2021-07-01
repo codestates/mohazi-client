@@ -3,12 +3,10 @@ import styled from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
 import { Link } from 'react-router-dom';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../actions/actions.js';
 import axios from 'axios';
 
-//============== CSS - basics =================
 const FixPosition = styled.div`
     display: flex;
     flex-direction: column;
@@ -49,7 +47,6 @@ const Space = styled.div`
     flex-grow: 1;
 `;
 
-//============== CSS - buttons =================
 const LoginButton = styled(Link)`
     font-size: 0.9rem;
     font-weight: 600;
@@ -104,16 +101,16 @@ function Header() {
     const dispatch = useDispatch();
     const state = useSelector(state => state);
     let { isLogin } = state;
-    isLogin = true;
     
     function handleLogout() {
         if(confirm("로그아웃 하시겠습니까?") === true) {
             dispatch(logout());
-            // axios
-            // .get('https://localhost:4000/logout')
-            // .then(res => )
-            alert("성공적으로 로그아웃 되었습니다");
-            history.push('/landing');
+            axios
+            .get('https://localhost:4000/logout')
+            .then(res => {
+                alert("성공적으로 로그아웃 되었습니다");
+                history.push('/landing');
+            })
         }
     }
     
