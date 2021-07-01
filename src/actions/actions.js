@@ -1,7 +1,6 @@
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const USERUPDATE = 'USERUPDATE';
-export const CREATECARD = 'CREATECARD';
 
 export const login = (data) => {
     return {
@@ -30,13 +29,3 @@ export const userUpdate = (data) => {
         }
     }
 }
-
-export const createCard = (data) => {
-    return {
-        type: CREATECARD,
-        payload: {
-            dailyCard: data,
-        }
-    }
-}
-

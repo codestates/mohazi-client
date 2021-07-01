@@ -1,18 +1,17 @@
 /*global kakao*/ 
 import { withRouter, Route, useHistory } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import oc from 'open-color';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { createCard } from '../actions/actions';
 
 const { kakao } = window;
 
 dotenv.config();
 
-const KakaoMap = styled.div`
+const Map = styled.div`
     width: 100vw;
     height: 650px;
     border-radius: 10px;
@@ -98,6 +97,17 @@ const SelectCategory = styled.select`
     margin-top: 20px;
 `;
 
+const SelectRegion = styled.select`
+    border-radius: 3px;
+    width: 80px;
+    height: 30px;
+    position: absolute;
+    z-index: 10;
+    right: 50px;
+    margin-top: 600px;
+    margin-bottom: 50px;
+`;
+
 const Place = styled.div`
     font-size: 0.7rem;
     width: 130px;
@@ -107,16 +117,7 @@ const Place = styled.div`
     margin: 5px;
     padding: 5px;
     box-shadow: rgb(180 180 180) -1px 1px 8px;
-
-    display: flex;
-    flex-direction: column;
-    top: ${props => props.top}px;
-    transition: all 0.5s linear;
     cursor: pointer;
-    &:hover {
-        transition: all 0.5s ease 0s;
-        transform: translateY(-15px);
-    }
 `;
 
 const Selection = styled.div`
@@ -147,7 +148,6 @@ const CreateCardButton = styled.button`
 
 function RegisterPage() {
     const state = useSelector(state => state);
-    const dispatch = useDispatch();
     const history = useHistory();
     const { isLogin, userInfo } = state;
 
@@ -177,8 +177,6 @@ function RegisterPage() {
     }
 
     const onDrop = (event) => {
-        console.log('dragged:', event.dataTransfer.getData('text'))
-        //브라우저의 default handling 방지
         event.preventDefault();
         event.target.style.border = 'none';
         
@@ -192,23 +190,29 @@ function RegisterPage() {
         
         event.dataTransfer.clearData();
     }
-    
-    const [isCategorySearch, setisCategorySearch] = useState(false)
-    const [isKeywordSearch, setisKeywordSearch] = useState(false);
-    const [inputText, setInputText] = useState('이태원 맛집');
-    const [inputDate, setInputDate] = useState('')
-    const [keyword, setKeyword] = useState('');
-    const categories = [["restaurant", "음식점", "FD6"], ["mall", "백화점", "MT1"], ["cafe", "카페", "CE7"], ["park", "공원", "AT4"], ["exhibition", "전시관", "CT1"]];
+
+    const bounds = new kakao.maps.LatLngBounds();
+    const infowindow = new kakao.maps.InfoWindow({zIndex:1});
+    const [map, setMap] = useState('')
+    const [[lat, lng], setLatLng] = useState([37.566826, 126.9786567]); // y, x
+    const [positionMarker, setPositionMarker] = useState('');
+    const [placeMarkers, setPlaceMarkers] =useState([]);
+    const [inputText, setInputText] = useState('');
+    const [inputDate, setInputDate] = useState('');
+    const categories = [["restaurant", "음식점", "FD6"], ["mall", "백화점", "MT1"], ["cafe", "카페", "CE7"], ["park", "관광명소", "AT4"], ["exhibition", "전시관", "CT1"]];
     const [category, setCategory] = useState(categories[0][2]);
-    const options = categories.map(category => {
+    const categoryOptions = categories.map(category => {
         return <option value={category[2]}>{category[1]}</option>;
+    });
+    const regions = ["강서구", "구로구", "양천구", "영등포구", "금천구", "동작구", "관악구", "서초구", "강남구", "송파구", "강동구", "마포구", "서대문구", "은평구", "종로구", "중구", "용산구", "성동구", "동대문구", "성북구", "강북구", "도봉구", "노원구", "중랑구", "광진구"]
+    const regionOptions = regions.map(region => {
+        return <option value={region}>{region}</option>;
     });
 
     const [places, setPlaces] = useState([{id:'1', place_name: '스타벅스'}, {id:'2', place_name: '현대백화점'}, {id:'3', place_name: 'Cafe Groovy'}, {id:'4', place_name: 'D Museum'}, {id:'5', place_name: '투썸플레이스'}])
-    const showPlaces = places.map((place, index) => {
+    let showPlaces = places.map((place, index) => {
         return <Place
                 id={place.id}
-                top={index * 90}
                 draggable='true'
                 onDragStart={onDragStart}
                 onDragEnd={onDragEnd}
@@ -246,25 +250,53 @@ function RegisterPage() {
         //     'Content-Type': 'application/json',
         //     withCredentials: true,
         // }, {
-        //     itemType: category
+        //     itemType: category, //category 어떻게 보내줄 지 결정하기
+        //     //x: lng,
+        //     //y: lat,
         // })
-        // .then(res => {
-        //     setPlaces(res.items)
-        //     showPlaces = places.map(place => {
-        //         return <Place>{place.name}</Place>
-        //     })
-        // })
-        // .catch(err => console.log(err))
-        setisCategorySearch(true);
         axios({
             method: 'GET',
             url: `https://dapi.kakao.com/v2/local/search/keyword.json?query='스타'&category_group_code=${category}`,
             headers: { Authorization: "KakaoAK 82b9784bc57ed9f20be79aa814814551" },
           })
         .then(res => {
-            console.log('category:',res.data.documents[0].id)
+            //setPlaces(res.items)
             setPlaces(res.data.documents)
+            showPlaces = places.map(place => {
+                return <Place>{place.name}</Place>
+            })
+
+            for(let marker of placeMarkers) {
+                marker.setMap(null);
+            }
+
+            for(let place of places) {
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: new kakao.maps.LatLng(place.y, place.x) 
+                });
+            
+                kakao.maps.event.addListener(marker, 'click', function() {
+                    infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+                    infowindow.open(map, marker);
+                });
+        
+                bounds.extend(new kakao.maps.LatLng(place.y, place.x));
+                setPlaceMarkers([...placeMarkers, marker])
+            }
+
+            map.setBounds(bounds);
         })
+        .catch(err => console.log(err))
+        // axios({
+        //     method: 'GET',
+        //     url: `https://dapi.kakao.com/v2/local/search/keyword.json?query='스타'&category_group_code=${category}`,
+        //     headers: { Authorization: "KakaoAK 82b9784bc57ed9f20be79aa814814551" },
+        //   })
+        // .then(res => {
+        //     console.log('category:',res.data.documents)
+        //     setPlaces(res.data.documents)
+        // })
     };
 
     // const handleEnterKey = (event) => {
@@ -276,7 +308,6 @@ function RegisterPage() {
 
     const onChangeKeyword = (event) => {
         setInputText(event.target.value);
-        setisKeywordSearch(false);
     }
 
     const onChangeDate = (event) => {
@@ -286,8 +317,29 @@ function RegisterPage() {
 
     const handleSearch = (event) => {
         event.preventDefault();
-        setKeyword(inputText);
-        setisKeywordSearch(true);
+        const keyword = event.target.nodeName === "BUTTON"? document.getElementById('keyword').value: event.target.value;
+        const geocoder = new kakao.maps.services.Geocoder();
+
+        // 주소로 좌표를 검색합니다
+        geocoder.addressSearch(keyword, function(result, status) {
+
+            // 정상적으로 검색이 완료됐으면 
+            if (status === kakao.maps.services.Status.OK) {
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                setLatLng([result[0].y, result[0].x]);
+
+                // // 결과값으로 받은 위치를 마커로 표시합니다
+                // let marker = new kakao.maps.Marker({
+                //     map: map,
+                //     position: coords
+                // });
+
+                //setPositionMarker(marker);
+
+                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                map.setCenter(coords);
+            }
+        });
     }
 
     const handleCreateCard = () => {
@@ -296,7 +348,7 @@ function RegisterPage() {
                 history.push('/login');
             }
         } else {
-            axios.get(`https://localhost:4000/createcard`,
+            axios.post(`https://localhost:4000/createcard`,
                 {
                     'Content-Type': 'application/json',
                     withCredentials: true,
@@ -306,7 +358,6 @@ function RegisterPage() {
                 selections: selections
             })
                 .then(res => {
-                    dispatch(createCard(res.data.dailyCard));
                     if (confirm("마이페이지로 이동하시겠습니까?") === true) {
                         history.push('/mypage');
                     }
@@ -314,67 +365,44 @@ function RegisterPage() {
                 .catch(err => console.log(err))
         }
     }
-    //지도 관련
+
+    const handleMakePositionMarker = (mouseEvent) => {
+        if(positionMarker !== '') { 
+            positionMarker.setMap(null)
+        };
+        
+        let latlng = mouseEvent.latLng;
+        setLatLng([latlng.getLat(), latlng.getLng()]);
+    }
+
+    //지도 생성
     useEffect(() => {
-        var mapContainer = document.getElementById('map'),
+        const mapContainer = document.getElementById('map'),
             mapOptions = {
                 center: new kakao.maps.LatLng(37.566826, 126.9786567),
                 level: 3
             };  
 
-        var map = new kakao.maps.Map(mapContainer, mapOptions); 
-        
-        var ps = new kakao.maps.services.Places();  
-        
-        var infowindow = new kakao.maps.InfoWindow({zIndex:1});
-        
-        if(isKeywordSearch) {
-            var keyword = document.getElementById('keyword').value;
-        
-            if (!keyword.replace(/^\s+|\s+$/g, '')) {
-                alert('키워드를 입력해주세요!');
-                return false;
-            }
-        
-            ps.keywordSearch(keyword, placesSearchCB);
-        }
+        const map = new kakao.maps.Map(mapContainer, mapOptions); 
+        setMap(map);
 
-        if(isCategorySearch) {
-            ps.categorySearch(category, placesSearchCB, { useMapBounds: true });
-        }
-        
-        function placesSearchCB (data, status, pagination) {
-            console.log(data)
-            if (status === kakao.maps.services.Status.OK) {
-                // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-                // LatLngBounds 객체에 좌표를 추가합니다
-                var bounds = new kakao.maps.LatLngBounds();
-        
-                for (var i=0; i<data.length; i++) {
-                    displayMarker(data[i]);    
-                    bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-                }       
-        
-                // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-                map.setBounds(bounds);
-            } 
-        }
-        
-        function displayMarker(place) {
-            
-            // 마커를 생성하고 지도에 표시합니다
-            var marker = new kakao.maps.Marker({
-                map: map,
-                position: new kakao.maps.LatLng(place.y, place.x) 
-            });
-        
-            kakao.maps.event.addListener(marker, 'click', function() {
-                // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-                infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-                infowindow.open(map, marker);
-            });
-        }
-    })
+        kakao.maps.event.addListener(map, "click", handleMakePositionMarker);
+    }, [])
+
+    //위치 선택
+    useEffect(() => {
+        if(positionMarker !== '') { 
+            positionMarker.setMap(null)
+        };
+
+        let coords = new kakao.maps.LatLng(lat, lng);
+        let marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+        });
+
+        setPositionMarker(marker);
+    }, [lat, lng])
 
     return (
         <>
@@ -387,7 +415,7 @@ function RegisterPage() {
                     value={inputText} />
                 <button onClick={handleSearch}>검색</button>
             </SearchBar>
-            <KakaoMap id="map">
+            <Map id="map" >
                 <Selections>
                     <h3 style={{margin: 5}}>Selections</h3>
                     <ContentBox_Selections
@@ -404,14 +432,17 @@ function RegisterPage() {
                 </Selections>
                 <SearchResults>
                     <SelectCategory onChange={(e) => handleCategory(e)}>
-                        {options}
+                        {categoryOptions}
                     </SelectCategory>
                     <div style={{width: 130}}>{category}를 선택하셨어요!</div>
                     <ContentBox_Places>
                         {showPlaces}
                     </ContentBox_Places>
                 </SearchResults>
-            </KakaoMap>
+                <SelectRegion onChange={(e) => handleSearch(e)}>
+                    {regionOptions}
+                </SelectRegion>
+            </Map>
         </>
     )
 }
