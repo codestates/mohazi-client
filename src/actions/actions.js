@@ -31,6 +31,7 @@ export const userUpdate = (data) => {
     }
 }
 
+
 export const areaUpdate = (data) => {
     return {
         type: AREAUPDATE,
