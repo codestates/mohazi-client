@@ -7,6 +7,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../actions/actions.js';
 import axios from 'axios';
 
+require("dotenv").config();
+const server = process.env.REACT_APP_SERVER_URL;
+
 const FixPosition = styled.div`
     display: flex;
     flex-direction: column;
@@ -106,7 +109,7 @@ function Header() {
         if(confirm("로그아웃 하시겠습니까?") === true) {
             dispatch(logout());
             axios
-            .get('https://localhost:4000/logout')
+            .get(`${server}/logout`)
             .then(res => {
                 alert("성공적으로 로그아웃 되었습니다");
                 history.push('/landing');

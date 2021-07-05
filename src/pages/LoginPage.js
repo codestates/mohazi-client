@@ -6,6 +6,9 @@ import { useDispatch } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
 
+require("dotenv").config();
+const server = process.env.REACT_APP_SERVER_URL;
+
 const LoginBody = styled.div`
       height: 500px;
       width: 500px;
@@ -100,7 +103,7 @@ function LoginPage() {
     } else {
       setErrorMessage('');
       axios
-        .post(`https://localhost:4000/login`,
+        .post(`${server}/login`,
           {
             email: Email,
             password: Password

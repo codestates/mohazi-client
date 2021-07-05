@@ -7,6 +7,8 @@ import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
 import imageCompression from "browser-image-compression";
 
+require("dotenv").config();
+const server = process.env.REACT_APP_SERVER_URL;
 
 const UpdateBody = styled.div`
         height: 600px;
@@ -230,7 +232,7 @@ function UpdateUserPage() {
             console.log(handleDataForm(base64data));
             console.log(1)
             axios
-            .patch(`https://localhost:4000/userupdate`,
+            .patch(`${server}/userupdate`,
             handleDataForm(base64data),
             {
               headers: {

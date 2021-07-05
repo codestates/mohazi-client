@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
 
+require("dotenv").config();
+const server = process.env.REACT_APP_SERVER_URL;
+
 const DetailBody = styled.div`
     box-sizing: border-box;
     width: 100%;
