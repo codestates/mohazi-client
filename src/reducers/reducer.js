@@ -1,6 +1,6 @@
 import { GoogleLogout } from "react-google-login";
 import { initialState } from "./initialState";
-import { LOGIN, LOGOUT } from '../actions/actions.js';
+import { LOGIN, LOGOUT, USERUPDATE, AREAUPDATE } from '../actions/actions.js';
 
 const reducer = (state = initialState, action) => {
     switch(action.type){
@@ -20,6 +20,14 @@ const reducer = (state = initialState, action) => {
                     description: '',
                 },
               });
+
+        case USERUPDATE:
+            return state;
+        case AREAUPDATE:
+            console.log(action)
+            return Object.assign({}, state, {
+                region: action.payload.region,
+            });
         default:
             return state;
     }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from "axios";
 import { login } from '../actions/actions';
 import { Link, withRouter, Route, useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
 
@@ -75,12 +75,11 @@ function LoginPage() {
 
   const history = useHistory();
   const dispatch = useDispatch();
-  const state = useSelector((state) => state)
+
   const [ErrorMessage, setErrorMessage] = useState('');
   const [inputs, setInputs] = useState({
     Email: '',
     Password: '',
-    ErrorMessage: '',
   })
 
   const { Email, Password } = inputs;
@@ -126,7 +125,7 @@ function LoginPage() {
     }
   }
 
-  const handleSignup = () => {
+  const goSignup = () => {
     history.push('/signup')
   }
 
@@ -157,7 +156,7 @@ function LoginPage() {
       />
       <Btn>
         <span>
-          <LoginBtn onClick={handleSignup}>회원가입</LoginBtn>
+          <LoginBtn onClick={goSignup}>회원가입</LoginBtn>
           <LoginBtn onClick={handleLogin}>로그인</LoginBtn>
         </span>
       </Btn>
