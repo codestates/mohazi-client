@@ -9,7 +9,8 @@ import dotenv from 'dotenv';
 
 const { kakao } = window;
 
-dotenv.config();
+require("dotenv").config();
+const server = process.env.REACT_APP_SERVER_URL;
 
 const Map = styled.div`
     float: right;
@@ -251,7 +252,7 @@ function RegisterPage() {
 
     const handleCategory = (event) => {
         setCategory(event.target.value);
-        // axios.get(`https://localhost:4000/itemtype`,
+        // axios.get(`${server}/itemtype`,
         // {
         //     'Content-Type': 'application/json',
         //     withCredentials: true,
@@ -342,7 +343,7 @@ function RegisterPage() {
                 history.push('/login');
             }
         } else {
-            axios.post(`https://localhost:4000/createcard`,
+            axios.post(`${server}/createcard`,
                 {
                     'Content-Type': 'application/json',
                     withCredentials: true,

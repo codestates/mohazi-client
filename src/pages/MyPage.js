@@ -6,6 +6,9 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setCards, setCard } from '../actions/actions.js';
 
+require("dotenv").config();
+const server = process.env.REACT_APP_SERVER_URL;
+
 const Title = styled.div`
     width: 100%;
     text-align: center;
@@ -211,7 +214,7 @@ function MyPage() {
         
         if (confirm("삭제하면 내용을 복구할 수 없습니다. 삭제하시겠습니까?") === true) {
             axios
-                .get('https://localhost:4000/mypage',
+                .get(`${server}/mypage`,
                     {
                         'Content-Type': 'application/json',
                         withCredentials: true,
@@ -232,7 +235,7 @@ function MyPage() {
     useEffect(() => {
         //카드정보 불러오기
         // axios
-        //     .get('https://localhost:4000/mypage',
+        //     .get(`${server}/mypage`,
         //         {
         //             'Content-Type': 'application/json',
         //             withCredentials: true,
