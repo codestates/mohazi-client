@@ -1,6 +1,6 @@
 import { GoogleLogout } from "react-google-login";
 import { initialState } from "./initialState";
-import { LOGIN, LOGOUT, SETCARDS, SETCARD } from '../actions/actions.js';
+import { LOGIN, LOGOUT, SETCARDS, SETCARD, USERUPDATE, AREAUPDATE } from '../actions/actions.js';
 
 const reducer = (state = initialState, action) => {
     switch(action.type){
@@ -21,7 +21,7 @@ const reducer = (state = initialState, action) => {
                     description: '',
                 },
               });
-              
+
         case SETCARDS:
             return Object.assign({}, state, {
                 dailyCards: action.payload.dailyCards
@@ -30,6 +30,15 @@ const reducer = (state = initialState, action) => {
         case SETCARD:
             return Object.assign({}, state, {
                 dailyCard: action.payload.dailyCard
+            });
+
+        case USERUPDATE:
+            return state;
+        
+        case AREAUPDATE:
+            console.log(action)
+            return Object.assign({}, state, {
+                region: action.payload.region,
             });
 
         default:
