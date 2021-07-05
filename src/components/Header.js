@@ -104,7 +104,6 @@ function Header() {
     const dispatch = useDispatch();
     const state = useSelector(state => state);
     let { isLogin } = state;
-    isLogin = true;
     
     function handleLogout() {
         if(confirm("로그아웃 하시겠습니까?") === true) {

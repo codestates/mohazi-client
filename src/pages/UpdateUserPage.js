@@ -217,6 +217,8 @@ function UpdateUserPage() {
           maxWidthOrHeight: 1920,
           useWebWorker: true,
         };
+
+        
         
         imageCompression(imgFile, options)
         .then(res => {
@@ -225,6 +227,7 @@ function UpdateUserPage() {
           reader.readAsDataURL(res);
           reader.onloadend = () => {
             const base64data = reader.result;
+            console.log(handleDataForm(base64data));
             console.log(1)
             axios
             .patch(`https://localhost:4000/userupdate`,
@@ -256,7 +259,7 @@ function UpdateUserPage() {
         const file = new File([blob], "image.jpg");
       
         const formData = new FormData();
-        formData.append("photo", file);
+        formData.append("image", file);
         for (const prop in inputs) {
           formData.append(prop, inputs[prop]);
         }

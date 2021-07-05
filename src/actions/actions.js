@@ -1,6 +1,7 @@
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const USERUPDATE = 'USERUPDATE';
+export const AREAUPDATE = 'AREAUPDATE';
 
 export const login = (data) => {
     return {
@@ -26,6 +27,15 @@ export const userUpdate = (data) => {
         type: USERUPDATE,
         payload: {
             userInfo: data,
+        }
+    }
+}
+
+export const areaUpdate = (data) => {
+    return {
+        type: AREAUPDATE,
+        payload: {
+            region: data,
         }
     }
 }
