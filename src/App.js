@@ -22,8 +22,8 @@ import {
 } from "react-router-dom";
 
 function App() {
-
   const state = useSelector((state) => state);
+  //localStorage.clear();
 
   return (
     <Router>

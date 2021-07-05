@@ -1,6 +1,8 @@
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const USERUPDATE = 'USERUPDATE';
+export const SETCARDS = 'SETCARDS';
+export const SETCARD = 'SETCARDS';
 export const AREAUPDATE = 'AREAUPDATE';
 
 export const login = (data) => {
@@ -31,6 +33,14 @@ export const userUpdate = (data) => {
     }
 }
 
+export const setCards = (data) => {
+    return {
+        type: SETCARDS,
+        payload: {
+            dailyCards: data,
+        }
+    }
+}
 
 export const areaUpdate = (data) => {
     return {
@@ -41,3 +51,11 @@ export const areaUpdate = (data) => {
     }
 }
 
+export const setCard = (data) => {
+    return {
+        type: SETCARD,
+        payload: {
+            dailyCard: data,
+        }
+    }
+}

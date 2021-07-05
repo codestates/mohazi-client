@@ -11,6 +11,7 @@ const persistConfig = {
   storage: storage,
   stateReconciler : autoMergeLevel2,
 };
+
 const middleware = [logger, thunk]
 const enhancedReducer = persistReducer(persistConfig, reducer);
 const store = createStore(enhancedReducer, applyMiddleware(...middleware));
