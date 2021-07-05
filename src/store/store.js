@@ -9,6 +9,7 @@ const persistConfig = {
   key: 'root',
   storage
 };
+
 const middleware = [logger, thunk]
 const enhancedReducer = persistReducer(persistConfig, reducer);
 const store = createStore(enhancedReducer, applyMiddleware(...middleware));

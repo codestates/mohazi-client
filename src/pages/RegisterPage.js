@@ -12,10 +12,12 @@ const { kakao } = window;
 dotenv.config();
 
 const Map = styled.div`
-    width: 100vw;
+    float: right;
+    width: 60%;
     height: 650px;
     border-radius: 10px;
     position: relative;
+    border: 10px solid ${oc.gray[4]};
 `;
 
 const SearchBar = styled.form`
@@ -74,14 +76,11 @@ const ContentBox_Places = styled.div`
 const SearchResults = styled.div`
     margin: 20px 50px 0 340px;
     background: white;
-    box-shadow: rgb(180 180 180) -1px 1px 8px;
-    border-radius: 20px;
     width: 160px;
     height: 530px;
-    border-radius: 10px;
     position: absolute;
     padding: 40px;
-    z-index: 9;
+    z-index: 10;
     color: ${oc.gray[8]};
     display: flex;
     flex-direction: column;
@@ -146,10 +145,17 @@ const CreateCardButton = styled.button`
     }
 `;
 
+const Search_wrap = styled.div`
+    width: 40%;
+    height: 650px;
+    background: white;
+    float: left;
+`;
+
 function RegisterPage() {
     const state = useSelector(state => state);
     const history = useHistory();
-    const { isLogin, userInfo } = state;
+    const { isLogin, userInfo, region } = state;
 
     const onDragStart = (event) => {
         event.dataTransfer.setData('text/plain', event.target.id);
@@ -199,7 +205,7 @@ function RegisterPage() {
     const [placeMarkers, setPlaceMarkers] =useState([]);
     const [inputText, setInputText] = useState('');
     const [inputDate, setInputDate] = useState('');
-    const categories = [["restaurant", "음식점", "FD6"], ["mall", "백화점", "MT1"], ["cafe", "카페", "CE7"], ["park", "관광명소", "AT4"], ["exhibition", "전시관", "CT1"]];
+    const categories = [["restaurant", "음식점", "FD6"], ["mall", "백화점", "MT1"], ["cafe", "카페", "CE7"], ["park", "관광명소", "AT4"], ["exhibition", "문화시설", "CT1"]];
     const [category, setCategory] = useState(categories[0][2]);
     const categoryOptions = categories.map(category => {
         return <option value={category[2]}>{category[1]}</option>;
@@ -250,9 +256,9 @@ function RegisterPage() {
         //     'Content-Type': 'application/json',
         //     withCredentials: true,
         // }, {
-        //     itemType: category, //category 어떻게 보내줄 지 결정하기
-        //     //x: lng,
-        //     //y: lat,
+        //     itemType: category, // kakao catergory_code
+        //     x: lng,
+        //     y: lat,
         // })
         axios({
             method: 'GET',
@@ -268,17 +274,29 @@ function RegisterPage() {
 
             for(let marker of placeMarkers) {
                 marker.setMap(null);
+                console.log(placeMarkers)
             }
 
+            let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+            let imageSize = new kakao.maps.Size(24, 35);   
+            let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+
             for(let place of places) {
-                var marker = new kakao.maps.Marker({
+                let marker = new kakao.maps.Marker({
                     map: map,
-                    position: new kakao.maps.LatLng(place.y, place.x) 
+                    position: new kakao.maps.LatLng(place.y, place.x),
+                    image: markerImage
                 });
             
-                kakao.maps.event.addListener(marker, 'click', function() {
+                kakao.maps.event.addListener(marker, 'mouseover', function() {
                     infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
                     infowindow.open(map, marker);
+                });
+
+                kakao.maps.event.addListener(marker, 'mouseout', function() {
+                    // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+                    infowindow.close();
                 });
         
                 bounds.extend(new kakao.maps.LatLng(place.y, place.x));
@@ -288,23 +306,7 @@ function RegisterPage() {
             map.setBounds(bounds);
         })
         .catch(err => console.log(err))
-        // axios({
-        //     method: 'GET',
-        //     url: `https://dapi.kakao.com/v2/local/search/keyword.json?query='스타'&category_group_code=${category}`,
-        //     headers: { Authorization: "KakaoAK 82b9784bc57ed9f20be79aa814814551" },
-        //   })
-        // .then(res => {
-        //     console.log('category:',res.data.documents)
-        //     setPlaces(res.data.documents)
-        // })
     };
-
-    // const handleEnterKey = (event) => {
-    //     console.log('검색:', event.target.value)
-    //     if(event.key === 'Enter') {
-    //         //setInputText(event.target.value);
-    //     }
-    // }
 
     const onChangeKeyword = (event) => {
         setInputText(event.target.value);
@@ -328,14 +330,6 @@ function RegisterPage() {
                 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
                 setLatLng([result[0].y, result[0].x]);
 
-                // // 결과값으로 받은 위치를 마커로 표시합니다
-                // let marker = new kakao.maps.Marker({
-                //     map: map,
-                //     position: coords
-                // });
-
-                //setPositionMarker(marker);
-
                 // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
                 map.setCenter(coords);
             }
@@ -355,7 +349,7 @@ function RegisterPage() {
                 }, {
                 date: inputDate,
                 userId: userInfo.id,
-                selections: selections
+                selections: selections,
             })
                 .then(res => {
                     if (confirm("마이페이지로 이동하시겠습니까?") === true) {
@@ -387,6 +381,10 @@ function RegisterPage() {
         setMap(map);
 
         kakao.maps.event.addListener(map, "click", handleMakePositionMarker);
+
+        // if(region) {
+        //     setLatLng({region.y, region.x})
+        // }
     }, [])
 
     //위치 선택
@@ -406,7 +404,7 @@ function RegisterPage() {
 
     return (
         <>
-            <SearchBar className="inputForm">
+            <SearchBar className="inputForm" onsubmit="return false">
                 <input
                     id='keyword'
                     type='text'
@@ -415,7 +413,7 @@ function RegisterPage() {
                     value={inputText} />
                 <button onClick={handleSearch}>검색</button>
             </SearchBar>
-            <Map id="map" >
+            <Search_wrap>
                 <Selections>
                     <h3 style={{margin: 5}}>Selections</h3>
                     <ContentBox_Selections
@@ -439,6 +437,8 @@ function RegisterPage() {
                         {showPlaces}
                     </ContentBox_Places>
                 </SearchResults>
+            </Search_wrap>
+            <Map id="map" >
                 <SelectRegion onChange={(e) => handleSearch(e)}>
                     {regionOptions}
                 </SelectRegion>

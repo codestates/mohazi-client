@@ -70,10 +70,10 @@ function Footer() {
                     </ContentCategory>
                     <ContentCategory>Created by<br/>
                         <Content>
-                            Hyehyun Kim <ContentLink href="https://github.com/franhhk">@github</ContentLink><br/>
-                            Hyunjun Kim <ContentLink href="https://github.com/boltang2">@github</ContentLink><br/>
-                            Junghyun Jo <ContentLink href="https://github.com/whThswh">@github</ContentLink><br/>
-                            Jihoon Baek <ContentLink href="https://github.com/hoon6653">@github</ContentLink><br/>
+                            Hyehyun Kim <ContentLink to="https://github.com/franhhk">@github</ContentLink><br/>
+                            Hyunjun Kim <ContentLink to="https://github.com/boltang2">@github</ContentLink><br/>
+                            Junghyun Jo <ContentLink to="https://github.com/whThswh">@github</ContentLink><br/>
+                            Jihoon Baek <ContentLink to="https://github.com/hoon6653">@github</ContentLink><br/>
                         </Content>
                     </ContentCategory>
                 </FooterContents>

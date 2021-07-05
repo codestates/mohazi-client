@@ -128,7 +128,7 @@ function LandingPage() {
                     withCredentials: true,
                 })
             .then((res) => {
-                setSelections(res.recommndations)
+                //setSelections(res.recommndations)
                 console.log(selections);
             })
             .catch((e) => console.log(e))
