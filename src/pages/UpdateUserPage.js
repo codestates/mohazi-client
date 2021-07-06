@@ -232,7 +232,7 @@ function UpdateUserPage() {
             const base64data = reader.result;
             console.log('base64 = ' , base64data);
             axios
-            .patch(`${server}/userupdate`,
+            .put(`${server}/userupdate`,
             handleDataForm(base64data),
             {
               headers: {

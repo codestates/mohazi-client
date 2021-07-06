@@ -103,7 +103,7 @@ function LoginPage() {
     } else {
       setErrorMessage('');
       axios
-        .post(`${server}/login`,
+        .put(`${server}/login`,
           {
             email: Email,
             password: Password

@@ -164,7 +164,7 @@ function SignupPage() {
     } else {
       handleError('ErrorAll', '')
       axios
-        .post(`${server}/signup`,
+        .put(`${server}/signup`,
           {
             email: Email,
             password: Password,
