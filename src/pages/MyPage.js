@@ -165,7 +165,7 @@ function MyPage() {
     });
     let showCards = visibleCards.map(
         card => {
-            const selections = card.selections.map(selection => {
+            let selections = card.selections.map(selection => {
                 return <Selection>{selection.place_name}</Selection>
             });
         
@@ -188,6 +188,7 @@ function MyPage() {
             {selections}
         </Card>
         });
+        console.log(visibleCards)
 
     const handleSortCards = (event) => {
         cardSort = event.target.value;
@@ -247,6 +248,7 @@ function MyPage() {
         //         setVisibleCards(dailyCards); //처음엔 전체 글이 보여집니다
         //     })
         //     .catch(error => console.log(error))
+        
         dispatch(setCards(dailyCards));
         setVisibleCards(dailyCards);
     }, [dailyCards])
