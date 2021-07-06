@@ -154,6 +154,7 @@ function MyPage() {
     const dispatch = useDispatch();
     const history = useHistory();
     const { userInfo, dailyCards } = state;
+    console.log('Mypage = ', state);
     const [ visibleCards, setVisibleCards ] = useState([]);
     let cardSort = "전체 글"
     const cardSorts = ["전체 글", "내가 쓴 글", "태그 당한 글"]
@@ -248,6 +249,10 @@ function MyPage() {
         setVisibleCards(dailyCards);
     }, [dailyCards])
 
+    function handleImageURL(image) {
+        return `${process.env.REACT_APP_SERVER_URL}/${image}`
+      }
+
     return (
         <div>
             <Title>Mypage</Title>
@@ -256,7 +261,7 @@ function MyPage() {
                     {cardSortOptions}
                 </SelectCardSort>
                 <UserInfo>
-                    <User_ProfileImg src='/img/default_avatar.png'/>
+                    <User_ProfileImg src={handleImageURL(userInfo.photo)}/>
                     <User_Name>{userInfo.username}</User_Name>
                     <User_Description>{userInfo.description}</User_Description>
                     <User_UpdateButton onClick={handleUpdateUser}>수정하기</User_UpdateButton>

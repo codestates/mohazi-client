@@ -138,6 +138,7 @@ function UpdateUserPage() {
     const dispatch = useDispatch();
     const state = useSelector((state) => state.userInfo)
     const [inputs, setInputs] = useState({
+        UserId: state.id,
         Email: state.email,
         Username: state.username,
         Password: '',
@@ -172,7 +173,7 @@ function UpdateUserPage() {
 
 
   const handleUpdate = () => {
-    console.log('Email', Email, 'Username', Username, 'Password', Password)
+    console.log('Email', Email, 'Username', Username, 'Password', Password, 'Description', Description);
 
     const isTrue = Username !== '' && Password !== '';
 
@@ -227,21 +228,28 @@ function UpdateUserPage() {
           reader.readAsDataURL(res);
           reader.onloadend = () => {
             const base64data = reader.result;
-            console.log(handleDataForm(base64data));
-            console.log(1)
+            console.log('base64 = ' , base64data);
             axios
             .patch(`https://localhost:4000/userupdate`,
             handleDataForm(base64data),
             {
               headers: {
                 'Content-Type': 'multipart/form-data',
-                withCredentials: true,
               },
+              withCredentials: true,
             })
             .then(res => {
               console.log(res.data);
-              dispatch(userUpdate(res.data))
-              history.push(`/mypage`)
+              axios
+              .get(`https://localhost:4000/usersearch`,
+              {
+                  params: {email: Email,}
+              })
+              .then(res => {
+                console.log(res.data.userInfo);
+                dispatch(userUpdate(res.data.userInfo))
+                history.push(`/mypage`)
+              })
             })
           }
         })
@@ -257,21 +265,27 @@ function UpdateUserPage() {
         }
         const blob = new Blob([ia], { type: "image/jpeg" });
         const file = new File([blob], "image.jpg");
+        console.log('file = ', file);
       
         const formData = new FormData();
         formData.append("image", file);
         for (const prop in inputs) {
+          console.log('prop = ', prop, inputs[prop])
           formData.append(prop, inputs[prop]);
+          
         }
+        for (var pair of formData.entries()) { 
+          console.log(pair[0]+ ', ' + pair[1]); 
+        }
+
         return formData;
       };
 
     const handleImage = (event) => {
         let reader = new FileReader();
-        console.log('hi');
+        console.log('e = ', event.target.files[0]);
         reader.onloadend = (e) => {
             const base64 = reader.result;
-            console.log(base64)
             if (base64) setImgBase64(base64.toString());
         }
         if (event.target.files[0]) {
