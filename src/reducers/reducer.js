@@ -33,7 +33,10 @@ const reducer = (state = initialState, action) => {
             });
 
         case USERUPDATE:
-            return state;
+            console.log(action)
+            return Object.assign({}, state, {
+                userInfo: action.payload.userInfo
+            });;
         
         case AREAUPDATE:
             console.log(action)

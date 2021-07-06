@@ -113,6 +113,10 @@ const PhotoImg = styled.img`
     height: 180px;
 `;
 
+const Upload = styled.div`
+    display: flex;
+`;
+
 const FriendBox = styled.div`
     margin: auto;
     width: 20%;
@@ -233,10 +237,13 @@ function UpdateDetailPage() {
         reader.onload = function(event) { 
             var img = document.createElement("img"); 
             img.setAttribute("src", event.target.result); 
+            img.width = 180;
+            img.height = 180;
             document.getElementById("image_container").appendChild(img); 
             console.log('');
         }; 
         reader.readAsDataURL(event.target.files[0]); 
+        console.log(reader);
     }
   
   //---modal---
@@ -308,10 +315,8 @@ function UpdateDetailPage() {
                         )
                     })}
                     <Photo>
-                    <input type="file" id="image" accept="image/*" onchange="setThumbnail(event);"/> 
-                    <div id="image_container"></div>
-
-
+                    <input type="file" multiple id="image" accept="image/*" onChange={(e) => setThumbnail(e)}/> 
+                    <Upload id="image_container"></Upload>
                     </Photo>
                 </PhotoBox>
                 <FriendBox>
