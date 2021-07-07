@@ -240,8 +240,16 @@ function UpdateUserPage() {
             })
             .then(res => {
               console.log(res.data);
-              dispatch(userUpdate(res.data))
-              history.push(`/mypage`)
+              axios
+              .get(`${server}/usersearch`,
+              {
+                  params: {email: Email,}
+              })
+              .then(res => {
+                console.log(res.data.userInfo);
+                dispatch(userUpdate(res.data.userInfo))
+                history.push(`/mypage`)
+              })
             })
           }
         })

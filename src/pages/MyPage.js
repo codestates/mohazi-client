@@ -270,7 +270,8 @@ function MyPage() {
     }, [dailyCards])
 
     function handleImageURL(image) {
-        return `${server}/${image}`
+        console.log(image);
+        return `img/${image}`
       }
 
     return (
