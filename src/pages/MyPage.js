@@ -255,7 +255,8 @@ function MyPage() {
     }, [dailyCards])
 
     function handleImageURL(image) {
-        return `${process.env.REACT_APP_SERVER_URL}/${image}`
+        console.log(image);
+        return `img/${image}`
       }
 
     return (

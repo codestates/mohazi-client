@@ -243,7 +243,7 @@ function UpdateUserPage() {
             .then(res => {
               console.log(res.data);
               axios
-              .get(`https://localhost:4000/usersearch`,
+              .get(`${server}/usersearch`,
               {
                   params: {email: Email,}
               })
