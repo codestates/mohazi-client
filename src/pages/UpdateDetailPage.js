@@ -275,7 +275,7 @@ function UpdateDetailPage() {
 
     function handleSearchUser(event) {
         console.log(event.target.value)
-        axios.get(`${server}/usersearch`,
+        axios.put(`${server}/usersearch`,
         {
             'Content-Type': 'application/json',
             withCredentials: true,

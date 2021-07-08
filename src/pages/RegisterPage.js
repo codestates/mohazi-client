@@ -307,7 +307,7 @@ function RegisterPage() {
     const infowindow = new kakao.maps.InfoWindow({zIndex:1});
     const geocoder = new kakao.maps.services.Geocoder();
     const [map, setMap] = useState('')
-    const [[lat, lng], setLatLng] = useState([37.566826, 126.9786567]); // y, x
+    const [[lat, lng], setLatLng] = useState([region.y, region.x]||[37.566826, 126.9786567]); // y, x
     const [positionMarker, setPositionMarker] = useState('');
     const [selectionMarkers, setSelectionMarkers] = useState([]);
     const [placeMarkers, setPlaceMarkers] =useState([]);
@@ -457,7 +457,7 @@ function RegisterPage() {
     useEffect(() => {
         const mapContainer = document.getElementById('map'),
             mapOptions = {
-                center: new kakao.maps.LatLng(37.566826, 126.9786567),
+                center: new kakao.maps.LatLng(lat, lng),
                 level: 3
             };
 
