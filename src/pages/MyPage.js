@@ -49,6 +49,10 @@ const SelectCardSort = styled.select`
     border-radius: 3px;
     top: 0;
     margin-top: 20px;
+    border: 3px solid black;
+    font-weight: 600;
+    width: 80px;
+    height: 30px;
 `;
 
 const UserInfo = styled.div`
@@ -56,11 +60,11 @@ const UserInfo = styled.div`
     width: 230px;
     margin-top: 60px;
     position: relative;
-    background: linear-gradient(0deg, ${oc.cyan[4]} 0%, ${oc.gray[2]} 100%);
-    border-radius: 5px;
+    background: black;
+    border-radius: 10px;
     display:flex;
     flex-direction: column;
-    align-items:center;
+    align-items: center;
 `;
 
 const Card = styled.div`
@@ -103,7 +107,7 @@ const User_ProfileImg = styled.img`
     width: 180px;
     height: 180px;
     margin: 30px;
-    border-radius: 3px;
+    border-radius: 50%;
 `;
 
 const User_Description = styled.div`
@@ -118,18 +122,30 @@ const User_Description = styled.div`
 
 const User_Name = styled.div`
     font-weight: 600;
+    font-size: 1.5rem;
     color: white;
     width: 180px;
     text-align: center;
 `;
 
 const User_UpdateButton = styled.button`
-    color: gray;
-    float: right;
     width: 50px;
     height: 30px;
     margin: 10px;
     font-size: 0.7rem;
+    font-weight: 600;
+    background: ${oc.yellow[6]};
+    color: white;
+    cursor: pointer;
+    border: none;
+    box-shadow: rgb(180 180 180) -1px 1px 5px;
+    border-radius: 3px;
+    transition: .2s all;
+
+    &:hover {
+        background: ${oc.gray[6]};
+        color: white;
+    }
 `;
 
 const Card_Date = styled.div`
@@ -157,9 +173,8 @@ function MyPage() {
     const dispatch = useDispatch();
     const history = useHistory();
     const { userInfo, dailyCards } = state;
-    console.log('Mypage = ', state);
     const [ visibleCards, setVisibleCards ] = useState([]);
-    let cardSort = "전체 글"
+    let cardSort = "전체 글";
     const cardSorts = ["전체 글", "내가 쓴 글", "태그 당한 글"]
     const cardSortOptions = cardSorts.map(cardSort => {
         return <option value={cardSort}>{cardSort}</option>;
@@ -216,7 +231,7 @@ function MyPage() {
         
         if (confirm("삭제하면 내용을 복구할 수 없습니다. 삭제하시겠습니까?") === true) {
             axios
-                .get(`${server}/mypage`,
+                .put(`${server}/mypage`,
                     {
                         'Content-Type': 'application/json',
                         withCredentials: true,

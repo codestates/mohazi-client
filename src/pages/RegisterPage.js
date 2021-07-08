@@ -14,13 +14,13 @@ const KakaoRestAPIKey = process.env.REACT_APP_KAKAO_MAP_RESTAPI_KEY;
 
 const Map = styled.div`
     float: right;
-    width: 60%;
+    width: 65%;
     height: 650px;
     border-radius: 10px;
     position: relative;
 `;
 
-const SearchBar = styled.form`
+const SearchBar = styled.div`
     border-radius: 3px;
     border: 3px solid black;
     background: white;
@@ -70,6 +70,23 @@ const Selections = styled.div`
         margin-top: 20px;
         width: 30px;
         cursor: pointer;
+    }
+
+    #location {
+        color: black;
+    }
+
+    > input {
+        border: none;
+    }
+
+    .miniTitle {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: ${oc.gray[6]};
+        align-self: flex-start;
+        margin-left: 10px;
+        margin-right: 20px;
     }
 `;
 
@@ -159,7 +176,7 @@ const Place = styled.div`
         > h3, h4 {
             color: white;
         }
-        background: ${oc.gray[8]};
+        background: ${oc.yellow[4]};
     }
 
 `;
@@ -188,7 +205,7 @@ const Selection = styled.div`
         color: ${oc.gray[7]}
     }
 
-    .deleteSelection {
+    .removeSelection {
         display: none;
     }
 
@@ -206,7 +223,7 @@ const Selection = styled.div`
             display: none;
         }
 
-        .deleteSelection {
+        .removeSelection {
             display: block;
             color: ${oc.gray[3]};
             font-size: 0.9rem;
@@ -233,7 +250,7 @@ const CreateCardButton = styled.button`
 `;
 
 const Search_wrap = styled.div`
-    width: 40%;
+    width: 35%;
     height: 650px;
     background: white;
     float: left;
@@ -287,16 +304,16 @@ function RegisterPage() {
         event.dataTransfer.clearData();
     }
 
-    const bounds = new kakao.maps.LatLngBounds();
     const infowindow = new kakao.maps.InfoWindow({zIndex:1});
+    const geocoder = new kakao.maps.services.Geocoder();
     const [map, setMap] = useState('')
-    const [[lat, lng], setLatLng] = useState([37.566826, 126.9786567]); // y, x
+    const [[lat, lng], setLatLng] = useState([region.y, region.x]||[37.566826, 126.9786567]); // y, x
     const [positionMarker, setPositionMarker] = useState('');
+    const [selectionMarkers, setSelectionMarkers] = useState([]);
     const [placeMarkers, setPlaceMarkers] =useState([]);
     const [inputText, setInputText] = useState('');
     const [inputDate, setInputDate] = useState('');
-    const categories = [["restaurant", "음식점", "FD6"], ["mall", "백화점", "MT1"], ["cafe", "카페", "CE7"], ["park", "관광명소", "AT4"], ["exhibition", "문화시설", "CT1"]];
-    const [category, setCategory] = useState(categories[0][2]);
+    const categories = [[null, '선택', null], ["restaurant", "음식점", "FD6"], ["mall", "백화점", "MT1"], ["cafe", "카페", "CE7"], ["park", "관광명소", "AT4"], ["exhibition", "문화시설", "CT1"]];
     const categoryOptions = categories.map(category => {
         return <option value={category[2]}>{category[1]}</option>;
     });
@@ -305,8 +322,8 @@ function RegisterPage() {
         return <option value={region}>{region}</option>;
     });
 
-    const [places, setPlaces] = useState([{id:'1', place_name: '스타벅스'}, {id:'2', place_name: '현대백화점'}, {id:'3', place_name: 'Cafe Groovy'}, {id:'4', place_name: 'D Museum'}, {id:'5', place_name: '투썸플레이스'}])
-    let showPlaces = places.map((place, index) => {
+    const [places, setPlaces] = useState([])
+    const showPlaces = places.map((place, index) => {
         return <Place
                 id={place.id}
                 draggable='true'
@@ -324,7 +341,7 @@ function RegisterPage() {
         return <Selection onClick={() => handleRemoveSelection(selection)}>
                 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMGMtNC4xOTggMC04IDMuNDAzLTggNy42MDIgMCA2LjI0MyA2LjM3NyA2LjkwMyA4IDE2LjM5OCAxLjYyMy05LjQ5NSA4LTEwLjE1NSA4LTE2LjM5OCAwLTQuMTk5LTMuODAxLTcuNjAyLTgtNy42MDJ6bTAgMTFjLTEuNjU3IDAtMy0xLjM0My0zLTNzMS4zNDItMyAzLTMgMyAxLjM0MyAzIDMtMS4zNDMgMy0zIDN6Ii8+PC9zdmc+" />
                 <div>
-                    <div className="deleteSelection">일정 삭제</div>
+                    <div className="removeSelection">일정 삭제</div>
                     <h3>{selection.place_name}</h3>
                     <h4>{selection.address_name}</h4>
                     <h4>{selection.phone}</h4>
@@ -336,84 +353,32 @@ function RegisterPage() {
         const i = places.indexOf(place);
         setSelections([...selections, place]);
         setPlaces(places.filter((place, index) => index !== i));
-
-        // let imageSrc = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMGMtNC4xOTggMC04IDMuNDAzLTggNy42MDIgMCA2LjI0MyA2LjM3NyA2LjkwMyA4IDE2LjM5OCAxLjYyMy05LjQ5NSA4LTEwLjE1NSA4LTE2LjM5OCAwLTQuMTk5LTMuODAxLTcuNjAyLTgtNy42MDJ6bTAgMTFjLTEuNjU3IDAtMy0xLjM0My0zLTNzMS4zNDItMyAzLTMgMyAxLjM0MyAzIDMtMS4zNDMgMy0zIDN6Ii8+PC9zdmc+";
-        // let imageSize = new kakao.maps.Size(24, 35);   
-        // let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
-        // for(let marker of placeMarkers) {
-        //     console.log(marker)
-        // }
-
-        // marker = new kakao.maps.Marker({
-        //     image: markerImage
-        // });
     }
 
     const handleRemoveSelection = (selection) => {
         setPlaces([...places, selection]);
-        setSelections(selections.filter(el => el.id !== selection.id))
+        setSelections(selections.filter(el => el.id !== selection.id));
     }
 
     const handleCategory = (event) => {
         let mapBounds = map.getBounds();
 
-        setCategory(event.target.value);
-        // axios.get(`${server}/itemtype`,
-        // {
-        //     'Content-Type': 'application/json',
-        //     withCredentials: true,
-        // }, {
-        //     itemType: category, // kakao catergory_code
-        //     rect: [mapBounds.ha, mapBounds.qa, mapBounds.oa, mapBounds.pa]
-        // })
-        axios({
-            method: 'GET',
-            url: `https://dapi.kakao.com/v2/local/search/keyword.json?query='스타'&category_group_code=${category}`,
-            headers: { Authorization: `KakaoAK ${KakaoRestAPIKey}` },
-          })
+        const category = event.target.value;
+        axios.put(`${server}/itemtype`,
+        {
+            itemType: category, // kakao catergory_code
+            rect: [mapBounds.ha, mapBounds.qa, mapBounds.oa, mapBounds.pa]
+        }, {
+            'Content-Type': 'application/json',
+            withCredentials: true,
+        })
+        // axios({
+        //     method: 'GET',
+        //     url: `https://dapi.kakao.com/v2/local/search/keyword.json?query='스타'&category_group_code=${category}`,
+        //     headers: { Authorization: `KakaoAK ${KakaoRestAPIKey}` },
+        //   })
         .then(res => {
-            //setPlaces(res.items)
-            setPlaces(res.data.documents)
-            showPlaces = places.map(place => {
-                return <Place>{place.name}</Place>
-            })
-
-            for(let marker of placeMarkers) {
-                marker.setMap(null);
-            }
-
-            let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-            let imageSize = new kakao.maps.Size(24, 35);   
-            let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
-
-            for(let place of places) {
-                let marker = new kakao.maps.Marker({
-                    map: map,
-                    position: new kakao.maps.LatLng(place.y, place.x),
-                    image: markerImage
-                });
-            
-                kakao.maps.event.addListener(marker, 'mouseover', function() {
-                    infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-                    infowindow.open(map, marker);
-                });
-
-                kakao.maps.event.addListener(marker, 'mouseout', function() {
-                    // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
-                    infowindow.close();
-                });
-
-                kakao.maps.event.addListener(marker, 'click', function() {
-                    handleSelect(place);
-                })
-        
-                bounds.extend(new kakao.maps.LatLng(place.y, place.x));
-                setPlaceMarkers([...placeMarkers, marker]);
-            }
-
-            map.setBounds(bounds);
+            setPlaces(res.data.items);
         })
         .catch(err => console.log(err))
     };
@@ -432,16 +397,21 @@ function RegisterPage() {
         setSelections([]);
     }
 
+    const handleEnter = (event) => {
+        if(event.keyCode == 13){
+            handleSearchRegion(event);
+       }
+    }
+
     const handleSearchRegion = (event) => {
         event.preventDefault();
-        const keyword = event.target.nodeName === "BUTTON"? document.getElementById('keyword').value: event.target.value;
-        const geocoder = new kakao.maps.services.Geocoder();
+        const value = event.target.value;
+        const keyword = value? value: document.getElementById('keyword').value;
 
         // 주소로 좌표를 검색합니다
         geocoder.addressSearch(keyword, function(result, status) {
-
             if (status === kakao.maps.services.Status.OK) {
-                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
                 setLatLng([result[0].y, result[0].x]);
 
                 console.log(keyword, `region: {y: ${result[0].y}, x: ${result[0].x}}`)
@@ -479,10 +449,6 @@ function RegisterPage() {
     }
 
     const handleMakePositionMarker = (mouseEvent) => {
-        if(positionMarker !== '') { 
-            positionMarker.setMap(null)
-        };
-        
         let latlng = mouseEvent.latLng;
         setLatLng([latlng.getLat(), latlng.getLng()]); 
     };
@@ -491,9 +457,9 @@ function RegisterPage() {
     useEffect(() => {
         const mapContainer = document.getElementById('map'),
             mapOptions = {
-                center: new kakao.maps.LatLng(37.566826, 126.9786567),
+                center: new kakao.maps.LatLng(lat, lng),
                 level: 3
-            };  
+            };
 
         const map = new kakao.maps.Map(mapContainer, mapOptions); 
         setMap(map);
@@ -517,26 +483,109 @@ function RegisterPage() {
         });
 
         setPositionMarker(marker);
+
+        kakao.maps.event.addListener(marker, 'click', function () {
+            marker.setMap(null)
+        });
+
+        geocoder.coord2Address(lng, lat, function(result, status){
+            const location = document.getElementById('location')
+
+            if (status === kakao.maps.services.Status.OK) {
+                let detailAddr = !!result[0].road_address ? result[0].road_address.address_name: '';
+                location.textContent = detailAddr;
+            }
+        });
     }, [lat, lng])
+
+    //장소 마커 띄우기
+    useEffect(() => {
+        placeMarkers.map(el => el.setMap(null));
+        let markers = [];
+
+        let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+        let imageSize = new kakao.maps.Size(24, 35);
+        let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+        for (let place of places) {
+            let coords = new kakao.maps.LatLng(place.y, place.x);
+            let marker = new kakao.maps.Marker({
+                map: map,
+                position: coords,
+                image: markerImage
+            });
+
+            kakao.maps.event.addListener(marker, 'mouseover', function () {
+                infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+                infowindow.open(map, marker);
+            });
+
+            kakao.maps.event.addListener(marker, 'mouseout', function () {
+                // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+                infowindow.close();
+            });
+
+            kakao.maps.event.addListener(marker, 'click', function () {
+                infowindow.close();
+                handleSelect(place);
+            });
+
+            markers = [...markers, marker];
+        }
+
+        setPlaceMarkers(markers);
+        // map.setBounds(bounds);
+    }, [places])
+
+    //선택 항목 마커 띄우기
+    useEffect(() => {
+        selectionMarkers.map(el => el.setMap(null));
+        let markers = [];
+
+        let imageSrc = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMGMtNC4xOTggMC04IDMuNDAzLTggNy42MDIgMCA2LjI0MyA2LjM3NyA2LjkwMyA4IDE2LjM5OCAxLjYyMy05LjQ5NSA4LTEwLjE1NSA4LTE2LjM5OCAwLTQuMTk5LTMuODAxLTcuNjAyLTgtNy42MDJ6bTAgMTFjLTEuNjU3IDAtMy0xLjM0My0zLTNzMS4zNDItMyAzLTMgMyAxLjM0MyAzIDMtMS4zNDMgMy0zIDN6Ii8+PC9zdmc+";
+        let imageSize = new kakao.maps.Size(40, 62);   
+        let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+        for(let selection of selections) {
+            let coords = new kakao.maps.LatLng(selection.y, selection.x);
+            let marker = new kakao.maps.Marker({
+                map: map,
+                position: coords,
+                image: markerImage
+            });
+
+            markers = [...markers, marker];
+        }
+
+        setSelectionMarkers(markers);
+    }, [selections])
 
     return (
         <>
             <SelectRegion onChange={(e) => handleSearchRegion(e)}>
                     {regionOptions}
             </SelectRegion>
-            <SearchBar className="inputForm" onsubmit="return false">
+            <SearchBar className="inputForm">
                 <input
                     id='keyword'
                     type='text'
                     placeholder='지역을 검색하세요'
                     onChange={onChangeKeyword}
+                    onKeyDown={(e) => handleEnter(e)}
                     value={inputText} />
                 <img onClick={handleSearchRegion} src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMjMuMTExIDIwLjA1OGwtNC45NzctNC45NzdjLjk2NS0xLjUyIDEuNTIzLTMuMzIyIDEuNTIzLTUuMjUxIDAtNS40Mi00LjQwOS05LjgzLTkuODI5LTkuODMtNS40MiAwLTkuODI4IDQuNDEtOS44MjggOS44M3M0LjQwOCA5LjgzIDkuODI5IDkuODNjMS44MzQgMCAzLjU1Mi0uNTA1IDUuMDIyLTEuMzgzbDUuMDIxIDUuMDIxYzIuMTQ0IDIuMTQxIDUuMzg0LTEuMDk2IDMuMjM5LTMuMjR6bS0yMC4wNjQtMTAuMjI4YzAtMy43MzkgMy4wNDMtNi43ODIgNi43ODItNi43ODJzNi43ODIgMy4wNDIgNi43ODIgNi43ODItMy4wNDMgNi43ODItNi43ODIgNi43ODItNi43ODItMy4wNDMtNi43ODItNi43ODJ6bTIuMDEtMS43NjRjMS45ODQtNC41OTkgOC42NjQtNC4wNjYgOS45MjIuNzQ5LTIuNTM0LTIuOTc0LTYuOTkzLTMuMjk0LTkuOTIyLS43NDl6Ii8+PC9zdmc+" />
             </SearchBar>
             <Search_wrap>
                 <Selections>
                     <h2 style={{margin: 5}}>오늘 뭐하지?</h2><br/>
-                    <input type="date" value={inputDate} onChange={onChangeDate}/>
+                    <div className='miniTitle'>
+                        <span className='miniTitle'>날짜</span>
+                        <input type="date" value={inputDate} onChange={onChangeDate}/>
+                    </div><br/>
+                    <div className='miniTitle'>
+                        <span className='miniTitle'>위치</span>
+                        <span id='location'></span>
+                    </div><br/>
                     <ContentBox_Selections
                         id="dropzone"
                         onDragEnter={onDragEnter}
