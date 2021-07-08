@@ -40,7 +40,7 @@ function SearchPage() {
     }
     return (
         <SearchBody>
-            <img src="../seoulMap_00.jpg" alt="서울시 지도" useMap="#city-map" id="seoul-city-map"/>
+            <img src="../img/seoulMap_00.jpg" alt="서울시 지도" useMap="#city-map" id="seoul-city-map"/>
 
         <map name="city-map" id="city-map-link">
             <Area shape="poly" coords="350,9,368,8,375,21,387,15,402,23,394,46,394,64,408,101,404,107,397,94,390,121,363,94,350,93,353,54,342,37,339,21,349,9" id="01" alt="도봉구" onClick={goRegister} onMouseOver={change}></Area>
