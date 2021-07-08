@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import React, { useState } from 'react';
 import axios from 'axios';
 //import LoginPage from '../pages/LoginPage';
-import { login } from '../actions/actions';
+import { login } from '../../actions/actions';
 import { useDispatch } from 'react-redux';
 import oc from 'open-color';
 

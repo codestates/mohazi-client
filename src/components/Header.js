@@ -6,7 +6,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../actions/actions.js';
 import axios from 'axios';
-import LoginModal from './Login';
+import LoginModal from './Modals/Login';
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
