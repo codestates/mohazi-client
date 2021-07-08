@@ -10,38 +10,38 @@ require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
 
 const LoginBody = styled.div`
-      height: 500px;
-      width: 500px;
+      /*height: 500px;
+      width: 500px;*/
       box-sizing: border-box;
-      text-align: center;
-      background-color: white;  
-      border: 1px solid black;
+      background-color: blue;
       border-radius: 20px;
-      margin: 150px auto;
-  `;
-
-const Logo = styled(Link)`
       margin: 20px auto;
-      width:200px;
-      font-size: 3.0rem;
-          letter-spacing: 2px;
-          color: ${oc.cyan[7]};
-          font-family: 'Big Shoulders Stencil Display', cursive;
-          text-decoration: none;
-
-          &:hover {
-              color: ${oc.cyan[9]};
-          }
+      display: flex;
+      flex-direction: column;
+      align-items: center;
   `;
+
+const Title = styled.div`
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    font-size: 4rem;
+    background: white;
+    font-family: 'Fjalla One', sans-serif;
+    color: ${oc.yellow[4]};
+`;
 
 const LoginField = styled.div`
       margin: 20px auto;
-      width: 40%;
-      height: 50px;
+      width: 80px;
+      height: 100px;
   `;
 
 const EmailBody = styled.input`
-      z-index: 1;
+    border: 3px solid ${oc.gray[4]};
+    border-radius: 3px;
+    width: 200px;
+    z-index: 1;
       
   `;
 
@@ -65,17 +65,25 @@ const Btn = styled.div`
   `;
 
 const LoginBtn = styled.button`
+    appearance: none;
+    font-family: 'Big Shoulders Stencil Display', cursive;
+    font-size: 1.0em;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+  `;
+
+const SignUpBtn = styled.button`
   appearance: none;
   font-family: 'Big Shoulders Stencil Display', cursive;
   font-size: 1.0em;
   border: none;
   cursor: pointer;
   border-radius: 10px;
-  `;
+`;
 
 
 function LoginPage() {
-
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -84,12 +92,11 @@ function LoginPage() {
     Email: '',
     Password: '',
   })
-
   const { Email, Password } = inputs;
 
   const onChange = (e) => {
     const { value, name } = e.currentTarget;
-    console.log(e.currentTarget.value)
+    //console.log(e.currentTarget)
     setInputs({
       ...inputs,
       [name]: value,
@@ -115,15 +122,15 @@ function LoginPage() {
             }
           })
         .then((res) => {
-          console.log('login', res.data)
-          dispatch(login(res.data.userinfo))
+          //console.log('login', res.data)
+          dispatch(login(res.data.userinfo));
         })
         .then(res => {
-          console.log('로그인에 성공했습니다');
+          //console.log('로그인에 성공했습니다');
           history.push('/')
         })
         .catch((e) => {
-          console.log(e);
+          setErrorMessage('유효한 이메일 또는 비밀번호가 아닙니다');
         })
     }
   }
@@ -132,19 +139,12 @@ function LoginPage() {
     history.push('/signup')
   }
 
-
-
-
   return (
     <LoginBody>
-      <Logo to='/landing'>MOHAZI</Logo>
+      <Title>Login</Title>
       <LoginField>
-        <Text>Email:</Text>
-        <EmailBody type="text" name="Email" onChange={onChange}></EmailBody>
-      </LoginField>
-      <LoginField>
-        <Text>Password:</Text>
-        <PasswordBody type="password" name="Password" onChange={onChange}></PasswordBody>
+        <EmailBody type="text" name="Email" placeholder="이메일" onChange={onChange}></EmailBody>
+        <PasswordBody type="password" name="Password" placeholder="비밀번호" onChange={onChange}></PasswordBody>
       </LoginField>
       <Route
         render={() => {
@@ -159,7 +159,7 @@ function LoginPage() {
       />
       <Btn>
         <span>
-          <LoginBtn onClick={goSignup}>회원가입</LoginBtn>
+          <SignUpBtn onClick={goSignup}>회원가입</SignUpBtn>
           <LoginBtn onClick={handleLogin}>로그인</LoginBtn>
         </span>
       </Btn>

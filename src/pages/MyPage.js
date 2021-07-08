@@ -271,7 +271,7 @@ function MyPage() {
 
     function handleImageURL(image) {
         console.log(image);
-        return `img/${image}`
+        return `../../mohazi-server/uploads/${image}`
       }
 
     return (

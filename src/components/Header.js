@@ -6,6 +6,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../actions/actions.js';
 import axios from 'axios';
+import LoginModal from './Login';
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
@@ -48,22 +49,6 @@ const Logo = styled(Link)`
 
 const Space = styled.div`
     flex-grow: 1;
-`;
-
-const LoginButton = styled(Link)`
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: ${oc.cyan[6]};
-    padding: 0.5rem;
-    cursor: pointer;
-    border-radius: 3px;
-    text-decoration: none;
-    transition: .2s all;
-
-    &:hover {
-        background: ${oc.cyan[6]};
-        color: white;
-    }
 `;
 
 const MypageButton = styled(Link)`
@@ -127,7 +112,7 @@ function Header() {
                         <div>
                             <MypageButton to='/mypage'>Mypage</MypageButton>   <LogoutButton onClick={() => handleLogout()}>Logout</LogoutButton>
                         </div>
-                        : <LoginButton to='/login'>Login</LoginButton>
+                        :<LoginModal/>
                     }
                 </HeaderContents>
             </Background>

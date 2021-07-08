@@ -15,7 +15,7 @@ const KakaoRestAPIKey = process.env.REACT_APP_KAKAO_MAP_RESTAPI_KEY;
 const Map = styled.div`
     float: right;
     width: 65%;
-    height: 650px;
+    height: 100vh;
     border-radius: 10px;
     position: relative;
 `;
@@ -72,21 +72,28 @@ const Selections = styled.div`
         cursor: pointer;
     }
 
-    #location {
-        color: black;
-    }
-
     > input {
         border: none;
     }
 
     .miniTitle {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: ${oc.gray[6]};
         align-self: flex-start;
-        margin-left: 10px;
-        margin-right: 20px;
+        
+        > span {
+            margin-left: 10px;
+            margin-right: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: ${oc.gray[6]};
+        }
+    }
+
+    #location {
+        color: black;
+        margin: 0px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 20px;
     }
 `;
 
@@ -251,7 +258,7 @@ const CreateCardButton = styled.button`
 
 const Search_wrap = styled.div`
     width: 35%;
-    height: 650px;
+    height: 100vh;
     background: white;
     float: left;
     display: flex;
@@ -579,11 +586,11 @@ function RegisterPage() {
                 <Selections>
                     <h2 style={{margin: 5}}>오늘 뭐하지?</h2><br/>
                     <div className='miniTitle'>
-                        <span className='miniTitle'>날짜</span>
+                        <span>날짜</span>
                         <input type="date" value={inputDate} onChange={onChangeDate}/>
                     </div><br/>
                     <div className='miniTitle'>
-                        <span className='miniTitle'>위치</span>
+                        <span>위치</span>
                         <span id='location'></span>
                     </div><br/>
                     <ContentBox_Selections
