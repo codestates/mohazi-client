@@ -231,7 +231,7 @@ function MyPage() {
         
         if (confirm("삭제하면 내용을 복구할 수 없습니다. 삭제하시겠습니까?") === true) {
             axios
-                .get(`${server}/mypage`,
+                .put(`${server}/mypage`,
                     {
                         'Content-Type': 'application/json',
                         withCredentials: true,
