@@ -3,7 +3,6 @@ import React from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import LandingPage from "./pages/LandingPage";
-import LoginPage from "./pages/LoginPage";
 import MyPage from "./pages/MyPage";
 import RegisterPage from "./pages/RegisterPage";
 import SearchPage from "./pages/SearchPage";
@@ -41,7 +40,6 @@ function App() {
       />
       <Switch>
         <Route path='/landing' render={() => <LandingPage />} />
-        <Route path='/login' render={() => <LoginPage />} />
         <Route path='/mypage' render={() => <MyPage />} />
         <Route path='/register' render={() => <RegisterPage />} />
         <Route path='/search' render={() => <SearchPage />} />
