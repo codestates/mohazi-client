@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { withRouter, Route, useHistory } from "react-router-dom";
+import { areaUpdate } from '../actions/actions';
+import { useDispatch } from 'react-redux';
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
@@ -16,15 +18,17 @@ const Landing = styled.div`
 
 const Desc = styled.div`
         padding: 20px 0 0 0;
+        margin: auto;
+        width: 90%;
         position: relative;
         display: flex;
         justify-content: center;
     `;
 
 const DescBox = styled.div`
-        height: 250px;
-        width: 150px;
-        margin: 20px 20px 0 0;
+        height: 350px;
+        width: 200px;
+        margin: 25px;
         position: relative;
         flex-grow: 0;
         background: linear-gradient(0deg, ${oc.cyan[4]} 0%, ${oc.pink[4]} 100%);
@@ -39,19 +43,19 @@ const DescBoxText = styled.div`
     `;
 
 const RecBox = styled.div`
-        height: 300px;
-        padding: 20px 0 0 0;
-        display: flex;
+        height: 400px;
         width: 1000px;
+        margin: 0;
+        padding: 25px;
+        display: flex;
         float: left;
         position: relative;
-        overflow-x: scroll;
+        overflow-x: auto;
     `;
 
 const Rec = styled.div`
-        height: 250px;
-        width: 200px;
-        padding: 5px;
+        height: 350px;
+        width: 250px;
         background-color: white;
         box-shadow: rgb(180 180 180) -1px 1px 8px;
         display: flex;
@@ -70,10 +74,16 @@ const Rec = styled.div`
         }
         &:hover ~ .Rec {
             transition: all 0.5s ease 0s;
-            transform: translateX(80px);
+            transform: translateX(100px);
         }
     
     `;
+
+const RecImg = styled.img`
+    height: 350px;
+    width: 250px;
+    border-radius: 20px;
+`;
 
 const IntroBox = styled(Landing)`
         height: 350px;
@@ -114,8 +124,10 @@ const Box = styled.div`
 
 function LandingPage() {
     const history = useHistory();
+    const dispatch = useDispatch();
     const [selections, setSelections] = useState([1, 2, 3, 4, 5]);
     const [introes, setIntroes] = useState([1, 2, 3, 4, 5]);
+    const region = {};
 
     useEffect(() => {
         axios
@@ -126,17 +138,22 @@ function LandingPage() {
                 })
             .then((res) => {
                 console.log(res.data.recommendations);
-                res.data.recommendations.map((el) => {
-                    console.log(el);
-                })
-                //setSelections(res.data.recommndations);
-                console.log(selections);
+                setSelections(res.data.recommendations);
             })
             .catch((e) => console.log(e))
     }, [])
 
     function goSearach() {
         history.push('/search')
+    }
+
+
+    function goRegister(el) {
+        const {x,y} = el;
+        console.log(el)
+        console.log(x,y)
+        dispatch(areaUpdate(region));
+        history.push('/register');
     }
 
     function MouseWheelHandler(e) {
@@ -151,7 +168,10 @@ function LandingPage() {
     function getLocation() {
         if (navigator.geolocation) { // GPS를 지원하면
           navigator.geolocation.getCurrentPosition(function(position) {
-            console.log(position.coords.latitude + ' ' + position.coords.longitude);
+           region.y = position.coords.latitude;
+           region.x = position.coords.longitude;
+           console.log(region)
+
           }, function(error) {
             console.error(error);
           }, {
@@ -160,9 +180,10 @@ function LandingPage() {
             timeout: Infinity
           });
         } else {
-          alert('GPS를 지원하지 않습니다');
+          console.log('GPS를 지원하지 않습니다');
         }
       }
+
       getLocation();
 
     return (
@@ -177,8 +198,8 @@ function LandingPage() {
                 <RecBox>
                     {selections.map((el, index) => {
                         return (
-                            <Rec className="Rec" left={(index)*120} index={index}>
-                                <img src="img/cafe.jpg" />{el}
+                            <Rec className="Rec" left={(index)*150} index={index} onClick={() => goRegister(el)}>
+                                <RecImg className="RecImg" src="img/cafe.jpg" />
                             </Rec>
                         )
                     })}
@@ -186,7 +207,6 @@ function LandingPage() {
             </Desc>
             <IntroBox id="introbox">
                 {introes.map((el) => {
-                    console.log(el)
                     return (
                         <Box className="box" onWheel={(e) => MouseWheelHandler(e)}>
                             <IntroBoxText>
