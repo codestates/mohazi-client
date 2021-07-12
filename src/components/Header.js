@@ -121,15 +121,14 @@ function Header() {
         }
     }
 
-    // 바디 글자색 바꾸기
+    // 글자색 바꾸기
     function SetTextColor(color){
-        console.log(document.querySelector('body'))
-        document.querySelector('body').style.color = color;
+        document.querySelector('.sb').style.color = color;
     }
 
-    // 바디 배경색 바꾸기
+    // 배경색 바꾸기
     function SetBackgroundColor(color){
-        document.querySelector('.switch').style.background = color;
+        document.querySelector('.sb').style.background = color;
     }
 
     function handleToggle(event) {
@@ -154,7 +153,7 @@ function Header() {
     
     return (
         <FixPosition>
-            <Background className="switch">
+            <Background className="sb">
                 <HeaderContents>
                     <Logo to='/landing'>MOHAZI</Logo>
                     <Space/>
