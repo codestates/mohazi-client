@@ -98,8 +98,8 @@ const IntroBoxText = styled.div`
     `;
 
 const Btn = styled.div`
-        position:absolute;
-        left:50%;
+        position: absolute;
+        left: 50%;
         top: 80%;
         margin-left: -40px;
         margin-top: -20px;
@@ -219,7 +219,6 @@ function LandingPage() {
                         </Box>
                     )
                 })}
-
             </IntroBox>
         </Landing>
     )

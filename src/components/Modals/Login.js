@@ -6,14 +6,17 @@ import axios from 'axios';
 import { login } from '../../actions/actions';
 import { useDispatch } from 'react-redux';
 import oc from 'open-color';
+import GoogleLogin from 'react-google-login';
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
 
+const clientId = '626775549529-mgarkqol48n6optt5dd209ucc414sln0.apps.googleusercontent.com';
+
 const Modal_wrap = styled.div`
     display: none;
     width: 400px;
-    height: 500px;
+    height: 700px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -212,7 +215,7 @@ const LoginButton = styled.button`
     }
 `;
 
-function LoginModal() {
+function LoginModal({onSocial}) {
     const history = useHistory();
     const dispatch = useDispatch();
   
@@ -285,6 +288,41 @@ function LoginModal() {
       history.push('/signup');
     }
 
+    const onSuccess = async(response) => {
+    	console.log(response);
+        const { profileObj : { email, name, googleId } } = response;
+
+        axios
+          .put(`${server}/sociallogin`,
+            {
+              email: email,
+              password: googleId,
+              name: name,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                WithCredentials: true,
+              }
+            })
+          .then((res) => {
+            //console.log('login', res.data)
+            dispatch(login(res.data.userinfo));
+          })
+          .then(res => {
+            //console.log('로그인에 성공했습니다');
+            history.push('/')
+          })
+          .catch((e) => {
+            setErrorMessage('유효한 이메일 또는 비밀번호가 아닙니다');
+          })
+        
+    }
+
+    const onFailure = (error) => {
+        console.log(error);
+    }
+
     return (
         <div onClick={(e) => handleBgClick(e)}>
             <LoginButton onClick={handleOpenModal}>Login</LoginButton>
@@ -310,10 +348,11 @@ function LoginModal() {
                 <BtnField>
                     <LoginBtn onClick={handleLogin}>로그인</LoginBtn>
                     <SignUpBtn onClick={goSignup}>회원가입</SignUpBtn>
-                    <GoogleBtn>
-                        <img src='img/google_logo.png'></img>
-                        <span>Google 계정으로 로그인 하기</span>
-                    </GoogleBtn>
+                    <GoogleLogin
+                        clientId={clientId}
+                        responseType={"id_token"}
+                        onSuccess={onSuccess}
+                        onFailure={onFailure} />
                 </BtnField>
             </Modal_wrap>
         </div>

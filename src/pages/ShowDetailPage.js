@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import axios from "axios";
-import { login } from '../actions/actions';
 import { Link, withRouter, Route, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
@@ -9,115 +7,174 @@ import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
 
+const Body = styled.div`
+    width: 100%;
+    background-color: white;
+`;
+
 const DetailBody = styled.div`
     box-sizing: border-box;
-    width: 100%;
+    width: 60%;
+    height: 100%;
+    margin: 0 auto;
+    border: 1px solid white;
+    position: relative;
+    background-image: url('img/Memo.jpg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+`;
+
+const DetailTitle = styled.div`
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 4em;
+    margin: 100px 0 20px 150px;
+`;
+
+const Box = styled.div`
+    margin: 0 auto 100px auto;
+    width: 80%;
+    height: 80%;
+    display: flex;
+    border: 1px solid black;
+`;
+
+const LeftBox = styled.div`
+    margin: 10px;
+    width: 65%;
+    border: 1px solid black;
 `;
 
 const SelectionBox = styled.div`
-    width: 80%;
-    display: flex;
     border: 1px solid black;
-    border-radius: 20px;
-    margin: 50px auto;
-    overflow-x: auto;
+    position: relative;
 `;
 
 const Selection = styled.div`
-    margin: 5px auto;
-    width: 250px;
-    height: 400px;
-    border-radius: 20px;
-    position: relative;
-    
+    margin: 25px;
     & > * {
-        margin: auto;
-        width: 250px;
-        height: 400px;
-        border-radius: 20px;
-    }
-
-    &:hover .SelectionImg {
-        opacity: 0;
-    }
-
-    &:hover .SelectionHover {
-        opacity: 1;
-        transition: all 0.5s ease 0s;
-        transform: translateX(${props => {
-            if(props.index === props.length-1){
-                return -10;
-            }
-            return 10;
-        }}%) scaleX(1.2);
-        background-color: white;
-        z-index: 2;
-    }
-
-`;
-
-const SelectionImg = styled.img`
-    margin: 0;
-    opacity: 1;
-`;
-
-const SelectionHover = styled.div`
-    position: absolute;
-    top: 0px;
-    width: 250px;
-    height: 400px;
-    border: 1px solid black;
-    opacity: 0;
-    & > * {
-        transform: scaleX(0.9) translate(70%);
+        
     }
 `;
 
-const SelectionName = styled.div`
-
-`;
-
-const SelectionMemo = styled.div`
-
-`;
-
-const SelectionPost = styled.div`
-
-`;
-
-const SecondBox = styled.div`
-    width: 85%;
-    height: 230px;
+const PostIt = styled.div`
     display: flex;
-    margin: 50px auto;
-    flex-wrap: wrap;
+`;
+
+const PostIt1 = styled.div`
+    width: 50px;
+    height:50px;
+    border: 1px solid black;
+    background-color: ${props => {
+        switch(props.index){
+            case 0: return oc.red[5];
+            case 1: return oc.orange[5];
+            case 2: return oc.yellow[5];
+            case 3: return oc.green[5];
+            case 4: return oc.indigo[5];
+            default: return oc.grape[5];
+        }
+    }};
+    text-align: center;
+    vertical-align: middle;
+`;
+
+const PostItNum = styled.h2`
+    width: 40px;
+    height: 40px;
+    margin: 0 0 0 3px;
+    font-size: 2em;
+
+`;
+
+const PostIt2 = styled.div`
+    width: 250px;
+    height: 50px;
+    border: 1px solid black;
+    background-color: ${oc.gray[3]};
+    display: flex;
+`;
+
+const PostItTitle = styled.h2`
+    margin: 5px;
+    height: 50px;
+`;
+
+const PostItBtn = styled.button`
+    width: 20px;
+    height: 20px;
+
+`;
+
+const HoverBox = styled.div`
+    width: 80%;
+    border: 1px solid black;
+    margin: 20px 0 0 50px;
+    border-radius: 20px;
+
+`;
+
+const HoverTitle = styled.div`
+
+`;
+
+const HoverAdd = styled.div`
+
+`;
+
+const HoverPhone = styled.div`
+
+`;
+
+const PostItMemo = styled.div`
+    height: 120px;
+    white-space: pre-line;
+    overflow-y: auto;
+`;
+
+const Memo1 = styled.h4`
+    margin: 5px;
+`;
+
+const Memo2 = styled.h5`
+    margin: 5px;
+`;
+
+const RightBox = styled.div`
+    margin: 10px;
+    width: 35%;
+    border: 1px solid black;
 `;
 
 const PhotoBox = styled.div`
-    display: flex;
-    width: 70%;
-    height: 100%;
     margin: auto;
-    padding: 20px;
     border: 1px solid black;
     border-radius: 20px;
     overflow-x: auto;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    width: 100%;
+
 `;
 
 const Photo = styled.div`
-    float: left;
+    width: 90%;
+    margin: 5px auto;
+    border: 1px solid black;
+    heigth: 160px;
+    padding: 5px;
+
 `;
 
 const PhotoImg = styled.img`
-    margin: 5px;
-    width: 180px;
-    height: 180px;
+    width: 90%;
+    heigth: 150px;
+    object-fit: fill;
 `;
+
 
 const FriendBox = styled.div`
     margin: auto;
-    width: 20%;
-    height: 100%;
     border: 1px solid black;
     border-radius: 20px;
     overflow-x: auto;
@@ -125,6 +182,7 @@ const FriendBox = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     text-align: center;
+
 `;
 
 const Friend = styled.div`
@@ -147,17 +205,6 @@ const FriendName = styled.div`
     top: 68px;
 `;
 
-const Btn = styled.div`
-    width: 80%;
-    height: 50px;
-    margin: 0 auto;
-`;
-
-const UpdateBtn = styled.button`
-    float: right;
-    margin: 0 0 30px 0;
-`;
-
 
 
 function ShowDetailPage() {
@@ -165,58 +212,86 @@ function ShowDetailPage() {
     const history = useHistory();
     const { dailyCard } = useSelector((state) => state)
 
+    console.log(dailyCard)
+
     const GoUpdateDetail = () => {
         history.push('/updatedetail')
     }
 
+    const ShowHoverEvent = (e, index) => {
+        console.log('a');
+        let Div = document.querySelector(`#HoverBox${index}`)
+        let Btn = document.querySelector(`#PostItBtn${index}`)
+
+        if(Div.style.display === 'none'){
+            Div.style.display = 'block';
+            Btn.innerText = 'X';
+        } else {
+            Div.style.display = 'none';
+            Btn.innerText = 'O';
+        }
+    }
+
 
     return (
+        <Body>
         <DetailBody>
-            <SelectionBox>
-            {dailyCard.selections.map((el, index) => {
-                        return (
-                            <Selection className="Selection" length={dailyCard.selections.length} index={index}>
-                                <SelectionImg className="SelectionImg" src={el.photo}></SelectionImg>
-                                <SelectionHover className="SelectionHover">
-                                    <SelectionName>{el.type_id.name}</SelectionName>
-                                    <SelectionMemo>{el.memo}</SelectionMemo>
-                                    <SelectionPost>
-                                    </SelectionPost>
-                                </SelectionHover>
-                            </Selection>
-                        )
-                    })}
-            </SelectionBox>
-            <SecondBox>
-                <PhotoBox>
-                    {dailyCard.photo.map((el, index) => {
-                        return (
-                            <Photo className="Photo" index={index}>
-                                <PhotoImg src={el}/>
-                            </Photo>
-                        )
-                    })}
-                </PhotoBox>
-                <FriendBox>
-                {dailyCard.friends.map((el, index) => {
-                    console.log(el.photo)
-                    return (
-                        <Friend>
-                            <FriendPhoto className="FriendsPhoto" index={index}>
-                                <FriendPhotoImg src={el.photo}/>
-                            </FriendPhoto>
-                            <FriendName>
-                                {el.username}
-                            </FriendName>
-                        </Friend>
-                    )
-                })}
-                </FriendBox>
-            </SecondBox>
-            <Btn>
-                <UpdateBtn onClick={GoUpdateDetail}>수정하기</UpdateBtn>
-            </Btn>
+            <DetailTitle>Daily Note</DetailTitle>
+            <Box>
+                <LeftBox>
+                    <SelectionBox>
+                        {dailyCard.selections.map((el, index) => {
+                            return (
+                                <Selection>
+                                    <PostIt>
+                                        <PostIt1 index={index}>
+                                            <PostItNum>{index + 1}</PostItNum>
+                                        </PostIt1>
+                                        <PostIt2>
+                                            <PostItTitle>{el.type_id.name}</PostItTitle>
+                                            <PostItBtn id={`PostItBtn${index}`} onClick={(e) => ShowHoverEvent(e, index)}>O</PostItBtn>
+                                        </PostIt2>
+                                    </PostIt>
+                                    <HoverBox id={`HoverBox${index}`}>
+                                        <Memo1>Memo: </Memo1>
+                                        <PostItMemo>
+                                            <Memo2>{el.memo}</Memo2>
+                                        </PostItMemo>
+                                    </HoverBox>
+                                </Selection>
+                            )
+                        })}
+                    </SelectionBox>
+                </LeftBox>
+                <RightBox>
+                    <PhotoBox>
+                        {dailyCard.photo.map((el, index) => {
+                            return (
+                                <Photo className="Photo" index={index}>
+                                    <PhotoImg src={el} />
+                                </Photo>
+                            )
+                        })}
+                    </PhotoBox>
+                    <FriendBox>
+                        {dailyCard.friends.map((el, index) => {
+                            console.log(el.photo)
+                            return (
+                                <Friend>
+                                    <FriendPhoto className="FriendsPhoto" index={index}>
+                                        <FriendPhotoImg src={el.photo} />
+                                    </FriendPhoto>
+                                    <FriendName>
+                                        {el.username}
+                                    </FriendName>
+                                </Friend>
+                            )
+                        })}
+                    </FriendBox>
+                </RightBox>
+            </Box>
         </DetailBody>
+        </Body>
     )
 }
 
