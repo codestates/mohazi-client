@@ -9,79 +9,134 @@ import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
 
-const SignupBody = styled.div`
-      height: 500px;
-      width: 500px;
-      box-sizing: border-box;
-      text-align: center;
-      background-color: white;  
-      border: 1px solid black;
-      border-radius: 20px;
-      margin: 150px auto;
-  `;
+const Wrap = styled.div`
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 30;
+    object-fit: fill;
+`;
 
-const Logo = styled(Link)`
-      margin: 20px auto;
-      width:200px;
-      font-size: 3.0rem;
-          letter-spacing: 2px;
-          color: ${oc.cyan[7]};
-          font-family: 'Big Shoulders Stencil Display', cursive;
-          text-decoration: none;
+const SignUpField = styled.div`
+    width: 400px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 50;
+    position: absolute;
+`;
 
-          &:hover {
-              color: ${oc.cyan[9]};
-          }
-  `;
+const Title = styled.div`
+    width: 100%;
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px;
+    font-size: 4rem;
+    font-family: 'Fjalla One', sans-serif;
+    color: ${oc.yellow[4]};
+`;
 
-const SignupField = styled.div`
-      margin: 20px auto;
-      width: 40%;
-      height: 50px;
-      & > * {
-        z-index: 1;
-      }
+const SignUpButton = styled.button`
+    border: none;
+    background: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: ${oc.cyan[6]};
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: .2s all;
+
+    &:hover {
+        background: ${oc.cyan[6]};
+        color: white;
+    }
+`;
+
+const InputField = styled.div`
+    margin: 20px auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   `;
 
 const EmailBody = styled.input`
-      
-  `;
+    border: 2px solid ${oc.gray[4]};
+    border-radius: 3px;
+    width: 200px;
+    height: 40px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+`;
 
 const PasswordBody = styled.input`
+    border: 2px solid ${oc.gray[4]};
+    border-radius: 3px;
+    width: 200px;
+    height: 40px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+`;
 
-  `;
+const Alert = styled.div`
+    margin: 20px auto;
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: ${oc.gray[8]}
+`;
 
 const ConfirmPasswordBody = styled.input`
-
+    border: 2px solid ${oc.gray[4]};
+    border-radius: 3px;
+    width: 200px;
+    height: 40px;
+    margin-bottom: 20px;
+    padding-left: 10px;
   `;
 
 const UsernameBody = styled.input`
-
-  `;
-const Text = styled.span`
-      margin: 0 0 0 25px;
-      float: left;
-      z-index: 2;
-
-  `;
-
-const Alert = styled.div`
-
+    border: 2px solid ${oc.gray[4]};
+    border-radius: 3px;
+    width: 200px;
+    height: 40px;
+    margin-bottom: 20px;
+    z-index: 1;
+    padding-left: 10px;
   `;
 
 const Login = styled(Link)`
-  `;
+`;
 
-const Btn = styled.div`
-  `;
+const BtnField = styled.div`
+    margin: 20px auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
 
 const SignupBtn = styled.button`
-  appearance: none;
-  font-family: 'Big Shoulders Stencil Display', cursive;
-  font-size: 1.0em;
-  border: none;
-  cursor: pointer;
-  border-radius: 10px;
+    width: 200px;
+    height: 35px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    color: white;
+    background: ${oc.indigo[4]};
+
+    &:hover {
+        background: ${oc.gray[5]}
+    }
   `;
 
 function SignupPage() {
@@ -102,6 +157,24 @@ function SignupPage() {
     ErrorUsername: '',
   })
   const { ErrorAll, ErrorEmail, ErrorPassword, ErrorUsername } = errorInputs;
+
+  function handleOpenModal() {
+    document.querySelector('.modal_wrap').style.display = 'block';
+    document.querySelector('.black_bg').style.display = 'block';
+  }
+
+  function handleCloseModal() {
+    document.querySelector('.modal_wrap').style.display = 'none';
+    document.querySelector('.black_bg').style.display = 'none';
+  }
+
+  function handleBgClick(event) {
+    //console.log(event.target.classList)
+    if (event.target.classList.contains("black_bg")) {
+      document.querySelector('.modal_wrap').style.display = 'none';
+      document.querySelector('.black_bg').style.display = 'none';
+    }
+  }
 
   const onChange = (e) => {
     const { value, name } = e.currentTarget;
@@ -191,67 +264,58 @@ function SignupPage() {
   }
 
   return (
-    <SignupBody>
-      <Logo>MOHAZI</Logo>
-      <SignupField>
-        <Text>Email:</Text>
-        <EmailBody name="Email" onChange={onChange}></EmailBody>
-        <Route
-          render={() => {
-            if (ErrorEmail !== '') {
-              return (
-                <Alert>{ErrorEmail}</Alert>
-              );
-            }
-          }}
-        />
-      </SignupField>
-      <SignupField>
-        <Text>Username:</Text>
-        <UsernameBody name="Username" onChange={onChange}></UsernameBody>
-        <Route
-          render={() => {
-            if (ErrorUsername !== '') {
-              return (
-                <Alert>{ErrorUsername}</Alert>
-              );
-            }
-          }}
-        />
-      </SignupField>
-      <SignupField>
-        <Text>Password:</Text>
-        <PasswordBody name="Password" onChange={onChange}></PasswordBody>
-      </SignupField>
-      <SignupField>
-        <Text>Confirm:</Text>
-        <ConfirmPasswordBody name="ConfirmPassword" onChange={onChange}></ConfirmPasswordBody>
-        <Route
-          render={() => {
-            if (ErrorPassword !== '') {
-              return (
-                <Alert>{ErrorPassword}</Alert>
-              );
-            }
-          }}
-        />
-      </SignupField>
-      <SignupField>
-        <Login to='/login'>이미 회원이신가요?</Login>
-        <Btn>
+    <Wrap>
+    <img src="/img/welcome_img.png"/>
+      <SignUpField>
+        <Title>Sign Up</Title>
+        <InputField>
+          <EmailBody name="Email" placeholder="이메일" onChange={onChange}></EmailBody>
+          <Route
+            render={() => {
+              if (ErrorEmail !== '') {
+                return (
+                  <Alert>{ErrorEmail}</Alert>
+                );
+              }
+            }}
+          />
+          <UsernameBody name="Username" placeholder="아이디" onChange={onChange}></UsernameBody>
+          <Route
+            render={() => {
+              if (ErrorUsername !== '') {
+                return (
+                  <Alert>{ErrorUsername}</Alert>
+                );
+              }
+            }}
+          />
+          <PasswordBody name="Password" placeholder="비밀번호" onChange={onChange}></PasswordBody>
+          <ConfirmPasswordBody name="ConfirmPassword" placeholder="비밀번호 확인" onChange={onChange}></ConfirmPasswordBody>
+          <Route
+            render={() => {
+              if (ErrorPassword !== '') {
+                return (
+                  <Alert>{ErrorPassword}</Alert>
+                );
+              }
+            }}
+          />
+        </InputField>
+        <BtnField>
+          <Login to='/landing'>이미 회원이신가요?</Login>
           <SignupBtn onClick={handleSignup}>회원가입</SignupBtn>
-        </Btn>
-        <Route
-          render={() => {
-            if (ErrorAll !== '') {
-              return (
-                <Alert>{ErrorAll}</Alert>
-              );
-            }
-          }}
-        />
-      </SignupField>
-    </SignupBody>
+          <Route
+            render={() => {
+              if (ErrorAll !== '') {
+                return (
+                  <Alert>{ErrorAll}</Alert>
+                );
+              }
+            }}
+          />
+        </BtnField>
+      </SignUpField>
+    </Wrap>
   )
 }
 
