@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { userUpdate } from '../actions/actions';
 import { Link, withRouter, Route, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
@@ -33,6 +32,17 @@ const Logo = styled(Link)`
                 color: ${oc.cyan[9]};
             }
   `;
+  
+const Title = styled.div`
+  width: 100%;
+  text-align: center;
+  margin: 20px 0;
+  padding: 20px;
+  font-size: 4rem;
+  background: white;
+  font-family: 'Fjalla One', sans-serif;
+  color: ${oc.yellow[4]};
+`;
 
 const Field = styled.div`
         height:500px;
@@ -149,6 +159,7 @@ function UpdateUserPage() {
   const { ErrorAll, ErrorUsername, ErrorPassword } = errorInputs;
   const [imgBase64, setImgBase64] = useState("");
   const [imgFile, setImgFile] = useState(null);
+  
   const onChange = (e) => {
     const { value, name } = e.currentTarget;
     setInputs({
@@ -156,6 +167,7 @@ function UpdateUserPage() {
       [name]: value,
     })
   }
+
   const handleError = (name, value) => {
     setErrorInputs({
       ...errorInputs,
@@ -174,6 +186,7 @@ function UpdateUserPage() {
   }
   // 정규식
   const checkWord = /\W/;
+  
   useEffect(() => {
     if (Password !== ConfirmPassword) {
       handleError('ErrorPassword', '비밀번호가 일치하지 않습니다.')
@@ -181,6 +194,7 @@ function UpdateUserPage() {
       handleError('ErrorPassword', '');
     }
   }, [ConfirmPassword, Password])
+  
   useEffect(() => {
     const checkUsername = checkWord.exec(Username);
     if (checkUsername) {
@@ -192,8 +206,9 @@ function UpdateUserPage() {
       handleError('ErrorUsername', '')
     }
   }, [Username])
+  
   const handleSubmit = () => {
-    console.log("압축 시작");
+    //console.log("압축 시작");
 
     const options = {
       maxSizeMB: 0.2,
@@ -201,15 +216,16 @@ function UpdateUserPage() {
       useWebWorker: true,
     };
 
-
     imageCompression(imgFile, options)
-      .then(res => {
-        console.log('test=', res);
+    .then(res => {
+        //console.log('test=', res);
         const reader = new FileReader();
+        
         reader.readAsDataURL(res);
         reader.onloadend = () => {
           const base64data = reader.result;
-          console.log('base64 = ', base64data);
+          //console.log('base64 = ', base64data);
+          
           axios
             .put(`${server}/userupdate`,
               handleDataForm(base64data),
@@ -220,21 +236,13 @@ function UpdateUserPage() {
                 withCredentials: true,
               })
             .then(res => {
-              console.log(res.data);
-              axios
-                .get(`${server}/usersearch`,
-                  {
-                    params: { email: Email, }
-                  })
-                .then(res => {
-                  console.log(res.data.userInfo);
-                  dispatch(userUpdate(res.data.userInfo))
-                  history.push(`/mypage`)
-                })
+              alert(res.data.message);
+              history.push(`/mypage`)
             })
+            .catch(err => console.log(err))
         }
       })
-      .catch(e => console.log(e));
+      .catch(err => console.log(err));
   }
   const handleDataForm = (dataURI) => {
     const byteString = atob(dataURI.split(",")[1]);
@@ -259,6 +267,7 @@ function UpdateUserPage() {
     }
     return formData;
   };
+
   const handleImage = (event) => {
     let reader = new FileReader();
     console.log('e = ', event.target.files[0]);
@@ -271,16 +280,17 @@ function UpdateUserPage() {
       setImgFile(event.target.files[0]);
     }
   };
+
   return (
     <UpdateBody>
-      <Logo to='landing'>MOHAZI</Logo>
+      <Title>User Information</Title>
       <Field>
         <LeftField>
           <ImgField>
             <img src={imgBase64} />
           </ImgField>
-          <UploadLink htmlFor="imgFile">선택</UploadLink>
-          <Upload id="imgFile" type="file" name="image" accept="image/jpeg, image/jpg" onChange={handleImage}></Upload>
+          <UploadLink htmlFor="imgFile"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNSA0aC0zdi0xaDN2MXptOCA2Yy0xLjY1NCAwLTMgMS4zNDYtMyAzczEuMzQ2IDMgMyAzIDMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zem0xMS01djE3aC0yNHYtMTdoNS45M2MuNjY5IDAgMS4yOTMtLjMzNCAxLjY2NC0uODkxbDEuNDA2LTIuMTA5aDhsMS40MDYgMi4xMDljLjM3MS41NTcuOTk1Ljg5MSAxLjY2NC44OTFoMy45M3ptLTE5IDRjMC0uNTUyLS40NDctMS0xLTFzLTEgLjQ0OC0xIDEgLjQ0NyAxIDEgMSAxLS40NDggMS0xem0xMyA0YzAtMi43NjEtMi4yMzktNS01LTVzLTUgMi4yMzktNSA1IDIuMjM5IDUgNSA1IDUtMi4yMzkgNS01eiIvPjwvc3ZnPg=="/></UploadLink>
+          <Upload id="imgFile" type="file" name="image" accept="image/jpeg" onChange={handleImage}></Upload>
           <DesField name="Description" onChange={onChange}></DesField>
         </LeftField>
         <RightField>
