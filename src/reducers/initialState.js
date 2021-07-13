@@ -9,6 +9,13 @@ export const initialState = {
     },
     region : '',
     selections: [],
+    friend: {
+        id: '',
+        email: '',
+        username: '',
+        photo: '',
+        description: '',
+    },
     dailyCards: [
         {
             id: 1,

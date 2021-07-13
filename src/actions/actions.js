@@ -4,6 +4,7 @@ export const USERUPDATE = 'USERUPDATE';
 export const SETCARDS = 'SETCARDS';
 export const SETCARD = 'SETCARDS';
 export const AREAUPDATE = 'AREAUPDATE';
+export const SETFRIEND = 'SETFRIEND';
 
 export const login = (data) => {
     return {
@@ -56,6 +57,15 @@ export const setCard = (data) => {
         type: SETCARD,
         payload: {
             dailyCard: data,
+        }
+    }
+}
+
+export const setFriend = (data) => {
+    return {
+        type: SETFRIEND,
+        payload: {
+            friend: data,
         }
     }
 }
