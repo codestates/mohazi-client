@@ -9,6 +9,7 @@ import imageCompression from "browser-image-compression";
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
+const s3ImageURl = process.env.REACT_APP_S3_IMAGE_URL;
 
 const Body = styled.div`
     width: 100%;
@@ -506,7 +507,7 @@ function UpdateDetailPage() {
             reader.readAsDataURL(event.target.files[0]);
             setImgFile(event.target.files[0]);
         }
-        
+
     };
 
     const PhotoDelete = (e, index) => {
@@ -652,7 +653,7 @@ function UpdateDetailPage() {
                         {photo.map((el, index) => {
                             return (         
                                 <Photo  className="Photo" index={index}>
-                                    <PhotoImg id={`PhotoImg${index}`} src={el} />
+                                    <PhotoImg id={`PhotoImg${index}`} src={s3ImageURl + '/' + el} />
                                     <PhotoBtn onClick={(e) => PhotoDelete(e, index)}>X</PhotoBtn>
                                 </Photo>
                             )
@@ -663,7 +664,7 @@ function UpdateDetailPage() {
                             return (
                                 <Friend>
                                     <FriendPhoto className="FriendsPhoto" index={index}>
-                                        <FriendPhotoImg src={el.photo} />
+                                        <FriendPhotoImg src={s3ImageURl + '/' + el.photo} />
                                     </FriendPhoto>
                                     <FriendName>
                                         {el.username}
