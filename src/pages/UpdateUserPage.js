@@ -8,69 +8,61 @@ import imageCompression from "browser-image-compression";
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
+const s3ImageURl = process.env.REACT_APP_S3_IMAGE_URL;
 
 const UpdateBody = styled.div`
-        height: 600px;
-        width: 800px;
-        box-sizing: border-box;
-        text-align: center;
-        background-color: white;  
-        border: 1px solid black;
-        border-radius: 20px;
-        margin: 150px auto;
-  `;
-
-const Logo = styled(Link)`
-        margin: 20px auto;
-        width:200px;
-        font-size: 3.0rem;
-            letter-spacing: 2px;
-            color: ${oc.cyan[7]};
-            font-family: 'Big Shoulders Stencil Display', cursive;
-            text-decoration: none;
-            &:hover {
-                color: ${oc.cyan[9]};
-            }
+    height: 600px;
+    width: 800px;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: white;  
+    border: 1px solid black;
+    border-radius: 20px;
+    margin: 150px auto;
   `;
   
 const Title = styled.div`
-  width: 100%;
-  text-align: center;
-  margin: 20px 0;
-  padding: 20px;
-  font-size: 4rem;
-  background: white;
-  font-family: 'Fjalla One', sans-serif;
-  color: ${oc.yellow[4]};
+    width: 100%;
+    text-align: center;
+    margin: 15px 0;
+    padding: 20px;
+    font-size: 4rem;
+    background: white;
+    font-family: 'Fjalla One', sans-serif;
+    color: ${oc.yellow[4]};
 `;
 
 const Field = styled.div`
-        height:500px;
-        width:100%;
-        display:flex;
+    height: 450px;
+    width:100%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
   `;
 
 const LeftField = styled.div`
     height:80%;
     width:30%;
-    background-color: cyan;
-    margin: auto;
     position: relative;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
-const ImgField = styled.div`
-   border-radius: 50%;
-   background-color: white;
-   height:200px;
-   width:200px;
-   margin: 30px auto;
-   overflow: hidden;
-`;
+const ProfileImg = styled.div`
+    display:flex;
+    justify-content: center;
+    align-items: center;
 
-const Img = styled.img`
-    width:100%;
-    height:100%;
-    object-fit: cover;
+   > div {
+    border-radius: 50%;
+    background-color: gray;
+    height:200px;
+    width:200px;
+    margin: 30px auto;
+    border: ${oc.gray[4]}
+   }
 `;
 
 const Upload = styled.input`
@@ -78,65 +70,113 @@ const Upload = styled.input`
 `;
 
 const UploadLink = styled.label`
-  position: absolute;
-  top: 195px;
-  left: 170px;
-  width: 45px;
-  height: 35px;
+    position: absolute;
+    cursor: pointer;
+
+    > img {
+      width: 80px;
+      height: 80px;
+    }
 `;
 
 const DesField = styled.input`
+  border: none;
+  width: 80%;
+  height: 80px;
+  background: gray;
 `;
 
 const RightField = styled.div`
     height:80%;
     width:50%;
-    background-color: cyan;
-    margin: auto;
+    margin-left: 10px;
 `;
 
 const UpdateField = styled.div`
-      margin: 20px auto;
-      width: 80%;
-      height: 50px;
-      background-color: white;
-      & > * {
-        z-index: 1;
-      }
+    margin: 15px auto;
+    width: 80%;
+    height: 50px;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+      
+    & > * {
+      z-index: 1;
+    }
 `;
 
 const EmailBody = styled.div`
-      
+    border-radius: 3px;
+    width: 200px;
+    margin-left: 10px;
+    text-align: left;
 `;
 
-const PasswordBody = styled.input`
-`;
-const ConfirmPasswordBody = styled.input`
-`;
-const UsernameBody = styled.input`
+const Input = styled.input`
+    border: 2px solid ${oc.gray[4]};
+    border-radius: 3px;
+    width: 200px;
+    height: 40px;
+    padding-left: 10px;
+    margin-left: 10px;
 `;
 
 const Text = styled.span`
+    font-weight: 600;
+    color: ${oc.gray[7]};
     margin: 0 0 0 25px;
     float: left;
-    z-index: 2;
+    width: 100px;
+    text-align: left;
 `;
 
 const Alert = styled.div`
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: ${oc.gray[8]}
   `;
-const Login = styled(Link)`
-  `;
-const Btn = styled.div`
-  `;
+  
+const BtnField = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 15px
+`;
 
 const UpdateBtn = styled.button`
-  appearance: none;
-  font-family: 'Big Shoulders Stencil Display', cursive;
-  font-size: 1.0em;
-  border: none;
-  cursor: pointer;
-  border-radius: 10px;
+    width: 150px;
+    height: 35px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    color: white;
+    background: ${oc.indigo[4]};
+    margin-right: 10px;
+
+    &:hover {
+        background: ${oc.gray[5]}
+    }
   `;
+
+const WithdrawalBtn = styled.button`
+    width: 100px;
+    height: 35px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    color: white;
+    background: ${oc.red[5]};
+    margin-left: 10px;
+
+    &:hover {
+        background: ${oc.gray[5]}
+    }
+`;
 
 function UpdateUserPage() {
   const history = useHistory();
@@ -157,7 +197,7 @@ function UpdateUserPage() {
     ErrorPassword: '',
   })
   const { ErrorAll, ErrorUsername, ErrorPassword } = errorInputs;
-  const [imgBase64, setImgBase64] = useState("");
+  const [imgBase64, setImgBase64] = useState('');
   const [imgFile, setImgFile] = useState(null);
   
   const onChange = (e) => {
@@ -227,7 +267,7 @@ function UpdateUserPage() {
           //console.log('base64 = ', base64data);
           
           axios
-            .put(`${server}/userupdate`,
+            .put(`${server}/s3upload`,
               handleDataForm(base64data),
               {
                 headers: {
@@ -236,8 +276,18 @@ function UpdateUserPage() {
                 withCredentials: true,
               })
             .then(res => {
-              alert(res.data.message);
-              history.push(`/mypage`)
+              //alert(res.data.message);
+              const photo = res.data.key;
+
+              axios
+                .put(`${server}/userupdate`, {
+                  userId: state.id,
+                  username: Username,
+                  password: Password,
+                  photo: photo,
+                  description: Description
+                })
+              //history.push(`/mypage`)
             })
             .catch(err => console.log(err))
         }
@@ -286,21 +336,23 @@ function UpdateUserPage() {
       <Title>User Information</Title>
       <Field>
         <LeftField>
-          <ImgField>
-            <img src={imgBase64} />
-          </ImgField>
-          <UploadLink htmlFor="imgFile"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNSA0aC0zdi0xaDN2MXptOCA2Yy0xLjY1NCAwLTMgMS4zNDYtMyAzczEuMzQ2IDMgMyAzIDMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zem0xMS01djE3aC0yNHYtMTdoNS45M2MuNjY5IDAgMS4yOTMtLjMzNCAxLjY2NC0uODkxbDEuNDA2LTIuMTA5aDhsMS40MDYgMi4xMDljLjM3MS41NTcuOTk1Ljg5MSAxLjY2NC44OTFoMy45M3ptLTE5IDRjMC0uNTUyLS40NDctMS0xLTFzLTEgLjQ0OC0xIDEgLjQ0NyAxIDEgMSAxLS40NDggMS0xem0xMyA0YzAtMi43NjEtMi4yMzktNS01LTVzLTUgMi4yMzktNSA1IDIuMjM5IDUgNSA1IDUtMi4yMzkgNS01eiIvPjwvc3ZnPg=="/></UploadLink>
+          <ProfileImg>
+            <div src={imgBase64} />
+            <UploadLink htmlFor="imgFile">
+              <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNSA0aC0zdi0xaDN2MXptOCA2Yy0xLjY1NCAwLTMgMS4zNDYtMyAzczEuMzQ2IDMgMyAzIDMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zem0xMS01djE3aC0yNHYtMTdoNS45M2MuNjY5IDAgMS4yOTMtLjMzNCAxLjY2NC0uODkxbDEuNDA2LTIuMTA5aDhsMS40MDYgMi4xMDljLjM3MS41NTcuOTk1Ljg5MSAxLjY2NC44OTFoMy45M3ptLTE5IDRjMC0uNTUyLS40NDctMS0xLTFzLTEgLjQ0OC0xIDEgLjQ0NyAxIDEgMSAxLS40NDggMS0xem0xMyA0YzAtMi43NjEtMi4yMzktNS01LTVzLTUgMi4yMzktNSA1IDIuMjM5IDUgNSA1IDUtMi4yMzkgNS01eiIvPjwvc3ZnPg=="/>
+            </UploadLink>
+          </ProfileImg>
           <Upload id="imgFile" type="file" name="image" accept="image/jpeg" onChange={handleImage}></Upload>
-          <DesField name="Description" onChange={onChange}></DesField>
+          <DesField name="Description" defaultValue={state.description} onChange={onChange}></DesField>
         </LeftField>
         <RightField>
           <UpdateField>
-            <Text>Email:</Text>
+            <Text>Email</Text>
             <EmailBody>{state.email}</EmailBody>
           </UpdateField>
           <UpdateField>
-            <Text>Username:</Text>
-            <UsernameBody name="Username" defaultValue={state.username} onChange={onChange}></UsernameBody>
+            <Text>Username</Text>
+            <Input name="Username" defaultValue={state.username} onChange={onChange}></Input>
             <Route
               render={() => {
                 if (ErrorUsername !== '') {
@@ -312,26 +364,26 @@ function UpdateUserPage() {
             />
           </UpdateField>
           <UpdateField>
-            <Text>Password:</Text>
-            <PasswordBody name="Password" onChange={onChange}></PasswordBody>
+            <Text>Password</Text>
+            <Input name="Password" type="password" onChange={onChange}></Input>
           </UpdateField>
           <UpdateField>
-            <Text>Confirm:</Text>
-            <ConfirmPasswordBody name="ConfirmPassword" onChange={onChange}></ConfirmPasswordBody>
+            <Text>Confirm</Text>
+            <Input name="ConfirmPassword" type="password" onChange={onChange}></Input>
             <Route
               render={() => {
-                if (ErrorPassword !== '') {
+                if (ErrorUsername !== '') {
                   return (
-                    <Alert>{ErrorPassword}</Alert>
+                    <Alert>{ErrorUsername}</Alert>
                   );
                 }
               }}
             />
           </UpdateField>
-          <Btn>
-            <UpdateBtn>회원탈퇴</UpdateBtn>
+          <BtnField>
             <UpdateBtn onClick={handleUpdate}>수정</UpdateBtn>
-          </Btn>
+            <WithdrawalBtn>회원탈퇴</WithdrawalBtn>
+          </BtnField>
         </RightField>
       </Field>
     </UpdateBody>

@@ -288,7 +288,7 @@ function MyPage() {
                     {cardSortOptions}
                 </SelectCardSort>
                 <UserInfo>
-                    <User_ProfileImg src={s3ImageURl + userInfo.photo}/>
+                    <User_ProfileImg src={s3ImageURl + '/' + userInfo.photo}/>
                     <User_Name>{userInfo.username}</User_Name>
                     <User_Description>{userInfo.description}</User_Description>
                     <User_UpdateButton onClick={handleUpdateUser}>수정하기</User_UpdateButton>
