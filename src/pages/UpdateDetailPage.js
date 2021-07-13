@@ -423,6 +423,7 @@ function UpdateDetailPage() {
                                 },
                             })
                         .then((res) => {
+                            console.log('key', res.data.key)
                             // stateupdate
                             setPhoto([...photo, res.data.key])
                         })
@@ -578,7 +579,7 @@ function UpdateDetailPage() {
                             )
                         })}
                     </PhotoBox>
-                    <FriendBox>
+                    <FriendBox onClick={handleOpenModal}>
                         {dailyCard.friends.map((el, index) => {
                             return (
                                 <Friend>

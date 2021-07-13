@@ -259,6 +259,9 @@ function UpdateUserPage() {
           withCredentials: true,
         },
       })
+      .then((res) => {
+        history.push('/mypage')
+      })
 
   }
 

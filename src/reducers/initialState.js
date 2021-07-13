@@ -4,10 +4,10 @@ export const initialState = {
         id: '',
         email: '',
         username: 'guest',
-        photo: '',
+        photo: null,
         description: '',
     },
-    region : '',
+    region : { 'x': null, 'y': null},
     selections: [],
     friend: {
         id: '',
@@ -21,7 +21,7 @@ export const initialState = {
             id: 1,
             date: '2021-07-02',
             userId: 3,
-            photo: 'photo',
+            photo: null,
             selections: [
                 { place_name: "스타벅스" },
                 { place_name: "현대미술관" },
@@ -31,7 +31,7 @@ export const initialState = {
             id:2,
             date: '2021-07-03',
             userId: 4,
-            photo: 'photo',
+            photo: null,
             selections: [
                 { place_name: "MoMa" },
                 { place_name: "Whitney Museum" },
@@ -41,7 +41,7 @@ export const initialState = {
             id: 3,
             date: '2021-07-04',
             userId: 3,
-            photo: 'photo',
+            photo: null,
             selections: [
                 { place_name: "MoMa" },
                 { place_name: "Whitney Museum" },
@@ -51,7 +51,7 @@ export const initialState = {
             id:4,
             date: '2021-07-05',
             userId: 5,
-            photo: 'photo',
+            photo: null,
             selections: [
                 { place_name: "MoMa" },
                 { place_name: "Whitney Museum" },
@@ -61,7 +61,7 @@ export const initialState = {
             id: 5,
             date: '2021-07-06',
             userId: 3,
-            photo: 'photo',
+            photo: null,
             selections: [
                 { place_name: "MoMa" },
                 { place_name: "Whitney Museum" },
@@ -71,7 +71,7 @@ export const initialState = {
             id:6,
             date: '2021-07-07',
             userId: 3,
-            photo: 'photo',
+            photo: null,
             selections: [
                 { place_name: "MoMa" },
                 { place_name: "Whitney Museum" },
