@@ -22,3 +22,15 @@ body {
   box-sizing: inherit;
 }
 
+@media (max-width: 2048px) {
+  #DetailBody {
+    width : 60%;
+  }
+}
+
+@media (max-width: 1024px) {
+  #DetailBody {
+    width : 95%;
+  }
+}
+
