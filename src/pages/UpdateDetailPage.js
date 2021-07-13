@@ -358,6 +358,8 @@ function UpdateDetailPage() {
         //저장할 때 state의 friend를 초기화시켜줘야 합니다
         dispatch(setFriend({}));
         history.push('/showdetail');
+    }
+
     const [ photo, setPhoto ] = useState(dailyCard.photo);
     const [imgBase64, setImgBase64] = useState("");
     const [imgFile, setImgFile] = useState(null);
@@ -416,7 +418,7 @@ function UpdateDetailPage() {
                 reader.readAsDataURL(res);
                 reader.onloadend = () => {
                     const base64data = reader.result;
-                    setPhoto([...photo, reader.result])
+                    //([...photo, reader.result])
 
                     axios
                         .put(`${server}/s3upload`,
@@ -428,8 +430,9 @@ function UpdateDetailPage() {
                                 },
                             })
                         .then((res) => {
+                            console.log('key', res.data.key)
                             // stateupdate
-                            // setPhoto([...photo, reader.result])
+                            setPhoto([...photo, res.data.key])
                         })
                 };
             })

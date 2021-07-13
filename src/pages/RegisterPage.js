@@ -145,6 +145,10 @@ const SearchResults = styled.div`
 
 const SelectCategory = styled.select`
     border-radius: 3px;
+    border: 3px solid black;
+    font-weight: 600;
+    width: 80px;
+    height: 30px;
     z-index: 10;
     top: 0;
 `;
@@ -258,7 +262,7 @@ const CreateCardButton = styled.button`
 
 const Search_wrap = styled.div`
     width: 35%;
-    height: 100vh;
+    height: 90vh;
     background: white;
     float: left;
     display: flex;
@@ -300,7 +304,7 @@ function RegisterPage() {
         event.preventDefault();
         event.target.style.border = 'none';
         
-        const draggedDataId = event.dataTransfer.getData('text');
+        const draggedDataId = Number(event.dataTransfer.getData('text'));
         for(let i=0; i<places.length; i++) {
             if (places[i].id === draggedDataId && !selections.includes(places[i])) {
                 setSelections(selections => [...selections, places[i]]);
@@ -314,7 +318,7 @@ function RegisterPage() {
     const infowindow = new kakao.maps.InfoWindow({zIndex:1});
     const geocoder = new kakao.maps.services.Geocoder();
     const [map, setMap] = useState('')
-    const [[lat, lng], setLatLng] = useState([region.y, region.x]||[37.566826, 126.9786567]); // y, x
+    const [[lat, lng], setLatLng] = useState([region.y || 37.566826, region.x || 126.9786567]); // y, x
     const [positionMarker, setPositionMarker] = useState('');
     const [selectionMarkers, setSelectionMarkers] = useState([]);
     const [placeMarkers, setPlaceMarkers] =useState([]);
@@ -433,7 +437,8 @@ function RegisterPage() {
         if(confirm("일정을 등록하시겠습니까?")){
             if(!isLogin) {
                 if (confirm("로그인 후 이용가능합니다. 로그인하시겠습니까?") === true) {
-                    history.push('/login');
+                    document.querySelector('.modal_wrap').style.display ='block';
+                    document.querySelector('.black_bg').style.display ='block';
                 }
             } else {
                 axios.put(`${server}/createcard`,
@@ -441,10 +446,10 @@ function RegisterPage() {
                         'Content-Type': 'application/json',
                         withCredentials: true,
                     }, {
-                    date: inputDate,
-                    userId: userInfo.id,
-                    selections: selections,
-                })
+                        date: inputDate,
+                        userId: userInfo.id,
+                        selections: selections,
+                    })
                     .then(res => {
                         if (confirm("마이페이지로 이동하시겠습니까?") === true) {
                             history.push('/mypage');
@@ -559,6 +564,10 @@ function RegisterPage() {
                 map: map,
                 position: coords,
                 image: markerImage
+            });
+
+            kakao.maps.event.addListener(marker, 'click', function () {
+                handleRemoveSelection(selection);
             });
 
             markers = [...markers, marker];

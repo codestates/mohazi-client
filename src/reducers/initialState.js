@@ -7,7 +7,7 @@ export const initialState = {
         photo: '',
         description: '',
     },
-    region : '',
+    region : { 'x': null, 'y': null},
     selections: [],
     friend: {
         id: '',
