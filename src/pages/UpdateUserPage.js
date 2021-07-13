@@ -192,6 +192,7 @@ function UpdateUserPage() {
       handleError('ErrorUsername', '')
     }
   }, [Username])
+  
   const handleSubmit = () => {
     console.log("압축 시작");
 
@@ -200,7 +201,6 @@ function UpdateUserPage() {
       maxWidthOrHeight: 1920,
       useWebWorker: true,
     };
-
 
     imageCompression(imgFile, options)
       .then(res => {
@@ -236,19 +236,23 @@ function UpdateUserPage() {
       })
       .catch(e => console.log(e));
   }
+
   const handleDataForm = (dataURI) => {
     const byteString = atob(dataURI.split(",")[1]);
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
+
     for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
+
     const blob = new Blob([ia], { type: "image/jpeg" });
     const file = new File([blob], "image.jpg");
     console.log('file = ', file);
 
     const formData = new FormData();
     formData.append("image", file);
+
     for (const prop in inputs) {
       console.log('prop = ', prop, inputs[prop])
       formData.append(prop, inputs[prop]);
@@ -259,6 +263,7 @@ function UpdateUserPage() {
     }
     return formData;
   };
+
   const handleImage = (event) => {
     let reader = new FileReader();
     console.log('e = ', event.target.files[0]);
@@ -271,6 +276,7 @@ function UpdateUserPage() {
       setImgFile(event.target.files[0]);
     }
   };
+
   return (
     <UpdateBody>
       <Logo to='landing'>MOHAZI</Logo>

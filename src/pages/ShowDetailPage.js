@@ -14,7 +14,6 @@ const Body = styled.div`
 
 const DetailBody = styled.div`
     box-sizing: border-box;
-    width: 60%;
     height: 100%;
     margin: 0 auto;
     border: 1px solid white;
@@ -27,7 +26,7 @@ const DetailBody = styled.div`
 const DetailTitle = styled.div`
     font-family: 'Fjalla One', sans-serif;
     font-size: 4em;
-    margin: 100px 0 20px 150px;
+    margin: 120px 0 20px 150px;
 `;
 
 const Box = styled.div`
@@ -35,17 +34,26 @@ const Box = styled.div`
     width: 80%;
     height: 80%;
     display: flex;
-    border: 1px solid black;
 `;
 
 const LeftBox = styled.div`
     margin: 10px;
     width: 65%;
-    border: 1px solid black;
+    position: relative;
+`;
+
+const LeftTitle = styled.div`
+    position: absolute;
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 1.5em;
+    top: -15px;
+    left: 20px;
 `;
 
 const SelectionBox = styled.div`
-    border: 1px solid black;
+    margin: 0 0 0 50px;
+    border-radius: 20px;
+    border: 2px solid black;
     position: relative;
 `;
 
@@ -87,7 +95,7 @@ const PostItNum = styled.h2`
 `;
 
 const PostIt2 = styled.div`
-    width: 250px;
+    width: 40%;
     height: 50px;
     border: 1px solid black;
     background-color: ${oc.gray[3]};
@@ -97,112 +105,200 @@ const PostIt2 = styled.div`
 const PostItTitle = styled.h2`
     margin: 5px;
     height: 50px;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 2.2em;
 `;
 
 const PostItBtn = styled.button`
     width: 20px;
     height: 20px;
+    margin: 15px auto;
 
 `;
 
-const HoverBox = styled.div`
-    width: 80%;
-    border: 1px solid black;
-    margin: 20px 0 0 50px;
-    border-radius: 20px;
-
-`;
-
-const HoverTitle = styled.div`
-
-`;
-
-const HoverAdd = styled.div`
-
-`;
-
-const HoverPhone = styled.div`
-
+const MemoBox = styled.div`
+    width: 80%;   
+    margin: 20px 0 0 50px;   
 `;
 
 const PostItMemo = styled.div`
-    height: 120px;
     white-space: pre-line;
-    overflow-y: auto;
+    
+    & > * {
+        font-family: 'Nanum Pen Script', cursive;
+        font-size: 1.7em;
+    }
 `;
 
 const Memo1 = styled.h4`
     margin: 5px;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 2em;
+`;
+
+const Memo2Box = styled.div`
+    height: 120px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar{
+        width: 5px;
+      }
+
+    &::-webkit-scrollbar-thumb{
+        background-color: ${oc.gray[7]};
+
+      }
+
+    &::-webkit-scrollbar-track{
+        background: transparent;
+      }
 `;
 
 const Memo2 = styled.h5`
     margin: 5px;
 `;
 
+const HoverBox = styled.div`
+    margin: 5px;
+    width: 95%;
+    display: none;
+    & > * {
+        margin: 5px;
+    }
+`;
+
+const HoverTitle = styled.h5`
+
+`;
+
+const HoverAdd = styled.h5`
+
+`;
+
+const HoverPhone = styled.h5`
+
+`;
+
 const RightBox = styled.div`
+    position: relative;    
     margin: 10px;
-    width: 35%;
-    border: 1px solid black;
+    width: 35%; 
+`;
+
+const RightTitle1 = styled.div`
+    position: absoulte;
+    top: 20px;
 `;
 
 const PhotoBox = styled.div`
-    margin: auto;
-    border: 1px solid black;
+    margin: 0px auto;
+    border: 2px solid black;
     border-radius: 20px;
-    overflow-x: auto;
-    display: flex;
-    flex-wrap: wrap;
+    overflow-y: auto;
     text-align: center;
     width: 100%;
+    height: 600px;
 
+    &::-webkit-scrollbar{
+        width: 5px;
+        height: 100px;
+      }
+
+    &::-webkit-scrollbar-thumb{
+        background-color: ${oc.gray[7]};
+        border-radius: 30px;
+      }
+
+    &::-webkit-scrollbar-track{
+        background: transparent;
+      }
+
+    &::-webkit-scrollbar-track-piece:end {
+        background: transparent;
+        margin-bottom: 15px;
+    }
+
+    &::-webkit-scrollbar-track-piece:start {
+        background: transparent;
+        margin-top: 15px;
+    }
 `;
 
 const Photo = styled.div`
     width: 90%;
-    margin: 5px auto;
-    border: 1px solid black;
-    heigth: 160px;
-    padding: 5px;
-
+    height: 150px;
+    margin: 10px auto;
+    border-radius: 20px;
 `;
 
 const PhotoImg = styled.img`
-    width: 90%;
-    heigth: 150px;
-    object-fit: fill;
+    border-radius: 20px;
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
 `;
 
 
 const FriendBox = styled.div`
-    margin: auto;
-    border: 1px solid black;
-    border-radius: 20px;
-    overflow-x: auto;
+    margin: 10px auto;
+    overflow-y: auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     text-align: center;
+    width: 100%;
+    height: 320px;
+    border: 2px solid black;
+    border-radius: 20px;
+
+    &::-webkit-scrollbar{
+        width: 5px;
+        height: 100px;
+      }
+
+    &::-webkit-scrollbar-thumb{
+        background-color: ${oc.gray[7]};
+        border-radius: 30px;
+      }
+
+    &::-webkit-scrollbar-track{
+        background: transparent;
+      }
+
+    &::-webkit-scrollbar-track-piece:end {
+        background: transparent;
+        margin-bottom: 15px;
+    }
+
+    &::-webkit-scrollbar-track-piece:start {
+        background: transparent;
+        margin-top: 15px;
+    }
 
 `;
 
 const Friend = styled.div`
-    margin: 5px;
+    margin: 10px;
     position: relative;
 `;
 
 const FriendPhoto = styled.div`
-    width: 80px;
+    width: 90px;
 `;
 
 const FriendPhotoImg = styled.img`
     width: 75px;
     height: 75px;
     border-radius: 50%;
+    border: 1px solid black;
 `;
 
 const FriendName = styled.div`
-    position: absolute;
-    top: 68px;
+
+`;
+
+const Btn = styled.button`
+
 `;
 
 
@@ -232,11 +328,12 @@ function ShowDetailPage() {
         }
     }
 
+    console.log(window.innerWidth)
 
     return (
         <Body>
-        <DetailBody>
-            <DetailTitle>Daily Note</DetailTitle>
+        <DetailBody id="DetailBody">
+            <DetailTitle>Daily Note: {dailyCard.date}</DetailTitle>
             <Box>
                 <LeftBox>
                     <SelectionBox>
@@ -252,12 +349,20 @@ function ShowDetailPage() {
                                             <PostItBtn id={`PostItBtn${index}`} onClick={(e) => ShowHoverEvent(e, index)}>O</PostItBtn>
                                         </PostIt2>
                                     </PostIt>
-                                    <HoverBox id={`HoverBox${index}`}>
+                                    <MemoBox>
                                         <Memo1>Memo: </Memo1>
                                         <PostItMemo>
-                                            <Memo2>{el.memo}</Memo2>
+                                            <Memo2Box id="Memo2Box">
+                                                <Memo2>{el.memo}</Memo2>
+                                            </Memo2Box>                
+                                            <HoverBox id={`HoverBox${index}`}>
+                                                <h4>-Info-</h4>
+                                                <HoverTitle>name: {el.type_id.name}</HoverTitle>
+                                                <HoverPhone>phone: {el.type_id.phone}</HoverPhone>
+                                                <HoverAdd>add: {el.type_id.address}</HoverAdd>
+                                            </HoverBox>
                                         </PostItMemo>
-                                    </HoverBox>
+                                    </MemoBox>
                                 </Selection>
                             )
                         })}
@@ -288,6 +393,7 @@ function ShowDetailPage() {
                             )
                         })}
                     </FriendBox>
+                    <Btn onClick={GoUpdateDetail}>수정완료</Btn>
                 </RightBox>
             </Box>
         </DetailBody>
