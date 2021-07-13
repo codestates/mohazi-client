@@ -374,11 +374,6 @@ function UpdateDetailPage() {
             PhotoUpload();
         }
     }, [imgFile])
-
-    useEffect(() => {
-        
-        console.log(memo)
-    }, [memo])
       
     const ShowHoverEvent = (e, index) => {
         console.log('a');
@@ -411,14 +406,12 @@ function UpdateDetailPage() {
             useWebWorker: true,
         };
 
-        console.log(imgFile);
         imageCompression(imgFile, options)
             .then((res) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(res);
                 reader.onloadend = () => {
                     const base64data = reader.result;
-                    //([...photo, reader.result])
 
                     axios
                         .put(`${server}/s3upload`,

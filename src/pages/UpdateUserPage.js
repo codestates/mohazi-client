@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { Link, withRouter, Route, useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
 import imageCompression from "browser-image-compression";
@@ -54,17 +54,13 @@ const ProfileImg = styled.div`
     display:flex;
     justify-content: center;
     align-items: center;
-
-   > div {
-    border-radius: 50%;
-    background-color: gray;
-    height:200px;
-    width:200px;
-    margin: 30px auto;
-    border: ${oc.gray[4]}
-   }
 `;
 
+const Img = styled.img`
+    height:200px;
+    width:200px;
+    border-radius: 50%;
+`;
 const Upload = styled.input`
    display: none;
 `;
@@ -80,10 +76,10 @@ const UploadLink = styled.label`
 `;
 
 const DesField = styled.input`
-  border: none;
-  width: 80%;
-  height: 80px;
-  background: gray;
+    border: none;
+    width: 80%;
+    height: 80px;
+    background: gray;
 `;
 
 const RightField = styled.div`
@@ -179,17 +175,20 @@ const WithdrawalBtn = styled.button`
 `;
 
 function UpdateUserPage() {
+
   const history = useHistory();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.userInfo)
+  const [ photo, setPhoto ] = useState(state.photo);
   const [inputs, setInputs] = useState({
     UserId: state.id,
     Email: state.email,
     Username: state.username,
-    Password: '',
-    ConfirmPassword: '',
+    Password: null,
+    ConfirmPassword: null,
     Description: '',
   })
+
   const { Email, Password, ConfirmPassword, Username, Description } = inputs;
   const [errorInputs, setErrorInputs] = useState({
     ErrorAll: '',
@@ -199,33 +198,18 @@ function UpdateUserPage() {
   const { ErrorAll, ErrorUsername, ErrorPassword } = errorInputs;
   const [imgBase64, setImgBase64] = useState('');
   const [imgFile, setImgFile] = useState(null);
-  
-  const onChange = (e) => {
-    const { value, name } = e.currentTarget;
-    setInputs({
-      ...inputs,
-      [name]: value,
-    })
-  }
-
-  const handleError = (name, value) => {
-    setErrorInputs({
-      ...errorInputs,
-      [name]: value,
-    })
-  }
-  const handleUpdate = () => {
-    console.log('Email', Email, 'Username', Username, 'Password', Password, 'Description', Description);
-    const isTrue = Username !== '' && Password !== '';
-    if (!isTrue) {
-      handleError('ErrorAll', '모든 항목을 입력하지 않았습니다.')
-    } else {
-      handleError('ErrorAll', '')
-      handleSubmit();
-    }
-  }
+  const mount = useRef(false);
   // 정규식
   const checkWord = /\W/;
+
+  useEffect(() => {
+      
+      if(!mount.current){
+          mount.current = true;
+      } else {
+          PhotoUpload();
+      }
+  }, [imgFile])
   
   useEffect(() => {
     if (Password !== ConfirmPassword) {
@@ -246,9 +230,42 @@ function UpdateUserPage() {
       handleError('ErrorUsername', '')
     }
   }, [Username])
-  
-  const handleSubmit = () => {
-    //console.log("압축 시작");
+
+  const onChange = (e) => {
+    const { value, name } = e.currentTarget;
+    setInputs({
+      ...inputs,
+      [name]: value,
+    })
+  }
+
+  const handleError = (name, value) => {
+    setErrorInputs({
+      ...errorInputs,
+      [name]: value,
+    })
+  }
+  const handleUpdate = () => {
+
+    axios
+      .put(`${server}/userupdate`, {
+        userId: state.id,
+        username: Username,
+        password: Password,
+        photo: photo,
+        description: Description,
+        headers: {
+          'Content-Type': 'application/json',
+          withCredentials: true,
+        },
+      })
+      .then((res) => {
+        history.push('/mypage')
+      })
+
+  }
+
+  const PhotoUpload = (event) => {
 
     const options = {
       maxSizeMB: 0.2,
@@ -257,46 +274,27 @@ function UpdateUserPage() {
     };
 
     imageCompression(imgFile, options)
-    .then(res => {
-        //console.log('test=', res);
+      .then((res) => {
         const reader = new FileReader();
-        
         reader.readAsDataURL(res);
         reader.onloadend = () => {
           const base64data = reader.result;
-          //console.log('base64 = ', base64data);
-          
+
           axios
             .put(`${server}/s3upload`,
               handleDataForm(base64data),
               {
                 headers: {
                   'Content-Type': 'multipart/form-data',
+                  withCredentials: true,
                 },
-                withCredentials: true,
               })
-            .then(res => {
-              //alert(res.data.message);
-              const photo = res.data.key;
-
-              axios
-                .put(`${server}/userupdate`, {
-                  userId: state.id,
-                  username: Username,
-                  password: Password,
-                  photo: photo,
-                  description: Description
-                },{
-                  'content-type': 'application/json',
-                  withCredentials: true
-                })
-                .then(res => console.log('update success',res.data.message))
-              //history.push(`/mypage`)
+            .then((res) => {
+              // stateupdate
+              setPhoto([...photo, res.data.key])
             })
-            .catch(err => console.log(err))
-        }
+        };
       })
-      .catch(err => console.log(err));
   }
 
   const handleDataForm = (dataURI) => {
@@ -315,11 +313,6 @@ function UpdateUserPage() {
     const formData = new FormData();
     formData.append("image", file);
 
-    // for (const prop in inputs) {
-    //   console.log('prop = ', prop, inputs[prop])
-    //   formData.append(prop, inputs[prop]);
-
-    // }
     for (var pair of formData.entries()) {
       console.log(pair[0] + ', ' + pair[1]);
     }
@@ -327,8 +320,8 @@ function UpdateUserPage() {
   };
 
   const handleImage = (event) => {
+
     let reader = new FileReader();
-    console.log('e = ', event.target.files[0]);
     reader.onloadend = (e) => {
       const base64 = reader.result;
       if (base64) setImgBase64(base64.toString());
@@ -345,7 +338,8 @@ function UpdateUserPage() {
       <Field>
         <LeftField>
           <ProfileImg>
-            <div src={imgBase64} />
+            <Img src ={s3ImageURl + photo}/>
+
             <UploadLink htmlFor="imgFile">
               <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNSA0aC0zdi0xaDN2MXptOCA2Yy0xLjY1NCAwLTMgMS4zNDYtMyAzczEuMzQ2IDMgMyAzIDMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zem0xMS01djE3aC0yNHYtMTdoNS45M2MuNjY5IDAgMS4yOTMtLjMzNCAxLjY2NC0uODkxbDEuNDA2LTIuMTA5aDhsMS40MDYgMi4xMDljLjM3MS41NTcuOTk1Ljg5MSAxLjY2NC44OTFoMy45M3ptLTE5IDRjMC0uNTUyLS40NDctMS0xLTFzLTEgLjQ0OC0xIDEgLjQ0NyAxIDEgMSAxLS40NDggMS0xem0xMyA0YzAtMi43NjEtMi4yMzktNS01LTVzLTUgMi4yMzktNSA1IDIuMjM5IDUgNSA1IDUtMi4yMzkgNS01eiIvPjwvc3ZnPg=="/>
             </UploadLink>
@@ -358,6 +352,7 @@ function UpdateUserPage() {
             <Text>Email</Text>
             <EmailBody>{state.email}</EmailBody>
           </UpdateField>
+
           <UpdateField>
             <Text>Username</Text>
             <Input name="Username" defaultValue={state.username} onChange={onChange}></Input>
@@ -371,6 +366,7 @@ function UpdateUserPage() {
               }}
             />
           </UpdateField>
+
           <UpdateField>
             <Text>Password</Text>
             <Input name="Password" type="password" onChange={onChange}></Input>
