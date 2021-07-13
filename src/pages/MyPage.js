@@ -4,17 +4,18 @@ import oc from 'open-color';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setCards, setCard } from '../actions/actions.js';
+import { setCards, setCard, userUpdate } from '../actions/actions.js';
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
+const s3ImageURl = process.env.REACT_APP_S3_IMAGE_URL;
 
 const Title = styled.div`
     width: 100%;
     text-align: center;
     padding: 20px;
     font-size: 5rem;
-    background: white;
+    background: ivory;
     font-family: 'Fjalla One', sans-serif;
     color: ${oc.yellow[4]};
 `;
@@ -250,6 +251,16 @@ function MyPage() {
     }
 
     useEffect(() => {
+        //유저정보 불러오기
+        axios
+            .get(`${server}/usersearch`,
+                {
+                    params: { email: userInfo.email, }
+                })
+            .then(res => {
+                console.log(res.data.userInfo);
+                dispatch(userUpdate(res.data.userInfo))
+            })
         //카드정보 불러오기
         // axios
         //     .get(`${server}/mypage`,
@@ -269,11 +280,6 @@ function MyPage() {
         setVisibleCards(dailyCards);
     }, [dailyCards])
 
-    function handleImageURL(image) {
-        console.log(image);
-        return `../../mohazi-server/uploads/${image}`
-      }
-
     return (
         <div>
             <Title>Mypage</Title>
@@ -282,7 +288,7 @@ function MyPage() {
                     {cardSortOptions}
                 </SelectCardSort>
                 <UserInfo>
-                    <User_ProfileImg src={handleImageURL(userInfo.photo)}/>
+                    <User_ProfileImg src={s3ImageURl + userInfo.photo}/>
                     <User_Name>{userInfo.username}</User_Name>
                     <User_Description>{userInfo.description}</User_Description>
                     <User_UpdateButton onClick={handleUpdateUser}>수정하기</User_UpdateButton>
