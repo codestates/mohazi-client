@@ -8,7 +8,10 @@ export const initialState = {
         description: '',
     },
     region : { 'x': null, 'y': null},
-    selections: [],
+    selections: [{
+        dailyCardId: '',
+        type: ''
+    }],
     friend: {
         id: '',
         email: '',
