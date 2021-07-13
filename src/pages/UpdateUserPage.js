@@ -244,19 +244,23 @@ function UpdateUserPage() {
       })
       .catch(err => console.log(err));
   }
+
   const handleDataForm = (dataURI) => {
     const byteString = atob(dataURI.split(",")[1]);
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
+
     for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
+
     const blob = new Blob([ia], { type: "image/jpeg" });
     const file = new File([blob], "image.jpg");
     console.log('file = ', file);
 
     const formData = new FormData();
     formData.append("image", file);
+
     for (const prop in inputs) {
       console.log('prop = ', prop, inputs[prop])
       formData.append(prop, inputs[prop]);
