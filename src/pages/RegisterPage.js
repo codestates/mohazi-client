@@ -441,16 +441,16 @@ function RegisterPage() {
                     document.querySelector('.black_bg').style.display ='block';
                 }
             } else {
-                axios.put(`${server}/createcard`,
-                    {
-                        'Content-Type': 'application/json',
-                        withCredentials: true,
-                    }, {
+                axios.put(`${server}/createcard`, {
                         date: inputDate,
                         userId: userInfo.id,
                         selections: selections,
+                    },{
+                        'Content-Type': 'application/json',
+                        withCredentials: true,
                     })
                     .then(res => {
+                        console.log(res)
                         if (confirm("마이페이지로 이동하시겠습니까?") === true) {
                             history.push('/mypage');
                         }
