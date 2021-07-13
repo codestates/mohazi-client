@@ -137,6 +137,7 @@ function SearchUserModal() {
     const [inputValue, setInputValue] = useState(null);
     const state = useSelector(state => state);
     const { dailyCard } = state; //친구를 추가하고 싶은 데일리 카드
+    const defaultProfileImg = '/img/default_profile_img.png'
 
     function handleOpenModal() {
         document.querySelector('.search_user_modal').style.display ='block';
@@ -158,6 +159,7 @@ function SearchUserModal() {
 
     function handleSelectUser(event) {
         const friendId = event.target.id;
+        console.log('friendId', friendId);
         
         axios
             .put(`${server}/addfriend`,
@@ -183,14 +185,18 @@ function SearchUserModal() {
 
     function handleSearchUser() {
         axios
-            .get(`${server}/usersearch`,
+            .put(`${server}/usersearch`,
                 {
-                    params: { email: inputValue, }
-                })
+                    email: inputValue,
+                },{
+                    'content-type': 'application/json',
+                    withCredentials: true
+                }
+                )
             .then(res => {
                 console.log(res.data)
                 //let users = res.data.userInfo;
-                setUsers([res.data.userInfo]);
+                setUsers([...res.data.userInfo]);
             })
             .catch(err => {
                 setUsers([]);
@@ -201,7 +207,7 @@ function SearchUserModal() {
         if(users) {
             setShowUsers(users.map(user => 
                 <User id={user.id} onClick={handleSelectUser}>
-                    <img src={s3ImageURl + '/' + user.photo}/>
+                    <img src={user.photo? s3ImageURl + '/' + user.photo : defaultProfileImg}/>
                     <div>{user.username}</div>
                 </User>));
         }

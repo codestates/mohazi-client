@@ -175,6 +175,7 @@ const WithdrawalBtn = styled.button`
 `;
 
 function UpdateUserPage() {
+  const defaultProfileImg = '/img/default_profile_img.png'
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -245,9 +246,10 @@ function UpdateUserPage() {
       [name]: value,
     })
   }
+  
   const handleUpdate = () => {
-
-    axios
+    if(Password === ConfirmPassword) {
+      axios
       .put(`${server}/userupdate`, {
         userId: state.id,
         username: Username,
@@ -262,11 +264,13 @@ function UpdateUserPage() {
       .then((res) => {
         history.push('/mypage')
       })
+    } else {
+      alert('비밀번호가 일치하지 않습니다')
+    }
 
   }
 
   const PhotoUpload = (event) => {
-
     const options = {
       maxSizeMB: 0.2,
       maxWidthOrHeight: 1920,
@@ -291,7 +295,7 @@ function UpdateUserPage() {
               })
             .then((res) => {
               // stateupdate
-              setPhoto([...photo, res.data.key])
+              setPhoto(res.data.key)
             })
         };
       })
@@ -338,7 +342,7 @@ function UpdateUserPage() {
       <Field>
         <LeftField>
           <ProfileImg>
-            <Img src ={s3ImageURl + photo}/>
+            <Img src ={photo? s3ImageURl + '/' +photo: defaultProfileImg}/>
 
             <UploadLink htmlFor="imgFile">
               <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNSA0aC0zdi0xaDN2MXptOCA2Yy0xLjY1NCAwLTMgMS4zNDYtMyAzczEuMzQ2IDMgMyAzIDMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zem0xMS01djE3aC0yNHYtMTdoNS45M2MuNjY5IDAgMS4yOTMtLjMzNCAxLjY2NC0uODkxbDEuNDA2LTIuMTA5aDhsMS40MDYgMi4xMDljLjM3MS41NTcuOTk1Ljg5MSAxLjY2NC44OTFoMy45M3ptLTE5IDRjMC0uNTUyLS40NDctMS0xLTFzLTEgLjQ0OC0xIDEgLjQ0NyAxIDEgMSAxLS40NDggMS0xem0xMyA0YzAtMi43NjEtMi4yMzktNS01LTVzLTUgMi4yMzktNSA1IDIuMjM5IDUgNSA1IDUtMi4yMzkgNS01eiIvPjwvc3ZnPg=="/>
