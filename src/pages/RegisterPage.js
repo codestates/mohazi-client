@@ -105,7 +105,7 @@ const ContentBox_Selections = styled.div`
     overflow-y: auto;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-    }
+    
     ::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
     }
@@ -121,7 +121,7 @@ const ContentBox_Places = styled.div`
     overflow-y: auto;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-    }
+    
     ::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
     }

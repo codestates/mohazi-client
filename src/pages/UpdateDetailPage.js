@@ -586,7 +586,7 @@ function UpdateDetailPage() {
                             )
                         })}
                     </PhotoBox>
-                    <FriendBox>
+                    <FriendBox onClick={handleOpenModal}>
                         {dailyCard.friends.map((el, index) => {
                             return (
                                 <Friend>
