@@ -10,7 +10,6 @@ const { kakao } = window;
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
-const KakaoRestAPIKey = process.env.REACT_APP_KAKAO_MAP_RESTAPI_KEY;
 
 const Map = styled.div`
     float: right;
@@ -145,6 +144,10 @@ const SearchResults = styled.div`
 
 const SelectCategory = styled.select`
     border-radius: 3px;
+    border: 3px solid black;
+    font-weight: 600;
+    width: 80px;
+    height: 30px;
     z-index: 10;
     top: 0;
 `;
@@ -258,18 +261,18 @@ const CreateCardButton = styled.button`
 
 const Search_wrap = styled.div`
     width: 35%;
-    height: 100vh;
+    height: 90vh;
     background: white;
     float: left;
     display: flex;
-    flex-dirention: row;
+    flex-direction: row;
     align-items:center;
 `;
 
 function UpdateSelectionPage() {
     const state = useSelector(state => state);
     const history = useHistory();
-    const { isLogin, userInfo, region } = state;
+    const { region, dailyCard } = state;
 
     const onDragStart = (event) => {
         event.dataTransfer.setData('text/plain', event.target.id);
@@ -299,11 +302,12 @@ function UpdateSelectionPage() {
     const onDrop = (event) => {
         event.preventDefault();
         event.target.style.border = 'none';
-        
-        const draggedDataId = event.dataTransfer.getData('text');
+
+        const draggedDataId = Number(event.dataTransfer.getData('text'));
         for(let i=0; i<places.length; i++) {
             if (places[i].id === draggedDataId && !selections.includes(places[i])) {
-                setSelections(selections => [...selections, places[i]]);
+                setSelections([...selections, places[i]]);
+                console.log('selections', selections)
                 setPlaces(places.filter((place, index) => index !== i));
             }
         }
@@ -314,7 +318,7 @@ function UpdateSelectionPage() {
     const infowindow = new kakao.maps.InfoWindow({zIndex:1});
     const geocoder = new kakao.maps.services.Geocoder();
     const [map, setMap] = useState('')
-    const [[lat, lng], setLatLng] = useState([region.y, region.x]||[37.566826, 126.9786567]); // y, x
+    const [[lat, lng], setLatLng] = useState([region.y || 37.566826, region.x || 126.9786567]); // y, x
     const [positionMarker, setPositionMarker] = useState('');
     const [selectionMarkers, setSelectionMarkers] = useState([]);
     const [placeMarkers, setPlaceMarkers] =useState([]);
@@ -379,11 +383,6 @@ function UpdateSelectionPage() {
             'Content-Type': 'application/json',
             withCredentials: true,
         })
-        // axios({
-        //     method: 'GET',
-        //     url: `https://dapi.kakao.com/v2/local/search/keyword.json?query='스타'&category_group_code=${category}`,
-        //     headers: { Authorization: `KakaoAK ${KakaoRestAPIKey}` },
-        //   })
         .then(res => {
             setPlaces(res.data.items);
         })
@@ -392,11 +391,6 @@ function UpdateSelectionPage() {
 
     const onChangeKeyword = (event) => {
         setInputText(event.target.value);
-    }
-
-    const onChangeDate = (event) => {
-        setInputDate(event.target.value);
-        console.log(inputDate)
     }
 
     const handleRefresh = () => {
@@ -429,29 +423,21 @@ function UpdateSelectionPage() {
         });
     }
 
-    const handleCreateCard = () => {
-        if(confirm("일정을 등록하시겠습니까?")){
-            if(!isLogin) {
-                if (confirm("로그인 후 이용가능합니다. 로그인하시겠습니까?") === true) {
-                    history.push('/login');
-                }
-            } else {
-                axios.put(`${server}/createcard`,
-                    {
-                        'Content-Type': 'application/json',
-                        withCredentials: true,
-                    }, {
-                    date: inputDate,
-                    userId: userInfo.id,
+    const handleChangeSelections= () => {
+        if (confirm("일정을 수정하시겠습니까?")) {
+            axios
+                .put(`${server}/selectionupdate`, {
+                    dailycardId: dailyCard.id,
                     selections: selections,
+                }, {
+                    'Content-Type': 'application/json',
+                    withCredentials: true,
                 })
-                    .then(res => {
-                        if (confirm("마이페이지로 이동하시겠습니까?") === true) {
-                            history.push('/mypage');
-                        }
-                    })
-                    .catch(err => console.log(err))
-            }
+                .then(res => {
+                    console.log(res.data.message)
+                    history.push('/updatedetail');
+                })
+                .catch(err => console.log(err))
         }
     }
 
@@ -561,6 +547,10 @@ function UpdateSelectionPage() {
                 image: markerImage
             });
 
+            kakao.maps.event.addListener(marker, 'click', function () {
+                handleRemoveSelection(selection);
+            });
+
             markers = [...markers, marker];
         }
 
@@ -584,10 +574,10 @@ function UpdateSelectionPage() {
             </SearchBar>
             <Search_wrap>
                 <Selections>
-                    <h2 style={{margin: 5}}>오늘 뭐하지?</h2><br/>
+                    <h2 style={{margin: 5}}>일정 변경하기</h2><br/>
                     <div className='miniTitle'>
                         <span>날짜</span>
-                        <input type="date" value={inputDate} onChange={onChangeDate}/>
+                        <span>{dailyCard.date}</span>
                     </div><br/>
                     <div className='miniTitle'>
                         <span>위치</span>
@@ -602,7 +592,7 @@ function UpdateSelectionPage() {
                         >
                         {showSelections}
                     </ContentBox_Selections>
-                    <CreateCardButton onClick={handleCreateCard}>일정을 등록하세요</CreateCardButton>
+                    <CreateCardButton onClick={handleChangeSelections}>수정하기</CreateCardButton>
                     <img onClick={handleRefresh} src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTMuNSAyYy01LjYyMSAwLTEwLjIxMSA0LjQ0My0xMC40NzUgMTBoLTMuMDI1bDUgNi42MjUgNS02LjYyNWgtMi45NzVjLjI1Ny0zLjM1MSAzLjA2LTYgNi40NzUtNiAzLjU4NCAwIDYuNSAyLjkxNiA2LjUgNi41cy0yLjkxNiA2LjUtNi41IDYuNWMtMS44NjMgMC0zLjU0Mi0uNzkzLTQuNzI4LTIuMDUzbC0yLjQyNyAzLjIxNmMxLjg3NyAxLjc1NCA0LjM4OSAyLjgzNyA3LjE1NSAyLjgzNyA1Ljc5IDAgMTAuNS00LjcxIDEwLjUtMTAuNXMtNC43MS0xMC41LTEwLjUtMTAuNXoiLz48L3N2Zz4="/>
                 </Selections>
                 <SearchResults>

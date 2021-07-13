@@ -286,7 +286,11 @@ function UpdateUserPage() {
                   password: Password,
                   photo: photo,
                   description: Description
+                },{
+                  'content-type': 'application/json',
+                  withCredentials: true
                 })
+                .then(res => console.log('update success',res.data.message))
               //history.push(`/mypage`)
             })
             .catch(err => console.log(err))
@@ -311,11 +315,11 @@ function UpdateUserPage() {
     const formData = new FormData();
     formData.append("image", file);
 
-    for (const prop in inputs) {
-      console.log('prop = ', prop, inputs[prop])
-      formData.append(prop, inputs[prop]);
+    // for (const prop in inputs) {
+    //   console.log('prop = ', prop, inputs[prop])
+    //   formData.append(prop, inputs[prop]);
 
-    }
+    // }
     for (var pair of formData.entries()) {
       console.log(pair[0] + ', ' + pair[1]);
     }
