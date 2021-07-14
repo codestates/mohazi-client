@@ -307,7 +307,7 @@ function LoginModal({onSocial}) {
             })
           .then((res) => {
             //console.log('login', res.data)
-            dispatch(login(res.data.userinfo));
+            dispatch(login(res.data.userInfo));
           })
           .then(res => {
             //console.log('로그인에 성공했습니다');

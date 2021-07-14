@@ -2,9 +2,9 @@ export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const USERUPDATE = 'USERUPDATE';
 export const SETCARDS = 'SETCARDS';
-export const SETCARD = 'SETCARDS';
+export const SETCARD = 'SETCARD';
 export const AREAUPDATE = 'AREAUPDATE';
-export const SETFRIEND = 'SETFRIEND';
+export const SETFRIENDS = 'SETFRIENDS';
 export const SETCATEGORY = 'SETCATEGORY';
 
 export const login = (data) => {
@@ -62,11 +62,12 @@ export const setCard = (data) => {
     }
 }
 
-export const setFriend = (data) => {
+export const setFriends = (data) => {
+    console.log('action', data)
     return {
-        type: SETFRIEND,
+        type: SETFRIENDS,
         payload: {
-            friend: data,
+            friends: data,
         }
     }
 }

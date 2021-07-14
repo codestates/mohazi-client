@@ -222,16 +222,18 @@ function MyPage() {
     const cardSortOptions = cardSorts.map(cardSort => {
         return <option value={cardSort}>{cardSort}</option>;
     });
+    //console.log('visible', visibleCards)
+    //let showCards = '';
     let showCards = visibleCards.map(
         card => {
-            let selections = card.selections.map(selection => {
-                return <Selection>
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAxMGMtMS4xMDQgMC0yLS44OTYtMi0ycy44OTYtMiAyLTIgMiAuODk2IDIgMi0uODk2IDItMiAybTAtNWMtMS42NTcgMC0zIDEuMzQzLTMgM3MxLjM0MyAzIDMgMyAzLTEuMzQzIDMtMy0xLjM0My0zLTMtM20tNyAyLjYwMmMwLTMuNTE3IDMuMjcxLTYuNjAyIDctNi42MDJzNyAzLjA4NSA3IDYuNjAyYzAgMy40NTUtMi41NjMgNy41NDMtNyAxNC41MjctNC40ODktNy4wNzMtNy0xMS4wNzItNy0xNC41MjdtNy03LjYwMmMtNC4xOTggMC04IDMuNDAzLTggNy42MDIgMCA0LjE5OCAzLjQ2OSA5LjIxIDggMTYuMzk4IDQuNTMxLTcuMTg4IDgtMTIuMiA4LTE2LjM5OCAwLTQuMTk5LTMuODAxLTcuNjAyLTgtNy42MDIiLz48L3N2Zz4="></img>
-                    <span>{selection.place_name}</span>
-                </Selection>
-            });
+            // let selections = card.selections.map(selection => {
+            //     return <Selection>
+            //         <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAxMGMtMS4xMDQgMC0yLS44OTYtMi0ycy44OTYtMiAyLTIgMiAuODk2IDIgMi0uODk2IDItMiAybTAtNWMtMS42NTcgMC0zIDEuMzQzLTMgM3MxLjM0MyAzIDMgMyAzLTEuMzQzIDMtMy0xLjM0My0zLTMtM20tNyAyLjYwMmMwLTMuNTE3IDMuMjcxLTYuNjAyIDctNi42MDJzNyAzLjA4NSA3IDYuNjAyYzAgMy40NTUtMi41NjMgNy41NDMtNyAxNC41MjctNC40ODktNy4wNzMtNy0xMS4wNzItNy0xNC41MjdtNy03LjYwMmMtNC4xOTggMC04IDMuNDAzLTggNy42MDIgMCA0LjE5OCAzLjQ2OSA5LjIxIDggMTYuMzk4IDQuNTMxLTcuMTg4IDgtMTIuMiA4LTE2LjM5OCAwLTQuMTk5LTMuODAxLTcuNjAyLTgtNy42MDIiLz48L3N2Zz4="></img>
+            //         <span>{selection.place_name}</span>
+            //     </Selection>
+            // });
         
-            return card.userId === userInfo.id? 
+            return card.admin === userInfo.id? 
             <Card
                 id={card.id}
                 color={oc.grape[3]}
@@ -240,7 +242,7 @@ function MyPage() {
                 <Card_Date>{card.date}</Card_Date>
                 <Card_Img src={card.photo? s3ImageURl + '/' + card.photo: defaultCardImg}/>
                 <Card_Selections>
-                    {selections}
+                    {/* {selections} */}
                 </Card_Selections>
                 <Admin>
                     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMmMyLjc1NyAwIDUgMi4yNDMgNSA1LjAwMSAwIDIuNzU2LTIuMjQzIDUtNSA1cy01LTIuMjQ0LTUtNWMwLTIuNzU4IDIuMjQzLTUuMDAxIDUtNS4wMDF6bTAtMmMtMy44NjYgMC03IDMuMTM0LTcgNy4wMDEgMCAzLjg2NSAzLjEzNCA3IDcgN3M3LTMuMTM1IDctN2MwLTMuODY3LTMuMTM0LTcuMDAxLTctNy4wMDF6bTYuMzY5IDEzLjM1M2MtLjQ5Ny40OTgtMS4wNTcuOTMxLTEuNjU4IDEuMzAyIDIuODcyIDEuODc0IDQuMzc4IDUuMDgzIDQuOTcyIDcuMzQ2aC0xOS4zODdjLjU3Mi0yLjI5IDIuMDU4LTUuNTAzIDQuOTczLTcuMzU4LS42MDMtLjM3NC0xLjE2Mi0uODExLTEuNjU4LTEuMzEyLTQuMjU4IDMuMDcyLTUuNjExIDguNTA2LTUuNjExIDEwLjY2OWgyNGMwLTIuMTQyLTEuNDQtNy41NTctNS42MzEtMTAuNjQ3eiIvPjwvc3ZnPg=="/>
@@ -254,11 +256,10 @@ function MyPage() {
             <Card_Date>{card.date}</Card_Date>
             <Card_Img src={card.photo? s3ImageURl + '/' + card.photo: defaultCardImg}/>
             <Card_Selections>
-                {selections}
+                {/* {selections} */}
             </Card_Selections>
         </Card>
         });
-        console.log(visibleCards)
 
     const handleSortCards = (event) => {
         cardSort = event.target.value;
@@ -266,9 +267,9 @@ function MyPage() {
         if(cardSort === "전체 글"){
             setVisibleCards(dailyCards);
         } else if(cardSort === "내가 쓴 글"){
-            setVisibleCards(dailyCards.filter(el => el.userId === userInfo.id));
+            setVisibleCards(dailyCards.filter(el => el.admin === userInfo.id));
         } else {
-            setVisibleCards(dailyCards.filter(el => el.userId !== userInfo.id));
+            setVisibleCards(dailyCards.filter(el => el.admin !== userInfo.id));
         }
     }
 
@@ -304,34 +305,98 @@ function MyPage() {
     }
 
     useEffect(() => {
+        //console.log('e',userInfo.email)
         //유저정보 불러오기
-        axios
-            .get(`${server}/usersearch`,
-                {
-                    params: { email: userInfo.email, }
-                })
-            .then(res => {
-                console.log(res.data.userInfo);
-                dispatch(userUpdate(res.data.userInfo))
-            })
-        //카드정보 불러오기
         // axios
-        //     .get(`${server}/mypage`,
+        //     .put(`${server}/usersearch`,
+        //     {
+        //         email: userInfo.email,
+        //         headers:
         //         {
         //             'Content-Type': 'application/json',
         //             withCredentials: true,
-        //         }, {
-        //         userId: userInfo.id
-        //     })
+        //         }})
         //     .then(res => {
-        //         dispatch(setCards(res.data.dailyCards));
-        //         setVisibleCards(dailyCards); //처음엔 전체 글이 보여집니다
+        //         console.log('response',res.data.userInfo);
+        //         dispatch(userUpdate(res.data.userInfo))
         //     })
-        //     .catch(error => console.log(error))
+        //     .then(res => console.log('아이디', userInfo.id))
+        //     .catch(err => console.log(err))
+        //카드정보 불러오기
         
-        dispatch(setCards(dailyCards));
-        setVisibleCards(dailyCards);
-    }, [dailyCards])
+        axios
+            .put(`${server}/mypage`, {
+                    userId: userInfo.id,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        withCredentials: true,
+                      }
+                    })
+            .then(res => {
+                console.log('mypage',res.data)
+                dispatch(setCards([...res.data.myCards, ...res.data.taggedCards]));
+            })
+            // .then(res => 
+            //     setVisibleCards(dailyCards)
+            // )
+            // .then(res => {
+            //     console.log('visible',visibleCards)
+            //     showCards = visibleCards.map(
+            //         card => {
+            //             let data = [];
+                        
+            //             axios
+            //             .put(`${server}/dailycardinfo`, {
+            //                 dailyCardId: card.id,
+            //                 headers: {
+            //                     'Content-Type': 'application/json',
+            //                     withCredentials: true,
+            //                 }
+            //             })
+            //             .then(res => {
+            //                data = res.data.selections;
+            //             })
+
+            //             let selections = data.map(selection => {
+            //                 return <Selection>
+            //                     <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAxMGMtMS4xMDQgMC0yLS44OTYtMi0ycy44OTYtMiAyLTIgMiAuODk2IDIgMi0uODk2IDItMiAybTAtNWMtMS42NTcgMC0zIDEuMzQzLTMgM3MxLjM0MyAzIDMgMyAzLTEuMzQzIDMtMy0xLjM0My0zLTMtM20tNyAyLjYwMmMwLTMuNTE3IDMuMjcxLTYuNjAyIDctNi42MDJzNyAzLjA4NSA3IDYuNjAyYzAgMy40NTUtMi41NjMgNy41NDMtNyAxNC41MjctNC40ODktNy4wNzMtNy0xMS4wNzItNy0xNC41MjdtNy03LjYwMmMtNC4xOTggMC04IDMuNDAzLTggNy42MDIgMCA0LjE5OCAzLjQ2OSA5LjIxIDggMTYuMzk4IDQuNTMxLTcuMTg4IDgtMTIuMiA4LTE2LjM5OCAwLTQuMTk5LTMuODAxLTcuNjAyLTgtNy42MDIiLz48L3N2Zz4="></img>
+            //                     <span>{selection.place_name}</span>
+            //                 </Selection>
+            //             });
+
+            //             return card.userId === userInfo.id ?
+            //                 <Card
+            //                     id={card.id}
+            //                     color={oc.grape[3]}
+            //                     onClick={(e) => handleShowCardDetails(e)}>
+            //                     <DeleteCardButton className='deleteBtn' onClick={(e) => handleDeleteCard(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png" />
+            //                     <Card_Date>{card.date}</Card_Date>
+            //                     <Card_Img src={card.photo ? s3ImageURl + '/' + card.photo : defaultCardImg} />
+            //                     <Card_Selections>
+            //                         {selections}
+            //                     </Card_Selections>
+            //                     <Admin>
+            //                         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMmMyLjc1NyAwIDUgMi4yNDMgNSA1LjAwMSAwIDIuNzU2LTIuMjQzIDUtNSA1cy01LTIuMjQ0LTUtNWMwLTIuNzU4IDIuMjQzLTUuMDAxIDUtNS4wMDF6bTAtMmMtMy44NjYgMC03IDMuMTM0LTcgNy4wMDEgMCAzLjg2NSAzLjEzNCA3IDcgN3M3LTMuMTM1IDctN2MwLTMuODY3LTMuMTM0LTcuMDAxLTctNy4wMDF6bTYuMzY5IDEzLjM1M2MtLjQ5Ny40OTgtMS4wNTcuOTMxLTEuNjU4IDEuMzAyIDIuODcyIDEuODc0IDQuMzc4IDUuMDgzIDQuOTcyIDcuMzQ2aC0xOS4zODdjLjU3Mi0yLjI5IDIuMDU4LTUuNTAzIDQuOTczLTcuMzU4LS42MDMtLjM3NC0xLjE2Mi0uODExLTEuNjU4LTEuMzEyLTQuMjU4IDMuMDcyLTUuNjExIDguNTA2LTUuNjExIDEwLjY2OWgyNGMwLTIuMTQyLTEuNDQtNy41NTctNS42MzEtMTAuNjQ3eiIvPjwvc3ZnPg==" />
+            //                         <span>내가 작성한 글</span>
+            //                     </Admin>
+            //                 </Card>
+            //                 : <Card
+            //                     id={card.id}
+            //                     color={oc.yellow[3]}
+            //                     onClick={(e) => handleShowCardDetails(e)}>
+            //                     <Card_Date>{card.date}</Card_Date>
+            //                     <Card_Img src={card.photo ? s3ImageURl + '/' + card.photo : defaultCardImg} />
+            //                     <Card_Selections>
+            //                         {selections}
+            //                     </Card_Selections>
+            //                 </Card>
+            //         });
+            // })
+            // .catch(error => console.log(error))
+        
+        //dispatch(setCards(dailyCards));
+        //setVisibleCards(dailyCards);
+    },[]);
 
     return (
         <div>

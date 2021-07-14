@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFriend } from '../../actions/actions.js';
+import { setFriends, setCard } from '../../actions/actions.js';
 import oc from 'open-color';
 
 require("dotenv").config();
@@ -165,22 +165,42 @@ function SearchUserModal() {
             .put(`${server}/addfriend`,
             {
                 userId: friendId,
-                dailyCardId: dailyCard.id
+                dailyCardId: 90
             },
             {
                 'Content-Type': 'application/json',
                 withCredentials: true,
             })
             .then(res => {
-              alert(res.data.message);
+              console.log(res.data);
+                axios
+                    .put(`${server}/dailycardinfo`,
+                        {
+                            dailyCardId: 90 
+                        },
+                        {
+                            'Content-Type': 'application/json',
+                            withCredentials: true,
+                        })
+                    .then(res => {
+                        console.log('dailycard', res)
+                        // dispatch(setCard({
+                        //     date: res.data.date,
+                        //     userId: 1,
+                        //     photo: res.data.photo, // 사용자가 찍은 사진들
+                        //     selections: res.data.selections,
+                        //     friends: res.data.friends
+                        // }))
+                        dispatch(setFriends(res.data.friends))
+
+                        document.querySelector('.search_user_modal').style.display = 'none';
+                        document.querySelector('.search_user_bg').style.display = 'none';
+                        })
             })
             .catch(err => console.log(err))
         // const friend = users.filter(user => user.id === Number(friendId));
         // console.log('친구추가',friend[0])
         // dispatch(setFriend(friend[0]));
-        
-        document.querySelector('.search_user_modal').style.display ='none';
-        document.querySelector('.search_user_bg').style.display ='none';
     }
 
     function handleSearchUser() {
