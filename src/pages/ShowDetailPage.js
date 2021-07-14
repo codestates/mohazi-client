@@ -197,7 +197,7 @@ const PhotoBox = styled.div`
     overflow-y: auto;
     text-align: center;
     width: 100%;
-    height: 600px;
+    height: 800px;
 
     &::-webkit-scrollbar{
         width: 5px;
@@ -247,7 +247,7 @@ const FriendBox = styled.div`
     justify-content: center;
     text-align: center;
     width: 100%;
-    height: 320px;
+    height: 500px;
     border: 2px solid black;
     border-radius: 20px;
 
@@ -298,7 +298,9 @@ const FriendName = styled.div`
 `;
 
 const Btn = styled.button`
-
+    position: absolute;
+    top: 150px;
+    left: 80%;
 `;
 
 
@@ -334,6 +336,7 @@ function ShowDetailPage() {
         <Body>
         <DetailBody id="DetailBody">
             <DetailTitle>Daily Note: {dailyCard.date}</DetailTitle>
+            <Btn onClick={GoUpdateDetail}>수정하기</Btn>
             <Box>
                 <LeftBox>
                     <SelectionBox>
@@ -345,7 +348,7 @@ function ShowDetailPage() {
                                             <PostItNum>{index + 1}</PostItNum>
                                         </PostIt1>
                                         <PostIt2>
-                                            <PostItTitle>{el.type_id.name}</PostItTitle>
+                                            <PostItTitle>{el.type.name}</PostItTitle>
                                             <PostItBtn id={`PostItBtn${index}`} onClick={(e) => ShowHoverEvent(e, index)}>O</PostItBtn>
                                         </PostIt2>
                                     </PostIt>
@@ -357,9 +360,9 @@ function ShowDetailPage() {
                                             </Memo2Box>                
                                             <HoverBox id={`HoverBox${index}`}>
                                                 <h4>-Info-</h4>
-                                                <HoverTitle>name: {el.type_id.name}</HoverTitle>
-                                                <HoverPhone>phone: {el.type_id.phone}</HoverPhone>
-                                                <HoverAdd>add: {el.type_id.address}</HoverAdd>
+                                                <HoverTitle>name: {el.type.name}</HoverTitle>
+                                                <HoverPhone>phone: {el.type.phone}</HoverPhone>
+                                                <HoverAdd>add: {el.type.address}</HoverAdd>
                                             </HoverBox>
                                         </PostItMemo>
                                     </MemoBox>
@@ -393,7 +396,6 @@ function ShowDetailPage() {
                             )
                         })}
                     </FriendBox>
-                    <Btn onClick={GoUpdateDetail}>수정완료</Btn>
                 </RightBox>
             </Box>
         </DetailBody>
