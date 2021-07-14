@@ -273,7 +273,7 @@ const Search_wrap = styled.div`
 function RegisterPage() {
     const state = useSelector(state => state);
     const history = useHistory();
-    const { isLogin, userInfo, region } = state;
+    const { isLogin, userInfo, region, category } = state;
 
     const onDragStart = (event) => {
         event.dataTransfer.setData('text/plain', event.target.id);
@@ -477,9 +477,22 @@ function RegisterPage() {
         setMap(map);
 
         kakao.maps.event.addListener(map, "click", handleMakePositionMarker);
-        // if(region) {
-        //     setLatLng({region.y, region.x})
-        // }
+        
+        //category selected from landing page
+        let mapBounds = map.getBounds();
+
+        axios.put(`${server}/itemtype`,
+        {
+            itemType: category, // kakao catergory_code
+            rect: [mapBounds.ha, mapBounds.qa, mapBounds.oa, mapBounds.pa]
+        }, {
+            'Content-Type': 'application/json',
+            withCredentials: true,
+        })
+        .then(res => {
+            setPlaces(res.data.items);
+        })
+        .catch(err => console.log(err))
     }, [])
 
     //위치 선택

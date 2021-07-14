@@ -5,6 +5,7 @@ export const SETCARDS = 'SETCARDS';
 export const SETCARD = 'SETCARDS';
 export const AREAUPDATE = 'AREAUPDATE';
 export const SETFRIEND = 'SETFRIEND';
+export const SETCATEGORY = 'SETCATEGORY';
 
 export const login = (data) => {
     return {
@@ -66,6 +67,15 @@ export const setFriend = (data) => {
         type: SETFRIEND,
         payload: {
             friend: data,
+        }
+    }
+}
+
+export const setCategory = (data) => {
+    return {
+        type: SETCATEGORY,
+        payload: {
+            category: data,
         }
     }
 }

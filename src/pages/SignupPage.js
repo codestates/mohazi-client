@@ -14,10 +14,16 @@ const Wrap = styled.div`
     height: 100vh;
     background: white;
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     z-index: 30;
-    object-fit: fill;
+
+    > img {
+      object-fit: fill;
+      width: 400px;
+      margin-right: 250px
+    }
 `;
 
 const SignUpField = styled.div`
@@ -40,26 +46,8 @@ const Title = styled.div`
     color: ${oc.yellow[4]};
 `;
 
-const SignUpButton = styled.button`
-    border: none;
-    background: white;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: ${oc.cyan[6]};
-    padding: 0.5rem;
-    cursor: pointer;
-    border-radius: 3px;
-    text-decoration: none;
-    transition: .2s all;
-
-    &:hover {
-        background: ${oc.cyan[6]};
-        color: white;
-    }
-`;
-
 const InputField = styled.div`
-    margin: 20px auto;
+    margin: 0px 0px 20px 0px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -71,7 +59,7 @@ const EmailBody = styled.input`
     border-radius: 3px;
     width: 200px;
     height: 40px;
-    margin-bottom: 20px;
+    margin: 10px 0px;
     padding-left: 10px;
 `;
 
@@ -80,17 +68,16 @@ const PasswordBody = styled.input`
     border-radius: 3px;
     width: 200px;
     height: 40px;
-    margin-bottom: 20px;
+    margin: 10px 0px;
     padding-left: 10px;
 `;
 
 const Alert = styled.div`
-    margin: 20px auto;
     width: 100%;
     text-align: center;
     font-weight: 500;
     font-size: 0.9rem;
-    color: ${oc.gray[8]}
+    color: ${oc.orange[7]}
 `;
 
 const ConfirmPasswordBody = styled.input`
@@ -98,7 +85,7 @@ const ConfirmPasswordBody = styled.input`
     border-radius: 3px;
     width: 200px;
     height: 40px;
-    margin-bottom: 20px;
+    margin: 10px 0px;
     padding-left: 10px;
   `;
 
@@ -107,12 +94,15 @@ const UsernameBody = styled.input`
     border-radius: 3px;
     width: 200px;
     height: 40px;
-    margin-bottom: 20px;
+    margin: 10px 0px;
     z-index: 1;
     padding-left: 10px;
   `;
 
-const Login = styled(Link)`
+const LoginRedirect = styled(Link)`
+    text-decoration: none;
+    margin-bottom: 10px;
+
 `;
 
 const BtnField = styled.div`
@@ -206,7 +196,7 @@ function SignupPage() {
   useEffect(() => {
     const checkedEmail = !checkEmail.exec(Email);
     if (checkedEmail) {
-      handleError('ErrorEmail', '이메일 형식이 아닙니다.')
+      handleError('ErrorEmail', '이메일 형식이 아닙니다')
     } else {
       handleError('ErrorEmail', '')
     }
@@ -217,9 +207,9 @@ function SignupPage() {
 
   useEffect(() => {
     const checkUsername = checkWord.exec(Username);
-    console.log(Username)
+    //console.log(Username)
     if (checkUsername) {
-      handleError('ErrorUsername', '이름 형식이 아닙니다.')
+      handleError('ErrorUsername', '이름 형식이 아닙니다')
     } else {
       handleError('ErrorUsername', '')
     }
@@ -233,7 +223,7 @@ function SignupPage() {
       ConfirmPassword !== '' && Username !== '';
 
     if (!isTrue) {
-      handleError('ErrorAll', '모든 항목을 입력하지 않았습니다.')
+      handleError('ErrorAll', '모든 항목을 입력하지 않았습니다')
     } else {
       handleError('ErrorAll', '')
       axios
@@ -250,11 +240,8 @@ function SignupPage() {
             }
           })
         .then((res) => {
-          console.log(res.data)
-        })
-        .then((res) => {
-          console.log('회원가입에 성공했습니다');
-          history.push('/login')
+          console.log('회원가입에 성공했습니다', res);
+          history.push('/landing')
         })
         .catch((e) => {
           console.log(e)
@@ -265,7 +252,7 @@ function SignupPage() {
 
   return (
     <Wrap>
-    <img src="/img/welcome_img.png"/>
+    <img src="/img/pablo-193.png"/>
       <SignUpField>
         <Title>Sign Up</Title>
         <InputField>
@@ -289,8 +276,8 @@ function SignupPage() {
               }
             }}
           />
-          <PasswordBody name="Password" placeholder="비밀번호" onChange={onChange}></PasswordBody>
-          <ConfirmPasswordBody name="ConfirmPassword" placeholder="비밀번호 확인" onChange={onChange}></ConfirmPasswordBody>
+          <PasswordBody name="Password" type="password" placeholder="비밀번호" onChange={onChange}></PasswordBody>
+          <ConfirmPasswordBody name="ConfirmPassword" type="password" placeholder="비밀번호 확인" onChange={onChange}></ConfirmPasswordBody>
           <Route
             render={() => {
               if (ErrorPassword !== '') {
@@ -302,7 +289,7 @@ function SignupPage() {
           />
         </InputField>
         <BtnField>
-          <Login to='/landing'>이미 회원이신가요?</Login>
+          <LoginRedirect to='/landing'>이미 회원이신가요?</LoginRedirect>
           <SignupBtn onClick={handleSignup}>회원가입</SignupBtn>
           <Route
             render={() => {
