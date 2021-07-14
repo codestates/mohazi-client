@@ -168,7 +168,7 @@ function SearchUserModal() {
                 dailyCardId: dailyCard.id
             },
             {
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
                 withCredentials: true,
             })
             .then(res => {

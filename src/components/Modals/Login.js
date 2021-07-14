@@ -16,7 +16,7 @@ const clientId = '626775549529-mgarkqol48n6optt5dd209ucc414sln0.apps.googleuserc
 const Modal_wrap = styled.div`
     display: none;
     width: 400px;
-    height: 700px;
+    height: 500px;
     position: absolute;
     top: 50%;
     left: 50%;
