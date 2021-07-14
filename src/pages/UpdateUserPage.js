@@ -187,6 +187,7 @@ const WithdrawalBtn = styled.button`
 `;
 
 function UpdateUserPage() {
+  const defaultProfileImg = '/img/default_profile_img.png'
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -257,9 +258,10 @@ function UpdateUserPage() {
       [name]: value,
     })
   }
+  
   const handleUpdate = () => {
-
-    axios
+    if(Password === ConfirmPassword) {
+      axios
       .put(`${server}/userupdate`, {
         userId: state.id,
         username: Username,
@@ -283,11 +285,13 @@ function UpdateUserPage() {
         alert('성공적으로 수정되었습니다. ')
         history.push('/mypage')
       })
+    } else {
+      alert('비밀번호가 일치하지 않습니다')
+    }
 
   }
 
   const PhotoUpload = (event) => {
-
     const options = {
       maxSizeMB: 0.2,
       maxWidthOrHeight: 1920,
@@ -312,7 +316,7 @@ function UpdateUserPage() {
               })
             .then((res) => {
               // stateupdate
-              setPhoto([...photo, res.data.key])
+              setPhoto(res.data.key)
             })
         };
       })
@@ -359,7 +363,7 @@ function UpdateUserPage() {
       <Field>
         <LeftField>
           <ProfileImg>
-            <Img src ={s3ImageURl + photo}/>
+            <Img src ={photo? s3ImageURl + '/' +photo: defaultProfileImg}/>
 
             <UploadLink htmlFor="imgFile">
               <AddImg>

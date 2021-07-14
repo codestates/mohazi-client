@@ -380,8 +380,10 @@ function UpdateDetailPage() {
     }
 
     const [ photo, setPhoto ] = useState(dailyCard.photo);
+
     const [ friends, setFriend ] = useState(dailyCard.friends);
     const [imgBase64, setImgBase64] = useState("");
+
     const [imgFile, setImgFile] = useState(null);
     const [memo, setMemo] = useState(dailyCard.selections.map((el) => el.memo));
     const mount = useRef(false);
@@ -568,8 +570,6 @@ function UpdateDetailPage() {
         document.querySelector('.search_user_modal').style.display ='block';
         document.querySelector('.search_user_bg').style.display ='block';
     }
-
-
 
     return (
         <Body>

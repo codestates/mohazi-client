@@ -427,7 +427,7 @@ function UpdateSelectionPage() {
         if (confirm("일정을 수정하시겠습니까?")) {
             axios
                 .put(`${server}/selectionupdate`, {
-                    dailycardId: dailyCard.id,
+                    dailycardId: 84,
                     selections: selections,
                 }, {
                     'Content-Type': 'application/json',
@@ -435,7 +435,7 @@ function UpdateSelectionPage() {
                 })
                 .then(res => {
                     console.log(res.data.message)
-                    history.push('/updatedetail');
+                    //history.push('/updatedetail');
                 })
                 .catch(err => console.log(err))
         }
