@@ -88,10 +88,11 @@ const UploadLink = styled.label`
 
 const DesField = styled.input`
     margin: 45px 0 0 0;
-    border: none;
+    border: 2px solid ${oc.gray[4]};
+    border-radius: 3px;
     width: 80%;
     height: 80px;
-    background: gray;
+    background: white;
 `;
 
 const RightField = styled.div`

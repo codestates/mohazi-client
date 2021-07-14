@@ -113,7 +113,7 @@ function Header() {
         if(confirm("로그아웃 하시겠습니까?") === true) {
             dispatch(logout());
             axios
-            .get(`${server}/logout`)
+            .put(`${server}/logout`)
             .then(res => {
                 alert("성공적으로 로그아웃 되었습니다");
                 history.push('/landing');

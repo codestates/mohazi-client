@@ -489,34 +489,33 @@ function UpdateDetailPage() {
     };
 
     const PhotoDelete = (e, index) => {
-
+        
         let Div = document.querySelector(`#PhotoImg${index}`).src.split('/')[3]
         const set = photo.slice(0);
         set.splice(index, 1)
 
         axios
-            .delete(`${server}/s3delete`, {
-                key: Div,
-                headers: {
+            .put(`${server}/s3delete`, { key: Div },
+                {
                     'Content-Type': 'application/json',
                     withCredentials: true,
-                },
-            })
+                }
+            )
             .then((res) => {
+                console.log('delete')
                  setPhoto(set);
             })
     }
 
 
-    const FriendPhotoDelete = (e, index) => {
-
-        let Div = document.querySelector(`#FriendPhotoImg${index}`).src.split('/')[3]
+    const FriendPhotoDelete = (e, index, el) => {
         const set = friends.slice(0);
         set.splice(index, 1);
 
         axios
-            .delete(`${server}/deletefriend`, {
-                key: Div,
+            .put(`${server}/deletefriend`, {
+                userId: el.id,
+                dailyCardId: 90,//dailyCard.id,
                 headers: {
                     'Content-Type': 'application/json',
                     withCredentials: true,
@@ -571,6 +570,9 @@ function UpdateDetailPage() {
         document.querySelector('.search_user_bg').style.display ='block';
     }
 
+    useEffect(() => {
+       console.log('rendering') 
+    },[friends])
     return (
         <Body>
         <DetailBody id="DetailBody">
@@ -638,7 +640,7 @@ function UpdateDetailPage() {
                                     <FriendName>
                                         {el.username}
                                     </FriendName>
-                                    <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, index)}>X</FriendPhotoBtn>
+                                    <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, index, el)}>X</FriendPhotoBtn>
                                 </Friend>
                             )
                         })}
