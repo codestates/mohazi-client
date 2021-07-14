@@ -90,10 +90,7 @@ export const initialState = {
             {
                 dailycardId: 1,
                 memo: '이제 맛집 리뷰의 메인이라 할 수 있는 주문한 메뉴에 대한 내용을 작성하는 부분인데요.이 부분은 그야말로 작성자의 글과 개인적인 생각이 가장 진하게 녹아지는 부분이라 생각됩니다.',
-                photo: 'Food.jpg', // 가게 사진
-                data: '',
-                type: 'resturant',
-                type_id: {
+                type: {
                     name: 'name',
                     phone: '000-1111-2222',
                     status: '영업 중',
@@ -104,10 +101,7 @@ export const initialState = {
             },
             {  dailycardId: 2,
                 memo: '안녕하세요',
-                photo: 'department.jpg',
-                data: '',
-                type: 'resturant',
-                type_id: {
+                type: {
                     name: 'name',
                     phone: '000-1111-2222',
                     status: '영업 중',
@@ -119,10 +113,7 @@ export const initialState = {
             {
                 dailycardId: 3,
                 memo: '안녕?',
-                photo: 'cafe.jpg',
-                data: '',
-                type: 'cafe',
-                type_id: {
+                type: {
                     name: 'name',
                     phone: '000-1111-2222',
                     status: '영업 중',
@@ -134,10 +125,7 @@ export const initialState = {
             {
                 dailycardId: 4,
                 memo: '안녕?',
-                photo: 'cafe.jpg',
-                data: '',
-                type: 'cafe',
-                type_id: {
+                type: {
                     name: 'name',
                     phone: '000-1111-2222',
                     status: '영업 중',
@@ -149,10 +137,7 @@ export const initialState = {
             {
                 dailycardId: 5,
                 memo: '안녕?',
-                photo: 'cafe.jpg',
-                data: '',
-                type: 'cafe',
-                type_id: {
+                type: {
                     name: 'name',
                     phone: '000-1111-2222',
                     status: '영업 중',

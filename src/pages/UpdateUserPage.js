@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { Link, withRouter, Route, useHistory } from "react-router-dom";
 import { useDispatch, useSelector, } from 'react-redux';
+import { userUpdate } from '../actions/actions.js';
 import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
 import imageCompression from "browser-image-compression";
@@ -11,7 +12,7 @@ const server = process.env.REACT_APP_SERVER_URL;
 const s3ImageURl = process.env.REACT_APP_S3_IMAGE_URL;
 
 const UpdateBody = styled.div`
-    height: 600px;
+    height: 700px;
     width: 800px;
     box-sizing: border-box;
     text-align: center;
@@ -54,12 +55,22 @@ const ProfileImg = styled.div`
     display:flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    height:200px;
+    width:200px;
+    border-radius: 50%;
 `;
 
 const Img = styled.img`
     height:200px;
     width:200px;
     border-radius: 50%;
+`;
+
+const AddImg = styled.div`
+    position: absolute;
+    top:80px;
+    left:80px;
 `;
 const Upload = styled.input`
    display: none;
@@ -76,6 +87,7 @@ const UploadLink = styled.label`
 `;
 
 const DesField = styled.input`
+    margin: 45px 0 0 0;
     border: none;
     width: 80%;
     height: 80px;
@@ -262,6 +274,15 @@ function UpdateUserPage() {
         },
       })
       .then((res) => {
+        const data = {
+          id: state.id,
+          email: state.email,
+          username: Username,
+          photo: photo,
+          description: Description,
+        }
+        dispatch(userUpdate(data));
+        alert('성공적으로 수정되었습니다. ')
         history.push('/mypage')
       })
     } else {
@@ -345,7 +366,9 @@ function UpdateUserPage() {
             <Img src ={photo? s3ImageURl + '/' +photo: defaultProfileImg}/>
 
             <UploadLink htmlFor="imgFile">
+              <AddImg>
               <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNSA0aC0zdi0xaDN2MXptOCA2Yy0xLjY1NCAwLTMgMS4zNDYtMyAzczEuMzQ2IDMgMyAzIDMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zem0xMS01djE3aC0yNHYtMTdoNS45M2MuNjY5IDAgMS4yOTMtLjMzNCAxLjY2NC0uODkxbDEuNDA2LTIuMTA5aDhsMS40MDYgMi4xMDljLjM3MS41NTcuOTk1Ljg5MSAxLjY2NC44OTFoMy45M3ptLTE5IDRjMC0uNTUyLS40NDctMS0xLTFzLTEgLjQ0OC0xIDEgLjQ0NyAxIDEgMSAxLS40NDggMS0xem0xMyA0YzAtMi43NjEtMi4yMzktNS01LTVzLTUgMi4yMzktNSA1IDIuMjM5IDUgNSA1IDUtMi4yMzkgNS01eiIvPjwvc3ZnPg=="/>
+              </AddImg>
             </UploadLink>
           </ProfileImg>
           <Upload id="imgFile" type="file" name="image" accept="image/jpeg" onChange={handleImage}></Upload>
@@ -360,16 +383,19 @@ function UpdateUserPage() {
           <UpdateField>
             <Text>Username</Text>
             <Input name="Username" defaultValue={state.username} onChange={onChange}></Input>
+          </UpdateField>
             <Route
               render={() => {
                 if (ErrorUsername !== '') {
                   return (
+                    <UpdateField>
                     <Alert>{ErrorUsername}</Alert>
+                    </UpdateField>
                   );
                 }
               }}
             />
-          </UpdateField>
+
 
           <UpdateField>
             <Text>Password</Text>
@@ -378,16 +404,18 @@ function UpdateUserPage() {
           <UpdateField>
             <Text>Confirm</Text>
             <Input name="ConfirmPassword" type="password" onChange={onChange}></Input>
-            <Route
+          </UpdateField>
+          <Route
               render={() => {
-                if (ErrorUsername !== '') {
+                if (ErrorPassword !== '') {
                   return (
-                    <Alert>{ErrorUsername}</Alert>
+                    <UpdateField>
+                    <Alert>{ErrorPassword}</Alert>
+                    </UpdateField>
                   );
                 }
               }}
             />
-          </UpdateField>
           <BtnField>
             <UpdateBtn onClick={handleUpdate}>수정</UpdateBtn>
             <WithdrawalBtn>회원탈퇴</WithdrawalBtn>

@@ -120,7 +120,12 @@ const PostItBtn = styled.button`
     width: 20px;
     height: 20px;
     margin: 15px auto;
+`;
 
+const PostItBtn2 = styled.button`
+    width: 20px;
+    height: 20px;
+    margin: 15px auto;
 `;
 
 const MemoBox = styled.div`
@@ -164,9 +169,6 @@ const Memo2Box = styled.textarea`
       }
 `;
 
-const Memo2 = styled.h5`
-    margin: 5px;
-`;
 
 const HoverBox = styled.div`
     margin: 5px;
@@ -312,6 +314,15 @@ const Friend = styled.div`
     position: relative;
 `;
 
+const AddFriendBtn = styled.div`
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border: 1px solid black;
+    font-size: 2em;
+    padding: 12px;
+`;
+
 const FriendPhoto = styled.div`
     width: 90px;
 `;
@@ -325,6 +336,14 @@ const FriendPhotoImg = styled.img`
 
 const FriendName = styled.div`
 
+`;
+
+const FriendPhotoBtn = styled.button`
+    width: 21px;
+    height: 21px;
+    position:absolute;
+    top: 0%;
+    left: 70%;
 `;
 
 const Btn = styled.button`
@@ -361,7 +380,10 @@ function UpdateDetailPage() {
     }
 
     const [ photo, setPhoto ] = useState(dailyCard.photo);
-    const [ imgBase64, setImgBase64 ] = useState("");
+
+    const [ friends, setFriend ] = useState(dailyCard.friends);
+    const [imgBase64, setImgBase64] = useState("");
+
     const [imgFile, setImgFile] = useState(null);
     const [memo, setMemo] = useState(dailyCard.selections.map((el) => el.memo));
     const mount = useRef(false);
@@ -471,9 +493,9 @@ function UpdateDetailPage() {
         let Div = document.querySelector(`#PhotoImg${index}`).src.split('/')[3]
         const set = photo.slice(0);
         set.splice(index, 1)
-        setPhoto(set);
+
         axios
-            .put(`${server}/s3delete`, {
+            .delete(`${server}/s3delete`, {
                 key: Div,
                 headers: {
                     'Content-Type': 'application/json',
@@ -481,10 +503,30 @@ function UpdateDetailPage() {
                 },
             })
             .then((res) => {
-                // stateupdate
-                // setPhoto(set);
+                 setPhoto(set);
             })
     }
+
+
+    const FriendPhotoDelete = (e, index) => {
+
+        let Div = document.querySelector(`#FriendPhotoImg${index}`).src.split('/')[3]
+        const set = friends.slice(0);
+        set.splice(index, 1);
+
+        axios
+            .delete(`${server}/deletefriend`, {
+                key: Div,
+                headers: {
+                    'Content-Type': 'application/json',
+                    withCredentials: true,
+                },
+            })
+            .then((res) => {
+                setFriend(set);
+            })
+    }
+
 
     const handleUpdate = () => {
 
@@ -512,12 +554,16 @@ function UpdateDetailPage() {
                     userId: dailyCard.id,
                     photo: photo,
                     selections: sel,
-                    friends: "friend",
+                    friends: friends,
                 }
                 dispatch(setCard(data));
-                alert('성공적으로 수정되었습니다. ')
-                history.push('/showdetail')
+                alert('성공적으로 수정되었습니다. ');
+                history.push('/showdetail');
             })
+    }
+
+    const goUpdateSelection = () => {
+        history.push('/updateselection');
     }
 
     function handleOpenModal() {
@@ -534,6 +580,7 @@ function UpdateDetailPage() {
                 <LeftBox>
                     <SelectionBox>
                         {dailyCard.selections.map((el, index) => {
+                            console.log(el.type)
                             return (
                                 <Selection>
                                     <PostIt>
@@ -541,8 +588,9 @@ function UpdateDetailPage() {
                                             <PostItNum>{index + 1}</PostItNum>
                                         </PostIt1>
                                         <PostIt2>
-                                            <PostItTitle>{el.type_id.name}</PostItTitle>
+                                            <PostItTitle>{el.type.name}</PostItTitle>
                                             <PostItBtn id={`PostItBtn${index}`} onClick={(e) => ShowHoverEvent(e, index)}>O</PostItBtn>
+                                            <PostItBtn2 onClick={goUpdateSelection}>o</PostItBtn2>
                                         </PostIt2>
                                     </PostIt>
                                     <MemoBox>
@@ -553,9 +601,9 @@ function UpdateDetailPage() {
                                             </Memo2Box>                
                                             <HoverBox id={`HoverBox${index}`}>
                                                 <h4>-Info-</h4>
-                                                <HoverTitle>name: {el.type_id.name}</HoverTitle>
-                                                <HoverPhone>phone: {el.type_id.phone}</HoverPhone>
-                                                <HoverAdd>add: {el.type_id.address}</HoverAdd>
+                                                <HoverTitle>name: {el.type.name}</HoverTitle>
+                                                <HoverPhone>phone: {el.type.phone}</HoverPhone>
+                                                <HoverAdd>add: {el.type.address}</HoverAdd>
                                             </HoverBox>
                                         </PostItMemo>
                                     </MemoBox>
@@ -577,16 +625,20 @@ function UpdateDetailPage() {
                             )
                         })}
                     </PhotoBox>
-                    <FriendBox onClick={handleOpenModal}>
-                        {dailyCard.friends.map((el, index) => {
+                    <FriendBox>
+                        <Friend>
+                        <AddFriendBtn onClick={handleOpenModal}>⊕</AddFriendBtn>
+                        </Friend>
+                        {friends.map((el, index) => {
                             return (
                                 <Friend>
                                     <FriendPhoto className="FriendsPhoto" index={index}>
-                                        <FriendPhotoImg src={s3ImageURl + '/' + el.photo} />
+                                        <FriendPhotoImg id={`FriendPhotoImg${index}`} src={s3ImageURl + '/' + el.photo} />
                                     </FriendPhoto>
                                     <FriendName>
                                         {el.username}
                                     </FriendName>
+                                    <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, index)}>X</FriendPhotoBtn>
                                 </Friend>
                             )
                         })}
