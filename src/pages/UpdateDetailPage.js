@@ -371,7 +371,8 @@ function UpdateDetailPage() {
 
     const history = useHistory();
     const dispatch = useDispatch();
-    const { dailyCard, friend } = useSelector((state) => state)
+    const { dailyCard, userInfo } = useSelector((state) => state)
+    console.log(dailyCard)
 
     const GoUpdateDetail = () => {
         //저장할 때 state의 friend를 초기화시켜줘야 합니다
@@ -379,13 +380,14 @@ function UpdateDetailPage() {
         history.push('/showdetail');
     }
 
-    const [ photo, setPhoto ] = useState(dailyCard.photo);
+    const [ photo, setPhoto ] = useState(JSON.parse(dailyCard.photo));
 
     const [ friends, setFriend ] = useState(dailyCard.friends);
+    
     const [imgBase64, setImgBase64] = useState("");
 
     const [imgFile, setImgFile] = useState(null);
-    const [memo, setMemo] = useState(dailyCard.selections.map((el) => el.memo));
+    const [memo, setMemo] = useState(dailyCard.memo);
     const mount = useRef(false);
 
     useEffect(() => {
@@ -396,6 +398,11 @@ function UpdateDetailPage() {
             PhotoUpload();
         }
     }, [imgFile])
+
+    useEffect(() => {
+        console.log(dailyCard.friends);
+        setFriend(dailyCard.friends);
+    },[dailyCard.friends]);
       
     const ShowHoverEvent = (e, index) => {
         console.log('a');
@@ -415,8 +422,7 @@ function UpdateDetailPage() {
         const { value, name } = e.currentTarget;
         console.log(value);
         //console.log(e.currentTarget)
-        const set = memo.slice(0);
-        set[index] = value;
+        const set = value;
         setMemo(set);
       }
 
@@ -516,9 +522,9 @@ function UpdateDetailPage() {
         set.splice(index, 1);
 
         axios
-            .delete(`${server}/deletefriend`, {
+            .put(`${server}/deletefriend`, {
                 userId: el.id,
-                dailyCardId: dailyCard.id,
+                dailyCardId: dailyCard.dailyCards_id,
 
                 headers: {
                     'Content-Type': 'application/json',
@@ -538,25 +544,18 @@ function UpdateDetailPage() {
         axios
             .put(`${server}/dailycardupdate`, {
                 date: Div || dailyCard.date,
-                photo: photo,
-                memos: memo.map(((el, index) => {
-                    return {
-                        selectionId: index + 1,
-                        memo: el,
-                    }
-                })),
-                dailyCardId: dailyCard.id,
+                photo: photo, // ["a.jpg","b.jpg"]
+                memo: memo,
+                dailycardId: dailyCard.dailyCards_id,
             })
             .then((res) => {
-                const sel = dailyCard.selections.map((el, index) => {
-                    el.memo = memo[index];
-                    return el;
-                })
+                console.log(res);
                 const data = {
                     date: Div || dailyCard.date,
-                    userId: dailyCard.id,
+                    userId: dailyCard.admin,
                     photo: photo,
-                    selections: sel,
+                    memo: memo,
+                    type: dailyCard.type,
                     friends: friends,
                 }
                 dispatch(setCard(data));
@@ -586,7 +585,6 @@ function UpdateDetailPage() {
                 <LeftBox>
                     <SelectionBox>
                         {dailyCard.type.map((el, index) => {
-                            console.log(el.type)
                             return (
                                 <Selection>
                                     <PostIt>
@@ -594,28 +592,32 @@ function UpdateDetailPage() {
                                             <PostItNum>{index + 1}</PostItNum>
                                         </PostIt1>
                                         <PostIt2>
-                                            <PostItTitle>{el.type.name}</PostItTitle>
+                                            <PostItTitle>{el.place_name}</PostItTitle>
                                             <PostItBtn id={`PostItBtn${index}`} onClick={(e) => ShowHoverEvent(e, index)}>O</PostItBtn>
                                             <PostItBtn2 onClick={goUpdateSelection}>o</PostItBtn2>
                                         </PostIt2>
                                     </PostIt>
                                     <MemoBox>
-                                        <Memo1>Memo: </Memo1>
-                                        <PostItMemo>
-                                            <Memo2Box defaultValue={el.memo} onChange={(e) => onChange(e, index)}>
-                                                
-                                            </Memo2Box>                
+                
+                                      
+                                        <PostItMemo>     
                                             <HoverBox id={`HoverBox${index}`}>
                                                 <h4>-Info-</h4>
-                                                <HoverTitle>name: {el.type.name}</HoverTitle>
-                                                <HoverPhone>phone: {el.type.phone}</HoverPhone>
-                                                <HoverAdd>add: {el.type.address}</HoverAdd>
+                                                <HoverTitle>name: {el.place_name}</HoverTitle>
+                                                <HoverPhone>phone: {el.phone}</HoverPhone>
+                                                <HoverAdd>add: {el.address_name}</HoverAdd>
                                             </HoverBox>
                                         </PostItMemo>
                                     </MemoBox>
                                 </Selection>
                             )
                         })}
+                                               <PostItMemo>
+                                        <Memo1>Memo: </Memo1>
+                                        <Memo2Box defaultValue={dailyCard.memo} onChange={onChange}>
+                                                
+                                                </Memo2Box>     
+                                        </PostItMemo>
                     </SelectionBox>
                 </LeftBox>
                 <RightBox>
@@ -635,8 +637,7 @@ function UpdateDetailPage() {
                         <Friend>
                         <AddFriendBtn onClick={handleOpenModal}>⊕</AddFriendBtn>
                         </Friend>
-                        {friends.map((el, index) => {
-                            console.log(el)
+                        {friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
                             return (
                                 <Friend>
                                     <FriendPhoto className="FriendsPhoto" index={index}>
