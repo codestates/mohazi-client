@@ -63,7 +63,6 @@ export const setCard = (data) => {
 }
 
 export const setFriends = (data) => {
-    console.log('action', data)
     return {
         type: SETFRIENDS,
         payload: {

@@ -4,7 +4,8 @@ import oc from 'open-color';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setCards, setCard, userUpdate } from '../actions/actions.js';
+import { setCards, setCard, userUpdate, setFriends } from '../actions/actions.js';
+import { isValidElementType } from "react-is";
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
@@ -216,7 +217,9 @@ function MyPage() {
     const defaultProfileImg = '/img/default_profile_img.png'
     const defaultCardImg = '/img/landscape.jpeg'
 
-    const { userInfo, dailyCards } = state;
+    const [isDeleteCard, setIsDeleteCard] = useState(-1)
+
+    const { userInfo, dailyCards, dailyCard } = state;
     const [ visibleCards, setVisibleCards ] = useState(dailyCards);
     let cardSort = "전체 글";
     const cardSorts = ["전체 글", "내가 쓴 글", "태그 당한 글"]
@@ -233,15 +236,17 @@ function MyPage() {
                     <span>{selection.place_name}</span>
                 </Selection>
             });
+
+            console.log('photo', card.photo)
         
             return card.admin === userInfo.id? 
             <Card
                 id={card.dailyCards_id}
                 color={oc.grape[3]}
                 onClick={(e) => handleShowCardDetails(e)}>
-                <DeleteCardButton className='deleteBtn' onClick={(e) => handleDeleteCard(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png"/>
+                <DeleteCardButton className='deleteBtn' id={card.dailyCards_id} onClick={(e) => handleDeleteCard(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png"/>
                 <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
-                <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + card.photo: defaultCardImg}/>
+                <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + card.photo[0]: defaultCardImg}/>
                 <Card_Selections id={card.dailyCards_id}>
                     {selections}
                 </Card_Selections>
@@ -255,7 +260,7 @@ function MyPage() {
                 color={oc.yellow[3]}
                 onClick={(e) => handleShowCardDetails(e)}>
             <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
-            <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + card.photo: defaultCardImg}/>
+            <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + card.photo[0]: defaultCardImg}/>
             <Card_Selections id={card.dailyCards_id}>
                 {selections}
             </Card_Selections>
@@ -277,26 +282,43 @@ function MyPage() {
     const handleShowCardDetails = (event) => {
         //console.log('target id', event.target)
         const cardId = Number(event.target.id);
-        const card = dailyCards.filter(el => el.dailyCards_id === cardId);
-
-        dispatch(setCard(...card));
-        history.push('/showdetail');
+        let card = dailyCards.filter(el => el.dailyCards_id === cardId);
+        dispatch(setCard(card));
+        
+        axios
+            .put(`${server}/dailycardinfo`, {
+                dailyCardId: cardId,
+            },{
+                'Content-Type': 'application/json',
+                withCredentials: true,
+            })
+            .then(res => {
+                //console.log('friends', res.data.friends)
+                dispatch(setFriends(res.data.friends))
+            })
+            .then(res => history.push('/showdetail'));
     }
 
     const handleDeleteCard = (event) => {
         event.stopPropagation();
         
+        console.log('delete card', event.target)
+        const cardId = Number(event.target.id);
+
         if (confirm("삭제하면 내용을 복구할 수 없습니다. 삭제하시겠습니까?") === true) {
             axios
-                .delete(`${server}/dailycarddelete`,
+                .put(`${server}/dailycarddelete`,
+                    {
+                        dailycardId: cardId
+                    },
                     {
                         'Content-Type': 'application/json',
                         withCredentials: true,
-                    }, {
-                    dailyCardId: event.target.id
-                })
+                    }
+                )
                 .then(res => {
-                    alert("일정이 삭제되었습니다")
+                    alert("일정이 삭제되었습니다");
+                    setIsDeleteCard(cardId);
                 })
                 .catch(error => console.log(error));
         }
@@ -307,25 +329,8 @@ function MyPage() {
     }
 
     useEffect(() => {
-        //console.log('e',userInfo.email)
-        //유저정보 불러오기
-        // axios
-        //     .put(`${server}/usersearch`,
-        //     {
-        //         email: userInfo.email,
-        //         headers:
-        //         {
-        //             'Content-Type': 'application/json',
-        //             withCredentials: true,
-        //         }})
-        //     .then(res => {
-        //         console.log('response',res.data.userInfo);
-        //         dispatch(userUpdate(res.data.userInfo))
-        //     })
-        //     .then(res => console.log('아이디', userInfo.id))
-        //     .catch(err => console.log(err))
-        //카드정보 불러오기
-        
+        //삭제 할 때마다 카드정보 불러오기
+        console.log('render after delete')
         axios
             .put(`${server}/mypage`, {
                     userId: userInfo.id,
@@ -337,69 +342,16 @@ function MyPage() {
             .then(res => {
                 console.log('mypage',res.data)
                 dispatch(setCards([...res.data.myCardsInfo, ...res.data.taggedCardsInfo]));
-                setVisibleCards(dailyCards);
             })
-            // .then(res => 
-            //     setVisibleCards(dailyCards)
-            // )
-            // .then(res => {
-            //     console.log('visible',visibleCards)
-            //     showCards = visibleCards.map(
-            //         card => {
-            //             let data = [];
-                        
-            //             axios
-            //             .put(`${server}/dailycardinfo`, {
-            //                 dailyCardId: card.id,
-            //                 headers: {
-            //                     'Content-Type': 'application/json',
-            //                     withCredentials: true,
-            //                 }
-            //             })
-            //             .then(res => {
-            //                data = res.data.selections;
-            //             })
+    },[isDeleteCard]);
 
-            //             let selections = data.map(selection => {
-            //                 return <Selection>
-            //                     <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAxMGMtMS4xMDQgMC0yLS44OTYtMi0ycy44OTYtMiAyLTIgMiAuODk2IDIgMi0uODk2IDItMiAybTAtNWMtMS42NTcgMC0zIDEuMzQzLTMgM3MxLjM0MyAzIDMgMyAzLTEuMzQzIDMtMy0xLjM0My0zLTMtM20tNyAyLjYwMmMwLTMuNTE3IDMuMjcxLTYuNjAyIDctNi42MDJzNyAzLjA4NSA3IDYuNjAyYzAgMy40NTUtMi41NjMgNy41NDMtNyAxNC41MjctNC40ODktNy4wNzMtNy0xMS4wNzItNy0xNC41MjdtNy03LjYwMmMtNC4xOTggMC04IDMuNDAzLTggNy42MDIgMCA0LjE5OCAzLjQ2OSA5LjIxIDggMTYuMzk4IDQuNTMxLTcuMTg4IDgtMTIuMiA4LTE2LjM5OCAwLTQuMTk5LTMuODAxLTcuNjAyLTgtNy42MDIiLz48L3N2Zz4="></img>
-            //                     <span>{selection.place_name}</span>
-            //                 </Selection>
-            //             });
+    useEffect(() => {
+        setVisibleCards(dailyCards);
+    }, [dailyCards])
 
-            //             return card.userId === userInfo.id ?
-            //                 <Card
-            //                     id={card.id}
-            //                     color={oc.grape[3]}
-            //                     onClick={(e) => handleShowCardDetails(e)}>
-            //                     <DeleteCardButton className='deleteBtn' onClick={(e) => handleDeleteCard(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png" />
-            //                     <Card_Date>{card.date}</Card_Date>
-            //                     <Card_Img src={card.photo ? s3ImageURl + '/' + card.photo : defaultCardImg} />
-            //                     <Card_Selections>
-            //                         {selections}
-            //                     </Card_Selections>
-            //                     <Admin>
-            //                         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMmMyLjc1NyAwIDUgMi4yNDMgNSA1LjAwMSAwIDIuNzU2LTIuMjQzIDUtNSA1cy01LTIuMjQ0LTUtNWMwLTIuNzU4IDIuMjQzLTUuMDAxIDUtNS4wMDF6bTAtMmMtMy44NjYgMC03IDMuMTM0LTcgNy4wMDEgMCAzLjg2NSAzLjEzNCA3IDcgN3M3LTMuMTM1IDctN2MwLTMuODY3LTMuMTM0LTcuMDAxLTctNy4wMDF6bTYuMzY5IDEzLjM1M2MtLjQ5Ny40OTgtMS4wNTcuOTMxLTEuNjU4IDEuMzAyIDIuODcyIDEuODc0IDQuMzc4IDUuMDgzIDQuOTcyIDcuMzQ2aC0xOS4zODdjLjU3Mi0yLjI5IDIuMDU4LTUuNTAzIDQuOTczLTcuMzU4LS42MDMtLjM3NC0xLjE2Mi0uODExLTEuNjU4LTEuMzEyLTQuMjU4IDMuMDcyLTUuNjExIDguNTA2LTUuNjExIDEwLjY2OWgyNGMwLTIuMTQyLTEuNDQtNy41NTctNS42MzEtMTAuNjQ3eiIvPjwvc3ZnPg==" />
-            //                         <span>내가 작성한 글</span>
-            //                     </Admin>
-            //                 </Card>
-            //                 : <Card
-            //                     id={card.id}
-            //                     color={oc.yellow[3]}
-            //                     onClick={(e) => handleShowCardDetails(e)}>
-            //                     <Card_Date>{card.date}</Card_Date>
-            //                     <Card_Img src={card.photo ? s3ImageURl + '/' + card.photo : defaultCardImg} />
-            //                     <Card_Selections>
-            //                         {selections}
-            //                     </Card_Selections>
-            //                 </Card>
-            //         });
-            // })
-            // .catch(error => console.log(error))
-        
-        //dispatch(setCards(dailyCards));
-        //setVisibleCards(dailyCards);
-    },[]);
+    useEffect(() => {
+        console.log('2', dailyCard)
+    }, [dailyCard])
 
     return (
         <div>

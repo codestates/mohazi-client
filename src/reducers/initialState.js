@@ -10,5 +10,5 @@ export const initialState = {
     region : { 'x': null, 'y': null},
     category: null,
     dailyCards: [],
-    dailyCard: {},
+    dailyCard: { friends: null },
 }
