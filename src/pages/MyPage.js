@@ -239,7 +239,7 @@ function MyPage() {
             });
 
             //console.log('photo', card.photo? JSON.parse(card.photo): '')
-            let photo = card.photo? JSON.parse(card.photo): null;
+            let photo = JSON.parse(card.photo);
         
             return card.admin === userInfo.id? 
             <Card

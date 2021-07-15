@@ -28,7 +28,7 @@ const Background = styled.div`
 
 const HeaderContents = styled.div`
     width: 1200px;
-    height: 55px;
+    height: 70px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -55,7 +55,7 @@ const Space = styled.div`
 const MypageButton = styled(Link)`
     font-size: 0.9rem;
     font-weight: 600;
-    color: ${oc.cyan[6]};
+    color: ${oc.indigo[6]};
     padding: 0.5rem;
     cursor: pointer;
     border-radius: 3px;
@@ -71,7 +71,7 @@ const MypageButton = styled(Link)`
 const LogoutButton = styled(Link)`
     font-size: 0.9rem;
     font-weight: 600;
-    color: ${oc.cyan[6]};
+    color: ${oc.indigo[6]};
     padding: 0.5rem;
     cursor: pointer;
     border-radius: 3px;
@@ -88,6 +88,7 @@ const LogoutButton = styled(Link)`
 const Day_Night_Toggle = styled.img`
     cursor: pointer;
     margin: 0 20px;
+    width: 35px;
 `
 
 function Header() {
