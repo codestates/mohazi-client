@@ -388,7 +388,7 @@ function ShowDetailPage() {
                         {JSON.parse(dailyCard.photo).map((el, index) => {
                             return (
                                 <Photo className="Photo" index={index}>
-                                    <PhotoImg src={el} />
+                                    <PhotoImg src={s3ImageURl + '/' + el} />
                                 </Photo>
                             )
                         })}

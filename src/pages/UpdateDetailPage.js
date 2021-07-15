@@ -541,6 +541,8 @@ function UpdateDetailPage() {
 
         const Div = document.querySelector('#inputDate').value;
         console.log(Div);
+
+        console.log('최종 포토', photo)
         axios
             .put(`${server}/dailycardupdate`, {
                 date: Div || dailyCard.date,
@@ -550,17 +552,19 @@ function UpdateDetailPage() {
             })
             .then((res) => {
                 console.log(res);
-                const data = {
-                    date: Div || dailyCard.date,
-                    userId: dailyCard.admin,
-                    photo: photo,
-                    memo: memo,
-                    type: dailyCard.type,
-                    friends: friends,
-                }
-                dispatch(setCard(data));
-                alert('성공적으로 수정되었습니다. ');
-                history.push('/showdetail');
+                axios
+                    .put(`${server}/dailycardinfo`, {
+                        dailyCardId: dailyCard.dailyCards_id,
+                    }, {
+                        'Content-Type': 'application/json',
+                        withCredentials: true,
+                    })
+                    .then(response => {
+                        console.log('friends', response.data.data)
+                        dispatch(setCard(response.data.data));
+                        alert('성공적으로 수정되었습니다. ');
+                        history.push('/showdetail');
+                    })
             })
     }
 

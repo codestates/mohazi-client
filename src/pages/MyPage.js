@@ -286,7 +286,7 @@ function MyPage() {
         const cardId = Number(event.target.id);
         let card = dailyCards.filter(el => el.dailyCards_id === cardId);
         dispatch(setCard(...card));
-        
+        console.log('id',cardId)
         axios
             .put(`${server}/dailycardinfo`, {
                 dailyCardId: cardId,
@@ -296,7 +296,7 @@ function MyPage() {
             })
             .then(res => {
                 console.log('friends', res.data)
-                dispatch(setFriends(res.data.friends));
+                dispatch(setFriends(res.data.data.friends));
             })
             .then(res => history.push('/showdetail'))
             .catch(err => console.log(err))
