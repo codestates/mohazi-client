@@ -237,7 +237,8 @@ function MyPage() {
                 </Selection>
             });
 
-            console.log('photo', card.photo)
+            console.log('photo', card.photo? card.photo: '')
+            let photo = card.photo
         
             return card.admin === userInfo.id? 
             <Card
@@ -283,7 +284,7 @@ function MyPage() {
         //console.log('target id', event.target)
         const cardId = Number(event.target.id);
         let card = dailyCards.filter(el => el.dailyCards_id === cardId);
-        dispatch(setCard(card));
+        dispatch(setCard(...card));
         
         axios
             .put(`${server}/dailycardinfo`, {
