@@ -444,7 +444,7 @@ function RegisterPage() {
                 }
             } else {
                 axios.put(`${server}/createcard`, {
-                        date: inputDate,
+                    date: inputDate,
                     userId: userInfo.id,
                     selections: selections,
                 }, {
@@ -452,7 +452,7 @@ function RegisterPage() {
                     withCredentials: true,
                 })
                     .then(res => {
-                        //console.log(res)
+                        console.log(res)
                         axios
                             .put(`${server}/mypage`, {
                                 userId: userInfo.id,

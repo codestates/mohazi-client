@@ -57,7 +57,7 @@ const DescBoxText = styled.div`
 const RecBox = styled.div`
         height: 400px;
         width: 1000px;
-        margin-left: 230px;
+        margin-left: 270px;
         padding: 25px;
         display: flex;
         float: left;
@@ -202,8 +202,9 @@ const Category = styled.div`
     
     > span {
         font-weight: 600;
-        font-size: 4rem;
+        font-size: 2rem;
         position: absolute;
+        margin: 0 0 310px 180px;
     }
     
     &:hover {
