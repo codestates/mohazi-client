@@ -311,7 +311,7 @@ function LoginModal({onSocial}) {
           })
           .then(res => {
             //console.log('로그인에 성공했습니다');
-            history.push('/')
+            //history.push('/')
           })
           .catch((e) => {
             setErrorMessage('유효한 이메일 또는 비밀번호가 아닙니다');
