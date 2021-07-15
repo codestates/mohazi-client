@@ -171,12 +171,13 @@ const Selection = styled.div`
 
     > span {
         margin-left: 10px;
-        color:
+        font-size: 0.8rem;
     }
 `
 
 const Card_Selections = styled.div`
     margin-top: 10px;
+    height: 140px;
     
     overflow-x: hidden;
     overflow-y: auto;
@@ -216,7 +217,7 @@ function MyPage() {
     const defaultCardImg = '/img/landscape.jpeg'
 
     const { userInfo, dailyCards } = state;
-    const [ visibleCards, setVisibleCards ] = useState([]);
+    const [ visibleCards, setVisibleCards ] = useState(dailyCards);
     let cardSort = "전체 글";
     const cardSorts = ["전체 글", "내가 쓴 글", "태그 당한 글"]
     const cardSortOptions = cardSorts.map(cardSort => {
@@ -235,27 +236,27 @@ function MyPage() {
         
             return card.admin === userInfo.id? 
             <Card
-                id={card.id}
+                id={card.dailyCards_id}
                 color={oc.grape[3]}
                 onClick={(e) => handleShowCardDetails(e)}>
                 <DeleteCardButton className='deleteBtn' onClick={(e) => handleDeleteCard(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png"/>
-                <Card_Date>{card.date}</Card_Date>
-                <Card_Img src={card.photo? s3ImageURl + '/' + card.photo: defaultCardImg}/>
-                <Card_Selections>
+                <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
+                <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + card.photo: defaultCardImg}/>
+                <Card_Selections id={card.dailyCards_id}>
                     {selections}
                 </Card_Selections>
-                <Admin>
+                <Admin id={card.dailyCards_id}>
                     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMmMyLjc1NyAwIDUgMi4yNDMgNSA1LjAwMSAwIDIuNzU2LTIuMjQzIDUtNSA1cy01LTIuMjQ0LTUtNWMwLTIuNzU4IDIuMjQzLTUuMDAxIDUtNS4wMDF6bTAtMmMtMy44NjYgMC03IDMuMTM0LTcgNy4wMDEgMCAzLjg2NSAzLjEzNCA3IDcgN3M3LTMuMTM1IDctN2MwLTMuODY3LTMuMTM0LTcuMDAxLTctNy4wMDF6bTYuMzY5IDEzLjM1M2MtLjQ5Ny40OTgtMS4wNTcuOTMxLTEuNjU4IDEuMzAyIDIuODcyIDEuODc0IDQuMzc4IDUuMDgzIDQuOTcyIDcuMzQ2aC0xOS4zODdjLjU3Mi0yLjI5IDIuMDU4LTUuNTAzIDQuOTczLTcuMzU4LS42MDMtLjM3NC0xLjE2Mi0uODExLTEuNjU4LTEuMzEyLTQuMjU4IDMuMDcyLTUuNjExIDguNTA2LTUuNjExIDEwLjY2OWgyNGMwLTIuMTQyLTEuNDQtNy41NTctNS42MzEtMTAuNjQ3eiIvPjwvc3ZnPg=="/>
                     <span>내가 작성한 글</span>
                 </Admin>
             </Card>
             : <Card
-                id={card.id}
+                id={card.dailyCards_id}
                 color={oc.yellow[3]}
                 onClick={(e) => handleShowCardDetails(e)}>
-            <Card_Date>{card.date}</Card_Date>
-            <Card_Img src={card.photo? s3ImageURl + '/' + card.photo: defaultCardImg}/>
-            <Card_Selections>
+            <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
+            <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + card.photo: defaultCardImg}/>
+            <Card_Selections id={card.dailyCards_id}>
                 {selections}
             </Card_Selections>
         </Card>
@@ -274,10 +275,11 @@ function MyPage() {
     }
 
     const handleShowCardDetails = (event) => {
-        const cardId = event.target.id;
-        const card = dailyCards.filter(el => el.id === cardId);
+        //console.log('target id', event.target)
+        const cardId = Number(event.target.id);
+        const card = dailyCards.filter(el => el.dailyCards_id === cardId);
 
-        dispatch(setCard(card));
+        dispatch(setCard(...card));
         history.push('/showdetail');
     }
 
@@ -286,7 +288,7 @@ function MyPage() {
         
         if (confirm("삭제하면 내용을 복구할 수 없습니다. 삭제하시겠습니까?") === true) {
             axios
-                .put(`${server}/dailycarddelete`,
+                .delete(`${server}/dailycarddelete`,
                     {
                         'Content-Type': 'application/json',
                         withCredentials: true,
@@ -335,6 +337,7 @@ function MyPage() {
             .then(res => {
                 console.log('mypage',res.data)
                 dispatch(setCards([...res.data.myCardsInfo, ...res.data.taggedCardsInfo]));
+                setVisibleCards(dailyCards);
             })
             // .then(res => 
             //     setVisibleCards(dailyCards)
