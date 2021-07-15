@@ -192,12 +192,13 @@ function UpdateUserPage() {
 
   const history = useHistory();
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.userInfo)
-  const [ photo, setPhoto ] = useState(state.photo);
+  const state = useSelector((state) => state);
+  const { userInfo, isLogin } = state;
+  const [ photo, setPhoto ] = useState(userInfo.photo);
   const [inputs, setInputs] = useState({
-    UserId: state.id,
-    Email: state.email,
-    Username: state.username,
+    UserId: userInfo.id,
+    Email: userInfo.email,
+    Username: userInfo.username,
     Password: null,
     ConfirmPassword: null,
     Description: '',
@@ -264,7 +265,7 @@ function UpdateUserPage() {
     if(Password === ConfirmPassword) {
       axios
       .put(`${server}/userupdate`, {
-        userId: state.id,
+        userId: userInfo.id,
         username: Username,
         password: Password,
         photo: photo,
@@ -358,6 +359,12 @@ function UpdateUserPage() {
     }
   };
 
+  useEffect(() => {
+    if (!isLogin) {
+      history.push('/pagenotfound');
+    }
+  }, []);
+
   return (
     <UpdateBody>
       <Title>User Information</Title>
@@ -373,17 +380,17 @@ function UpdateUserPage() {
             </UploadLink>
           </ProfileImg>
           <Upload id="imgFile" type="file" name="image" accept="image/jpeg" onChange={handleImage}></Upload>
-          <DesField name="Description" defaultValue={state.description} onChange={onChange}></DesField>
+          <DesField name="Description" defaultValue={userInfo.description} onChange={onChange}></DesField>
         </LeftField>
         <RightField>
           <UpdateField>
             <Text>Email</Text>
-            <EmailBody>{state.email}</EmailBody>
+            <EmailBody>{userInfo.email}</EmailBody>
           </UpdateField>
 
           <UpdateField>
             <Text>Username</Text>
-            <Input name="Username" defaultValue={state.username} onChange={onChange}></Input>
+            <Input name="Username" defaultValue={userInfo.username} onChange={onChange}></Input>
           </UpdateField>
             <Route
               render={() => {
