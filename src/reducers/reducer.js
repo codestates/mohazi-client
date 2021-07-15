@@ -43,7 +43,6 @@ const reducer = (state = initialState, action) => {
             });
 
         case SETFRIENDS:
-            console.log('reducer', action.payload.friends)
             return Object.assign({...state}, state.dailyCard.friends = action.payload.friends,
             );
 
