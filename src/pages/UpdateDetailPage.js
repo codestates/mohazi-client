@@ -488,13 +488,17 @@ function UpdateDetailPage() {
 
     const PhotoDelete = (e, index) => {
 
-        let Div = document.querySelector(`#PhotoImg${index}`).src.split('/')[3]
+        let Div = document.querySelector(`#PhotoImg${index}`).src.split('/')[3];
         const set = photo.slice(0);
         set.splice(index, 1)
 
+        console.log(Div);
+
         axios
-            .delete(`${server}/s3delete`, {
-                key: Div,
+            .put(`${server}/s3delete`, {
+                key: Div
+            },
+            {
                 headers: {
                     'Content-Type': 'application/json',
                     withCredentials: true,
@@ -506,15 +510,15 @@ function UpdateDetailPage() {
     }
 
 
-    const FriendPhotoDelete = (e, index) => {
+    const FriendPhotoDelete = (e, index, el) => {
 
-        let Div = document.querySelector(`#FriendPhotoImg${index}`).src.split('/')[3]
         const set = friends.slice(0);
         set.splice(index, 1);
 
         axios
             .delete(`${server}/deletefriend`, {
-                key: Div,
+                userId: el.id,
+                dailyCardId: dailyCard.id,
                 headers: {
                     'Content-Type': 'application/json',
                     withCredentials: true,
@@ -596,8 +600,8 @@ function UpdateDetailPage() {
                                     <MemoBox>
                                         <Memo1>Memo: </Memo1>
                                         <PostItMemo>
-                                            <Memo2Box onChange={(e) => onChange(e, index)}>
-                                                {el.memo}
+                                            <Memo2Box defaultValue={el.memo} onChange={(e) => onChange(e, index)}>
+                                                
                                             </Memo2Box>                
                                             <HoverBox id={`HoverBox${index}`}>
                                                 <h4>-Info-</h4>
@@ -630,6 +634,7 @@ function UpdateDetailPage() {
                         <AddFriendBtn onClick={handleOpenModal}>⊕</AddFriendBtn>
                         </Friend>
                         {friends.map((el, index) => {
+                            console.log(el)
                             return (
                                 <Friend>
                                     <FriendPhoto className="FriendsPhoto" index={index}>
@@ -638,7 +643,7 @@ function UpdateDetailPage() {
                                     <FriendName>
                                         {el.username}
                                     </FriendName>
-                                    <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, index)}>X</FriendPhotoBtn>
+                                    <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, index, el)}>X</FriendPhotoBtn>
                                 </Friend>
                             )
                         })}
