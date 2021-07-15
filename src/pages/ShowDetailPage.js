@@ -3,6 +3,7 @@ import { Link, withRouter, Route, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
+import axios from 'axios';
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
@@ -330,7 +331,6 @@ function ShowDetailPage() {
         }
     }
 
-    console.log(JSON.parse(dailyCard.photo));
 
     return (
         <Body>
@@ -340,8 +340,7 @@ function ShowDetailPage() {
             <Box>
                 <LeftBox>
                     <SelectionBox>
-                        {dailyCard.type.map((el, index) => {
-                            console.log(el)
+                        {dailyCard[0].type.map((el, index) => {
                             return (
                                 <Selection>
                                     <PostIt>
@@ -374,7 +373,7 @@ function ShowDetailPage() {
                 </LeftBox>
                 <RightBox>
                     <PhotoBox>
-                        {JSON.parse(dailyCard.photo).map((el, index) => {
+                        {JSON.parse(dailyCard[0].photo).map((el, index) => {
                             return (
                                 <Photo className="Photo" index={index}>
                                     <PhotoImg src={el} />
