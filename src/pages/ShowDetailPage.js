@@ -330,7 +330,7 @@ function ShowDetailPage() {
         }
     }
 
-    console.log(window.innerWidth)
+    console.log(JSON.parse(dailyCard.photo));
 
     return (
         <Body>
@@ -340,7 +340,8 @@ function ShowDetailPage() {
             <Box>
                 <LeftBox>
                     <SelectionBox>
-                        {dailyCard.selections.map((el, index) => {
+                        {dailyCard.type.map((el, index) => {
+                            console.log(el)
                             return (
                                 <Selection>
                                     <PostIt>
@@ -348,7 +349,7 @@ function ShowDetailPage() {
                                             <PostItNum>{index + 1}</PostItNum>
                                         </PostIt1>
                                         <PostIt2>
-                                            <PostItTitle>{el.type.name}</PostItTitle>
+                                            <PostItTitle>{el.place_name}</PostItTitle>
                                             <PostItBtn id={`PostItBtn${index}`} onClick={(e) => ShowHoverEvent(e, index)}>O</PostItBtn>
                                         </PostIt2>
                                     </PostIt>
@@ -360,9 +361,9 @@ function ShowDetailPage() {
                                             </Memo2Box>                
                                             <HoverBox id={`HoverBox${index}`}>
                                                 <h4>-Info-</h4>
-                                                <HoverTitle>name: {el.type.name}</HoverTitle>
-                                                <HoverPhone>phone: {el.type.phone}</HoverPhone>
-                                                <HoverAdd>add: {el.type.address}</HoverAdd>
+                                                <HoverTitle>name: {el.place_name}</HoverTitle>
+                                                <HoverPhone>phone: {el.phone}</HoverPhone>
+                                                <HoverAdd>add: {el.address_name}</HoverAdd>
                                             </HoverBox>
                                         </PostItMemo>
                                     </MemoBox>
@@ -373,7 +374,7 @@ function ShowDetailPage() {
                 </LeftBox>
                 <RightBox>
                     <PhotoBox>
-                        {dailyCard.photo.map((el, index) => {
+                        {JSON.parse(dailyCard.photo).map((el, index) => {
                             return (
                                 <Photo className="Photo" index={index}>
                                     <PhotoImg src={el} />

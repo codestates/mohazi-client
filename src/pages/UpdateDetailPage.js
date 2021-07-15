@@ -585,7 +585,7 @@ function UpdateDetailPage() {
             <Box>
                 <LeftBox>
                     <SelectionBox>
-                        {dailyCard.selections.map((el, index) => {
+                        {dailyCard.type.map((el, index) => {
                             console.log(el.type)
                             return (
                                 <Selection>
