@@ -550,17 +550,18 @@ function UpdateDetailPage() {
             })
             .then((res) => {
                 console.log(res);
-                const data = {
-                    date: Div || dailyCard.date,
-                    userId: dailyCard.admin,
-                    photo: photo,
-                    memo: memo,
-                    type: dailyCard.type,
-                    friends: friends,
-                }
+                axios.
+                put(`${server}/dailycardinfo`,{
+                    dailyCardId: dailyCard.dailyCards_id,
+                })
+                .then((res) => {
+                    console.log(res.data);
+                    /*
                 dispatch(setCard(data));
                 alert('성공적으로 수정되었습니다. ');
-                history.push('/showdetail');
+                history.push('/showdetail');*/
+                })
+                
             })
     }
 
