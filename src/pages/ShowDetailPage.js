@@ -3,9 +3,11 @@ import { Link, withRouter, Route, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
+import axios from 'axios';
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
+const s3ImageURl = process.env.REACT_APP_S3_IMAGE_URL;
 
 const Body = styled.div`
     width: 100%;
@@ -55,6 +57,12 @@ const SelectionBox = styled.div`
     border-radius: 20px;
     border: 2px solid black;
     position: relative;
+`;
+
+const MemoBox2 = styled.div`
+    margin: 0 0 0 50px;
+    border-radius: 20px;
+    border: 2px solid black;
 `;
 
 const Selection = styled.div`
@@ -308,7 +316,7 @@ const Btn = styled.button`
 function ShowDetailPage() {
 
     const history = useHistory();
-    const { dailyCard } = useSelector((state) => state)
+    const { dailyCard, userInfo } = useSelector((state) => state)
 
     console.log(dailyCard)
 
@@ -330,7 +338,6 @@ function ShowDetailPage() {
         }
     }
 
-    console.log(window.innerWidth)
 
     return (
         <Body>
@@ -340,7 +347,7 @@ function ShowDetailPage() {
             <Box>
                 <LeftBox>
                     <SelectionBox>
-                        {dailyCard.selections.map((el, index) => {
+                        {dailyCard.type.map((el, index) => {
                             return (
                                 <Selection>
                                     <PostIt>
@@ -348,32 +355,37 @@ function ShowDetailPage() {
                                             <PostItNum>{index + 1}</PostItNum>
                                         </PostIt1>
                                         <PostIt2>
-                                            <PostItTitle>{el.type.name}</PostItTitle>
+                                            <PostItTitle>{el.place_name}</PostItTitle>
                                             <PostItBtn id={`PostItBtn${index}`} onClick={(e) => ShowHoverEvent(e, index)}>O</PostItBtn>
                                         </PostIt2>
                                     </PostIt>
                                     <MemoBox>
-                                        <Memo1>Memo: </Memo1>
                                         <PostItMemo>
-                                            <Memo2Box id="Memo2Box">
-                                                <Memo2>{el.memo}</Memo2>
-                                            </Memo2Box>                
+
                                             <HoverBox id={`HoverBox${index}`}>
                                                 <h4>-Info-</h4>
-                                                <HoverTitle>name: {el.type.name}</HoverTitle>
-                                                <HoverPhone>phone: {el.type.phone}</HoverPhone>
-                                                <HoverAdd>add: {el.type.address}</HoverAdd>
+                                                <HoverTitle>name: {el.place_name}</HoverTitle>
+                                                <HoverPhone>phone: {el.phone}</HoverPhone>
+                                                <HoverAdd>add: {el.address_name}</HoverAdd>
                                             </HoverBox>
                                         </PostItMemo>
                                     </MemoBox>
                                 </Selection>
                             )
                         })}
-                    </SelectionBox>
-                </LeftBox>
+                        </SelectionBox>
+                        <MemoBox2>
+                            <PostItMemo>
+                                <Memo1>Memo: </Memo1>
+                                <Memo2Box id="Memo2Box">
+                                    <Memo2>{dailyCard.memo}</Memo2>
+                                </Memo2Box>
+                            </PostItMemo>
+                            </MemoBox2>
+                    </LeftBox>
                 <RightBox>
                     <PhotoBox>
-                        {dailyCard.photo.map((el, index) => {
+                        {JSON.parse(dailyCard.photo).map((el, index) => {
                             return (
                                 <Photo className="Photo" index={index}>
                                     <PhotoImg src={el} />
@@ -382,12 +394,12 @@ function ShowDetailPage() {
                         })}
                     </PhotoBox>
                     <FriendBox>
-                        {dailyCard.friends.map((el, index) => {
+                        {dailyCard.friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
                             console.log(el.photo)
                             return (
                                 <Friend>
                                     <FriendPhoto className="FriendsPhoto" index={index}>
-                                        <FriendPhotoImg src={el.photo} />
+                                        <FriendPhotoImg src={s3ImageURl + '/' + el.photo} />
                                     </FriendPhoto>
                                     <FriendName>
                                         {el.username}

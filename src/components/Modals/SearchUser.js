@@ -132,6 +132,7 @@ const ResultField = styled.div`
 
 function SearchUserModal() {
     const dispatch = useDispatch();
+    const history = useHistory();
     const [users, setUsers] = useState([]);
     const [showUsers, setShowUsers] = useState([]);
     const [inputValue, setInputValue] = useState(null);
@@ -165,7 +166,7 @@ function SearchUserModal() {
             .put(`${server}/addfriend`,
             {
                 userId: friendId,
-                dailyCardId: 90
+                dailyCardId: dailyCard.dailyCards_id,
             },
             {
                 'Content-Type': 'application/json',
@@ -176,7 +177,7 @@ function SearchUserModal() {
                 axios
                     .put(`${server}/dailycardinfo`,
                         {
-                            dailyCardId: 90 
+                            dailyCardId: dailyCard.dailyCards_id, 
                         },
                         {
                             'Content-Type': 'application/json',
