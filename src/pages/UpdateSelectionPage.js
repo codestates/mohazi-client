@@ -323,7 +323,6 @@ function UpdateSelectionPage() {
     const [selectionMarkers, setSelectionMarkers] = useState([]);
     const [placeMarkers, setPlaceMarkers] =useState([]);
     const [inputText, setInputText] = useState('');
-    const [inputDate, setInputDate] = useState('');
     const categories = [[null, '선택', null], ["restaurant", "음식점", "FD6"], ["mall", "백화점", "MT1"], ["cafe", "카페", "CE7"], ["park", "관광명소", "AT4"], ["exhibition", "문화시설", "CT1"]];
     const categoryOptions = categories.map(category => {
         return <option value={category[2]}>{category[1]}</option>;
@@ -347,7 +346,7 @@ function UpdateSelectionPage() {
             </Place>
     });
     
-    const [selections, setSelections] = useState(dailyCard.selections)
+    const [selections, setSelections] = useState(dailyCard.type)
     const showSelections = selections.map(selection => {
         return <Selection onClick={() => handleRemoveSelection(selection)}>
                 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMGMtNC4xOTggMC04IDMuNDAzLTggNy42MDIgMCA2LjI0MyA2LjM3NyA2LjkwMyA4IDE2LjM5OCAxLjYyMy05LjQ5NSA4LTEwLjE1NSA4LTE2LjM5OCAwLTQuMTk5LTMuODAxLTcuNjAyLTgtNy42MDJ6bTAgMTFjLTEuNjU3IDAtMy0xLjM0My0zLTNzMS4zNDItMyAzLTMgMyAxLjM0MyAzIDMtMS4zNDMgMy0zIDN6Ii8+PC9zdmc+" />
@@ -427,15 +426,15 @@ function UpdateSelectionPage() {
         if (confirm("일정을 수정하시겠습니까?")) {
             axios
                 .put(`${server}/selectionupdate`, {
-                    dailycardId: 84,
+                    dailycardId: dailyCard.dailyCards_id,
                     selections: selections,
                 }, {
                     'Content-Type': 'application/json',
                     withCredentials: true,
                 })
                 .then(res => {
-                    console.log(res.data.message)
-                    //history.push('/updatedetail');
+                    alert(res.data.message)
+                    history.push('/updatedetail');
                 })
                 .catch(err => console.log(err))
         }
@@ -458,9 +457,6 @@ function UpdateSelectionPage() {
         setMap(map);
 
         kakao.maps.event.addListener(map, "click", handleMakePositionMarker);
-        // if(region) {
-        //     setLatLng({region.y, region.x})
-        // }
     }, [])
 
     //위치 선택
