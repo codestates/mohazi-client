@@ -1,6 +1,6 @@
 import { GoogleLogout } from "react-google-login";
 import { initialState } from "./initialState";
-import { LOGIN, LOGOUT, SETCARDS, SETCARD, USERUPDATE, AREAUPDATE, SETFRIEND } from '../actions/actions.js';
+import { LOGIN, LOGOUT, SETCARDS, SETCARD, USERUPDATE, AREAUPDATE, SETFRIENDS, SETCATEGORY } from '../actions/actions.js';
 
 const reducer = (state = initialState, action) => {
     switch(action.type){
@@ -42,9 +42,14 @@ const reducer = (state = initialState, action) => {
                 region: action.payload.region,
             });
 
-        case SETFRIEND:
+        case SETFRIENDS:
+            console.log('reducer', action.payload.friends)
+            return Object.assign({...state}, state.dailyCard.friends = action.payload.friends,
+            );
+
+        case SETCATEGORY:
             return Object.assign({}, state, {
-                friend: action.payload.friend,
+                category: action.payload.category,
             });
 
         default:

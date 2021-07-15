@@ -2,6 +2,7 @@ import axios from 'axios';
 import { withRouter, Route, useHistory } from "react-router-dom";
 import { areaUpdate } from '../actions/actions';
 import { useDispatch } from 'react-redux';
+import { setCategory } from '../actions/actions';
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
@@ -23,6 +24,8 @@ const Desc = styled.div`
         position: relative;
         display: flex;
         justify-content: center;
+
+        border: 10px dashed ${oc.yellow[3]};
     `;
 
 const DescBox = styled.div`
@@ -36,6 +39,15 @@ const DescBox = styled.div`
         border-radius: 20px;
     `;
 
+const DescriptionImg = styled.img`
+    height: 350px;
+    margin: 25px;
+    border-radius: 20px;
+    z-index: 10;
+    position: absolute;
+    left: 10px;
+`;
+
 const DescBoxText = styled.div`
         margin-top: 150px;
         margin-bottom: 20px;
@@ -45,7 +57,7 @@ const DescBoxText = styled.div`
 const RecBox = styled.div`
         height: 400px;
         width: 1000px;
-        margin: 0;
+        margin-left: 230px;
         padding: 25px;
         display: flex;
         float: left;
@@ -63,11 +75,16 @@ const Rec = styled.div`
         z-index: ${(props) => props.index};
         clear: both;
         border-radius: 20px;
-        border: 1px solid black;
         position: absolute;
         left: ${(props) => props.left}px;
         transition: all 0.5s linear;
         cursor: pointer;
+        justify-content: center;
+        align-items: center;
+        
+        > img {
+            width: 250px
+        }
         &:hover {
             transition: all 0.5s ease 0s;
             transform: translateY(-15px);
@@ -122,12 +139,91 @@ const Box = styled.div`
 
     // ------------------css------------------ //
 
+const Introductions = styled.div`
+    width: 100vw;
+`;
+
+const IntroPage = styled.div`
+    width: 100vw;
+    height: 700px;
+    background: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    > div {
+        margin-left: 70px;
+
+        > span {
+        float: left;
+        text-align: left;
+        font-weight: 600;
+        font-size: 4rem;
+        color: ${oc.yellow[5]};
+        width: 550px;
+        }
+
+        > .subText {
+        font-weight: 500;
+        font-size: 1.5rem;
+        color: ${oc.gray[5]};
+        margin-top: 20px;
+        }
+    }
+
+    > img {
+        width: 800px;
+        float: right;
+    }
+`
+const Category = styled.div`
+    height: 350px;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    z-index: ${(props) => props.index};
+    clear: both;
+    border-radius: 20px;
+    position: absolute;
+    left: ${(props) => props.left}px;
+    transition: all 0.5s linear;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+        
+    > img {
+        width: 230px;
+        margin: 5px;
+    }
+
+    #first, #fourth {
+        width: 140px;
+    }
+    
+    > span {
+        font-weight: 600;
+        font-size: 4rem;
+        position: absolute;
+    }
+    
+    &:hover {
+        transition: all 0.5s ease 0s;
+        transform: translateY(-15px);
+    }
+    &:hover ~ .Rec {
+        transition: all 0.5s ease 0s;
+        transform: translateX(100px);
+    }
+    
+    `;
+
 function LandingPage() {
     const history = useHistory();
     const dispatch = useDispatch();
     const [selections, setSelections] = useState([1, 2, 3, 4, 5]);
     const [introes, setIntroes] = useState([1, 2, 3, 4, 5]);
     const region = {};
+    const categories = [['관광', 'first', "AT4"], ['커피', 'second', "CE7"], ['음식', 'third', "FD6"], ['문화', 'fourth', "CT1"], ['쇼핑', 'fifth', "MT1"]]
 
     useEffect(() => {
         axios
@@ -147,12 +243,15 @@ function LandingPage() {
         history.push('/search')
     }
 
+    function goRegister(categoryCode) {
+        //const {x,y} = el;
+        //console.log(el)
+        //console.log(x,y)
 
-    function goRegister(el) {
-        const {x,y} = el;
-        console.log(el)
-        console.log(x,y)
+        //사용자 위치
         dispatch(areaUpdate(region));
+        //선택한 카테고리
+        dispatch(setCategory(categoryCode));
         history.push('/register');
     }
 
@@ -189,23 +288,28 @@ function LandingPage() {
     return (
         <Landing id="Landing">
             <Desc id="Desc">
-                <DescBox>
+                {/* <DescBox>
                     <DescBoxText>
                         오늘<br />
                         추천장소
                     </DescBoxText>
-                </DescBox>
+                </DescBox> */}
+                <DescriptionImg src='/img/pablo-212.png'/>
                 <RecBox>
-                    {selections.map((el, index) => {
+                    {/* {selections.map((el, index) => {
                         return (
-                            <Rec className="Rec" left={(index)*150} index={index} onClick={() => goRegister(el)}>
+                            <Rec id={index} className="Rec" left={(index)*150} index={index} onClick={() => goRegister(el)}>
                                 <RecImg className="RecImg" src="img/cafe.jpg" />
                             </Rec>
                         )
-                    })}
+                    })} */}
+                    {categories.map((category, index) => <Category className="Rec" left={index * 150} index={index} onClick={() => goRegister(category[2])}>
+                        <span>{category[0]}</span>
+                        <img id={category[1]} src={'/img/pablo-' + index + '.png'}/>
+                    </Category> )}
                 </RecBox>
             </Desc>
-            <IntroBox id="introbox">
+            {/* <IntroBox id="introbox">
                 {introes.map((el) => {
                     return (
                         <Box className="box" onWheel={(e) => MouseWheelHandler(e)}>
@@ -219,7 +323,23 @@ function LandingPage() {
                         </Box>
                     )
                 })}
-            </IntroBox>
+            </IntroBox> */}
+            <Introductions>
+                <IntroPage>
+                    <div>
+                        <span>오늘도 뭘 해야할지 모르겠다면?</span>
+                        <span className="subText">당신이 있는 그곳에서의 놀거리를 찾아보세요!</span>
+                    </div>
+                    <img src='/img/pablo-isolation.png'></img>
+                </IntroPage>
+                <IntroPage>
+                    <img src='/img/pablo-839.png'></img>
+                    <div>
+                        <span>만나서 일정을 계획하기가 어렵다면?</span>
+                        <span className="subText">일정을 만들고 바로 친구들과 공유해요!</span>
+                    </div>
+                </IntroPage>
+            </Introductions>
         </Landing>
     )
 }

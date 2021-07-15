@@ -347,7 +347,7 @@ function UpdateSelectionPage() {
             </Place>
     });
     
-    const [selections, setSelections] = useState([])
+    const [selections, setSelections] = useState(dailyCard.selections)
     const showSelections = selections.map(selection => {
         return <Selection onClick={() => handleRemoveSelection(selection)}>
                 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMGMtNC4xOTggMC04IDMuNDAzLTggNy42MDIgMCA2LjI0MyA2LjM3NyA2LjkwMyA4IDE2LjM5OCAxLjYyMy05LjQ5NSA4LTEwLjE1NSA4LTE2LjM5OCAwLTQuMTk5LTMuODAxLTcuNjAyLTgtNy42MDJ6bTAgMTFjLTEuNjU3IDAtMy0xLjM0My0zLTNzMS4zNDItMyAzLTMgMyAxLjM0MyAzIDMtMS4zNDMgMy0zIDN6Ii8+PC9zdmc+" />
@@ -427,7 +427,7 @@ function UpdateSelectionPage() {
         if (confirm("일정을 수정하시겠습니까?")) {
             axios
                 .put(`${server}/selectionupdate`, {
-                    dailycardId: dailyCard.id,
+                    dailycardId: 84,
                     selections: selections,
                 }, {
                     'Content-Type': 'application/json',
@@ -435,7 +435,7 @@ function UpdateSelectionPage() {
                 })
                 .then(res => {
                     console.log(res.data.message)
-                    history.push('/updatedetail');
+                    //history.push('/updatedetail');
                 })
                 .catch(err => console.log(err))
         }

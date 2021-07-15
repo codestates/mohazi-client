@@ -380,8 +380,10 @@ function UpdateDetailPage() {
     }
 
     const [ photo, setPhoto ] = useState(dailyCard.photo);
+
     const [ friends, setFriend ] = useState(dailyCard.friends);
     const [imgBase64, setImgBase64] = useState("");
+
     const [imgFile, setImgFile] = useState(null);
     const [memo, setMemo] = useState(dailyCard.selections.map((el) => el.memo));
     const mount = useRef(false);
@@ -487,24 +489,22 @@ function UpdateDetailPage() {
     };
 
     const PhotoDelete = (e, index) => {
-
         let Div = document.querySelector(`#PhotoImg${index}`).src.split('/')[3];
+
         const set = photo.slice(0);
         set.splice(index, 1)
 
         console.log(Div);
 
         axios
-            .put(`${server}/s3delete`, {
-                key: Div
-            },
-            {
-                headers: {
+            .put(`${server}/s3delete`, { key: Div },
+                {
                     'Content-Type': 'application/json',
                     withCredentials: true,
-                },
-            })
+                }
+            )
             .then((res) => {
+                console.log('delete')
                  setPhoto(set);
             })
     }
@@ -519,6 +519,7 @@ function UpdateDetailPage() {
             .delete(`${server}/deletefriend`, {
                 userId: el.id,
                 dailyCardId: dailyCard.id,
+
                 headers: {
                     'Content-Type': 'application/json',
                     withCredentials: true,
@@ -573,8 +574,9 @@ function UpdateDetailPage() {
         document.querySelector('.search_user_bg').style.display ='block';
     }
 
-
-
+    useEffect(() => {
+       console.log('rendering') 
+    },[friends])
     return (
         <Body>
         <DetailBody id="DetailBody">

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFriend } from '../../actions/actions.js';
+import { setFriends, setCard } from '../../actions/actions.js';
 import oc from 'open-color';
 
 require("dotenv").config();
@@ -137,6 +137,7 @@ function SearchUserModal() {
     const [inputValue, setInputValue] = useState(null);
     const state = useSelector(state => state);
     const { dailyCard } = state; //친구를 추가하고 싶은 데일리 카드
+    const defaultProfileImg = '/img/default_profile_img.png'
 
     function handleOpenModal() {
         document.querySelector('.search_user_modal').style.display ='block';
@@ -158,39 +159,64 @@ function SearchUserModal() {
 
     function handleSelectUser(event) {
         const friendId = event.target.id;
+        console.log('friendId', friendId);
         
         axios
             .put(`${server}/addfriend`,
             {
                 userId: friendId,
-                dailyCardId: dailyCard.id
+                dailyCardId: 90
             },
             {
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
                 withCredentials: true,
             })
             .then(res => {
-              alert(res.data.message);
+              console.log(res.data);
+                axios
+                    .put(`${server}/dailycardinfo`,
+                        {
+                            dailyCardId: 90 
+                        },
+                        {
+                            'Content-Type': 'application/json',
+                            withCredentials: true,
+                        })
+                    .then(res => {
+                        console.log('dailycard', res)
+                        // dispatch(setCard({
+                        //     date: res.data.date,
+                        //     userId: 1,
+                        //     photo: res.data.photo, // 사용자가 찍은 사진들
+                        //     selections: res.data.selections,
+                        //     friends: res.data.friends
+                        // }))
+                        dispatch(setFriends(res.data.friends))
+
+                        document.querySelector('.search_user_modal').style.display = 'none';
+                        document.querySelector('.search_user_bg').style.display = 'none';
+                        })
             })
             .catch(err => console.log(err))
         // const friend = users.filter(user => user.id === Number(friendId));
         // console.log('친구추가',friend[0])
         // dispatch(setFriend(friend[0]));
-        
-        document.querySelector('.search_user_modal').style.display ='none';
-        document.querySelector('.search_user_bg').style.display ='none';
     }
 
     function handleSearchUser() {
         axios
-            .get(`${server}/usersearch`,
+            .put(`${server}/usersearch`,
                 {
-                    params: { email: inputValue, }
-                })
+                    email: inputValue,
+                },{
+                    'content-type': 'application/json',
+                    withCredentials: true
+                }
+                )
             .then(res => {
                 console.log(res.data)
                 //let users = res.data.userInfo;
-                setUsers([res.data.userInfo]);
+                setUsers([...res.data.userInfo]);
             })
             .catch(err => {
                 setUsers([]);
@@ -201,7 +227,7 @@ function SearchUserModal() {
         if(users) {
             setShowUsers(users.map(user => 
                 <User id={user.id} onClick={handleSelectUser}>
-                    <img src={s3ImageURl + '/' + user.photo}/>
+                    <img src={user.photo? s3ImageURl + '/' + user.photo : defaultProfileImg}/>
                     <div>{user.username}</div>
                 </User>));
         }
