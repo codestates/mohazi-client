@@ -1,10 +1,11 @@
 /*global kakao*/ 
 import { withRouter, Route, useHistory } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import oc from 'open-color';
 import axios from 'axios';
+import { setCards } from '../actions/actions.js';
 
 const { kakao } = window;
 
@@ -273,6 +274,7 @@ const Search_wrap = styled.div`
 function RegisterPage() {
     const state = useSelector(state => state);
     const history = useHistory();
+    const dispatch = useDispatch();
     const { isLogin, userInfo, region, category } = state;
 
     const onDragStart = (event) => {
@@ -443,17 +445,31 @@ function RegisterPage() {
             } else {
                 axios.put(`${server}/createcard`, {
                         date: inputDate,
-                        userId: userInfo.id,
-                        selections: selections,
-                    },{
-                        'Content-Type': 'application/json',
-                        withCredentials: true,
-                    })
+                    userId: userInfo.id,
+                    selections: selections,
+                }, {
+                    'Content-Type': 'application/json',
+                    withCredentials: true,
+                })
                     .then(res => {
-                        console.log(res)
-                        if (confirm("마이페이지로 이동하시겠습니까?") === true) {
-                            history.push('/mypage');
-                        }
+                        //console.log(res)
+                        axios
+                            .put(`${server}/mypage`, {
+                                userId: userInfo.id,
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    withCredentials: true,
+                                }
+                            })
+                            .then(res => {
+                                console.log('mypage', res.data)
+                                dispatch(setCards([...res.data.myCardsInfo, ...res.data.taggedCardsInfo]));
+                            })
+                            .then(res => {
+                                if (confirm("마이페이지로 이동하시겠습니까?") === true) {
+                                    history.push('/mypage');
+                                }
+                            })
                     })
                     .catch(err => console.log(err))
             }
