@@ -211,15 +211,14 @@ const Admin = styled.div`
 
 function MyPage() {
     const state = useSelector(state => state);
+    const { userInfo, dailyCards, dailyCard, isLogin } = state;
     const dispatch = useDispatch();
     const history = useHistory();
     
     const defaultProfileImg = '/img/default_profile_img.png'
     const defaultCardImg = '/img/landscape.jpeg'
 
-    const [isDeleteCard, setIsDeleteCard] = useState(-1)
-
-    const { userInfo, dailyCards, dailyCard } = state;
+    const [isDeleteCard, setIsDeleteCard] = useState(-1);
     const [ visibleCards, setVisibleCards ] = useState(dailyCards);
     
     let cardSort = "전체 글";
@@ -330,6 +329,12 @@ function MyPage() {
     const handleUpdateUser = () => {
         history.push('/updateuser');
     }
+
+    useEffect(() => {
+        if(!isLogin) {
+            history.push('/pagenotfound');
+        }
+    },[]);
 
     useEffect(() => {
         //삭제 할 때마다 카드정보 불러오기

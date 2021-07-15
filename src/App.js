@@ -11,6 +11,7 @@ import SignupPage from "./pages/SignupPage";
 import UpdateDetailPage from "./pages/UpdateDetailPage";
 import UpdateSelectionPage from "./pages/UpdateSelectionPage";
 import UpdateUserPage from "./pages/UpdateUserPage";
+import PageNotFound from "./pages/PageNotFound";
 
 import { useSelector } from "react-redux";
 import {
@@ -32,7 +33,8 @@ function App() {
           console.log(pathname)
           const isTrue = pathname !== '/login' &&
             pathname !== '/signup' &&
-            pathname !== '/updateuser';
+            pathname !== '/updateuser' &&
+            pathname !== '/pagenotfound';
           if (isTrue) {
             return <Header />
           }
@@ -48,6 +50,7 @@ function App() {
         <Route path='/updatedetail' render={() => <UpdateDetailPage />} />
         <Route path='/updateselection' render={() => <UpdateSelectionPage />} />
         <Route path='/updateuser' render={() => <UpdateUserPage />} />
+        <Route path='/pagenotfound' render={() => <PageNotFound />} />
         <Route
           exact path='/'
           render={() => <Redirect to='/landing' />}
@@ -58,7 +61,8 @@ function App() {
           const pathname = window.location.pathname;
           const isTrue = pathname !== '/login' &&
             pathname !== '/signup' &&
-            pathname !== '/updateuser';
+            pathname !== '/updateuser' &&
+            pathname !== '/pagenotfound';
           if (isTrue) {
             return <Footer />
           }

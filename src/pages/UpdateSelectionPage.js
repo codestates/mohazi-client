@@ -272,7 +272,7 @@ const Search_wrap = styled.div`
 function UpdateSelectionPage() {
     const state = useSelector(state => state);
     const history = useHistory();
-    const { region, dailyCard } = state;
+    const { region, dailyCard, isLogin } = state;
 
     const onDragStart = (event) => {
         event.dataTransfer.setData('text/plain', event.target.id);
@@ -447,6 +447,10 @@ function UpdateSelectionPage() {
 
     //지도 생성
     useEffect(() => {
+        if(!isLogin) {
+            history.push('/pagenotfound');
+        }
+
         const mapContainer = document.getElementById('map'),
             mapOptions = {
                 center: new kakao.maps.LatLng(lat, lng),
