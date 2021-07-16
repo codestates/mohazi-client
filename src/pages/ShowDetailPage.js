@@ -26,9 +26,10 @@ const DetailBody = styled.div`
 `;
 
 const DetailTitle = styled.div`
-    font-family: 'Fjalla One', sans-serif;
-    font-size: 4em;
-    margin: 120px 0 20px 150px;
+    font-family: 'Nanum Pen Script', cursive;
+    font-weight: 600;
+    font-size: 4.4em;
+    margin: 120px 0 20px 15%;
 `;
 
 const Box = styled.div`
@@ -41,42 +42,50 @@ const Box = styled.div`
 const LeftBox = styled.div`
     margin: 10px;
     width: 65%;
+    height: ${props => {
+        return 85 * props.hei + 144 * props.hei + 300;
+    }}px;
     position: relative;
 `;
 
-const LeftTitle = styled.div`
-    position: absolute;
-    font-family: 'Fjalla One', sans-serif;
-    font-size: 1.5em;
-    top: -15px;
-    left: 20px;
-`;
 
 const SelectionBox = styled.div`
     margin: 0 0 0 50px;
+    background: ${oc.yellow[0]};
     border-radius: 20px;
     border: 2px solid black;
-    position: relative;
+    position: absolute;
+    width: 90%;
 `;
 
-const MemoBox2 = styled.div`
+const MemoBox = styled.div`
     margin: 0 0 0 50px;
+    background: ${oc.yellow[0]};
     border-radius: 20px;
     border: 2px solid black;
+    position: absolute;
+    top: ${props => {
+        return 85 * props.hei + 144 * props.hei;
+    }}px;
+    width: 90%;
+    height: 250px;
+    white-space: pre-line;
+    
+    & > * {
+        font-family: 'Nanum Pen Script', cursive;
+        font-size: 1.7em;
+    }
 `;
 
 const Selection = styled.div`
     margin: 25px;
-    & > * {
-        
-    }
 `;
 
 const PostIt = styled.div`
     display: flex;
 `;
 
-const PostIt1 = styled.div`
+const PostItLeft = styled.div`
     width: 50px;
     height:50px;
     border: 1px solid black;
@@ -102,49 +111,70 @@ const PostItNum = styled.h2`
 
 `;
 
-const PostIt2 = styled.div`
-    width: 40%;
+const PostItRight = styled.div`
+    width: 330px;
     height: 50px;
     border: 1px solid black;
     background-color: ${oc.gray[3]};
-    display: flex;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar{
+        width: 2px;
+      }
+
+    &::-webkit-scrollbar-thumb{
+        background-color: ${oc.gray[7]};
+        border-radius: 30px;
+      }
+
+    &::-webkit-scrollbar-track{
+        background: transparent;
+      }
 `;
 
-const PostItTitle = styled.h2`
+const PostItTitle = styled.div`
+    float: left;
     margin: 5px;
     height: 50px;
     font-family: 'Nanum Pen Script', cursive;
+    font-weight: 1000;
     font-size: 2.2em;
 `;
 
 const PostItBtn = styled.button`
+    float:right;
     width: 20px;
-    height: 20px;
-    margin: 15px auto;
+    height: 50px;
+    border: 2px solid black;
+    border-left-width: 2px;
 
+    &: focus {
+        outline:none;
+    }
 `;
 
-const MemoBox = styled.div`
+const PostItInfo = styled.div`
     width: 80%;   
     margin: 20px 0 0 50px;   
 `;
 
-const PostItMemo = styled.div`
+const InfoBox = styled.div`
     white-space: pre-line;
     
     & > * {
         font-family: 'Nanum Pen Script', cursive;
         font-size: 1.7em;
     }
+
 `;
 
-const Memo1 = styled.h4`
+const MemoTitle = styled.h4`
     margin: 5px;
     font-family: 'Nanum Pen Script', cursive;
     font-size: 2em;
 `;
 
-const Memo2Box = styled.div`
+const MemoContent = styled.div`
     height: 120px;
     overflow-y: auto;
 
@@ -162,14 +192,31 @@ const Memo2Box = styled.div`
       }
 `;
 
-const Memo2 = styled.h5`
+const MemoText = styled.h5`
     margin: 5px;
 `;
 
 const HoverBox = styled.div`
     margin: 5px;
     width: 95%;
-    display: none;
+    height: 125px;
+    display: block;
+
+    overflow-y: auto;
+
+    &::-webkit-scrollbar{
+        width: 0px;
+      }
+
+    &::-webkit-scrollbar-thumb{
+        background-color: ${oc.gray[7]};
+
+      }
+
+    &::-webkit-scrollbar-track{
+        background: transparent;
+      }
+
     & > * {
         margin: 5px;
     }
@@ -188,24 +235,21 @@ const HoverPhone = styled.h5`
 `;
 
 const RightBox = styled.div`
-    position: relative;    
     margin: 10px;
     width: 35%; 
-`;
-
-const RightTitle1 = styled.div`
-    position: absoulte;
-    top: 20px;
+    height: ${props => {
+        return 85 * props.hei + 144 * props.hei + 300;
+    }}px;
 `;
 
 const PhotoBox = styled.div`
     margin: 0px auto;
+    background: ${oc.yellow[0]};
     border: 2px solid black;
     border-radius: 20px;
     overflow-y: auto;
-    text-align: center;
     width: 100%;
-    height: 800px;
+    height: 60%;
 
     &::-webkit-scrollbar{
         width: 5px;
@@ -233,29 +277,35 @@ const PhotoBox = styled.div`
 `;
 
 const Photo = styled.div`
-    width: 90%;
-    height: 150px;
-    margin: 10px auto;
+    width: 45%;
+    float: left;
+    margin: 2.5%;
     border-radius: 20px;
+    position: relative;
+    &:after {
+      content: "";
+      display: block;
+      padding-bottom: 100%;
+    }  
+   
 `;
 
 const PhotoImg = styled.img`
+    position: absolute;
     border-radius: 20px;
-    width: 100%;
-    height: 150px;
+    border: 4px solid black;
+    width:100%;
+    height: 100%;
     object-fit: cover;
 `;
 
 
 const FriendBox = styled.div`
-    margin: 10px auto;
+    margin: 20px auto;
+    background: ${oc.yellow[0]};
     overflow-y: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: center;
     width: 100%;
-    height: 500px;
+    height: 30%;
     border: 2px solid black;
     border-radius: 20px;
 
@@ -286,32 +336,57 @@ const FriendBox = styled.div`
 `;
 
 const Friend = styled.div`
-    margin: 10px;
+    float: left;
+    width: 30%;
     position: relative;
+    margin: 10px 1.5%;
+    position: relative;
+    &:after {
+        content: "";
+        display: block;
+        padding-bottom: 120%;
+    }
 `;
 
 const FriendPhoto = styled.div`
-    width: 90px;
+    position: absolute;
+    width: 100%;
+    height: 80%;
 `;
 
 const FriendPhotoImg = styled.img`
-    width: 75px;
-    height: 75px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     border: 1px solid black;
 `;
 
 const FriendName = styled.div`
-
+    position: absolute;
+    top: 77%;
+    width: 100%;
+    height: 20%;
+    text-align: center;
 `;
 
 const Btn = styled.button`
-    position: absolute;
-    top: 150px;
-    left: 80%;
+    margin: auto;
+    width: 100%;
+    height: 3%;
+    border-radius: 20px;
+    border: 2px solid black;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 2em;
+    background: ${oc.yellow[0]};
+    &: focus {
+        outline:none;
+    }
+    &: hover {
+        background: ${oc.red[2]};
+        transform: scale(1.01);
+        cursor: pointer;
+    }
 `;
-
-
 
 function ShowDetailPage() {
 
@@ -331,10 +406,10 @@ function ShowDetailPage() {
 
         if(Div.style.display === 'none'){
             Div.style.display = 'block';
-            Btn.innerText = 'X';
+            Btn.innerText = '↾';
         } else {
             Div.style.display = 'none';
-            Btn.innerText = 'O';
+            Btn.innerText = '⇂';
         }
     }
 
@@ -343,52 +418,49 @@ function ShowDetailPage() {
         <Body>
         <DetailBody id="DetailBody">
             <DetailTitle>Daily Note: {dailyCard.date}</DetailTitle>
-            <Btn onClick={GoUpdateDetail}>수정하기</Btn>
             <Box>
-                <LeftBox>
+                <LeftBox hei={dailyCard.type.length}>
                     <SelectionBox>
                         {dailyCard.type.map((el, index) => {
+                            console.log(dailyCard.type.length);
                             return (
                                 <Selection>
                                     <PostIt>
-                                        <PostIt1 index={index}>
+                                        <PostItLeft index={index}>
                                             <PostItNum>{index + 1}</PostItNum>
-                                        </PostIt1>
-                                        <PostIt2>
-                                            <PostItTitle>{el.place_name}</PostItTitle>
-                                            <PostItBtn id={`PostItBtn${index}`} onClick={(e) => ShowHoverEvent(e, index)}>O</PostItBtn>
-                                        </PostIt2>
+                                        </PostItLeft>
+                                        <PostItRight>
+                                            <PostItTitle>{el.place_name}</PostItTitle>               
+                                        </PostItRight>
+                                        <PostItBtn id={`PostItBtn${index}`} onClick={(e) => ShowHoverEvent(e, index)}>↾</PostItBtn>
                                     </PostIt>
-                                    <MemoBox>
-                                        <PostItMemo>
-
+                                    <PostItInfo>
+                                        <InfoBox>
                                             <HoverBox id={`HoverBox${index}`}>
                                                 <h4>-Info-</h4>
                                                 <HoverTitle>name: {el.place_name}</HoverTitle>
                                                 <HoverPhone>phone: {el.phone}</HoverPhone>
                                                 <HoverAdd>add: {el.address_name}</HoverAdd>
                                             </HoverBox>
-                                        </PostItMemo>
-                                    </MemoBox>
+                                        </InfoBox>
+                                    </PostItInfo>
                                 </Selection>
                             )
                         })}
                         </SelectionBox>
-                        <MemoBox2>
-                            <PostItMemo>
-                                <Memo1>Memo: </Memo1>
-                                <Memo2Box id="Memo2Box">
-                                    <Memo2>{dailyCard.memo}</Memo2>
-                                </Memo2Box>
-                            </PostItMemo>
-                            </MemoBox2>
-                    </LeftBox>
-                <RightBox>
+                        <MemoBox hei={dailyCard.type.length}> 
+                                <MemoTitle>Memo: </MemoTitle>
+                                <MemoContent id="MemoContent">
+                                    <MemoText>{dailyCard.memo}</MemoText>
+                                </MemoContent> 
+                        </MemoBox>
+                </LeftBox>
+                <RightBox id="RightBox" hei={dailyCard.type.length}>
                     <PhotoBox>
                         {JSON.parse(dailyCard.photo).map((el, index) => {
                             return (
-                                <Photo className="Photo" index={index}>
-                                    <PhotoImg src={el} />
+                                <Photo id="Photo" index={index}>
+                                    <PhotoImg src={s3ImageURl + '/' + el} />
                                 </Photo>
                             )
                         })}
@@ -397,8 +469,8 @@ function ShowDetailPage() {
                         {dailyCard.friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
                             console.log(el.photo)
                             return (
-                                <Friend>
-                                    <FriendPhoto className="FriendsPhoto" index={index}>
+                                <Friend id="Friend">
+                                    <FriendPhoto index={index}>
                                         <FriendPhotoImg src={s3ImageURl + '/' + el.photo} />
                                     </FriendPhoto>
                                     <FriendName>
@@ -408,6 +480,7 @@ function ShowDetailPage() {
                             )
                         })}
                     </FriendBox>
+                    <Btn onClick={GoUpdateDetail}>수정하기</Btn>
                 </RightBox>
             </Box>
         </DetailBody>

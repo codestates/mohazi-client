@@ -24,7 +24,7 @@ body {
 
 @media (max-width: 2048px) {
   #DetailBody {
-    width : 90%;
+    width : 80%;
   }
 }
 
@@ -32,5 +32,16 @@ body {
   #DetailBody {
     width : 95%;
   }
+  #Photo {
+    width : 80%;
+    margin: 10px 10%;
+  }
+  #Friend {
+    width: 45%;
+    margin: 10px 2.5%;
+  }
 }
+
+
+
 

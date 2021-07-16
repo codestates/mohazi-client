@@ -67,18 +67,6 @@ const SearchResults = styled.div`
     }
 `;
 
-const LoginBody = styled.div`
-      /*height: 500px;
-      width: 500px;*/
-      box-sizing: border-box;
-      background-color: blue;
-      border-radius: 20px;
-      margin: 20px auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-  `;
-
 const Title = styled.div`
     width: 100%;
     text-align: center;
@@ -202,7 +190,7 @@ const LoginButton = styled.button`
     background: white;
     font-size: 0.9rem;
     font-weight: 600;
-    color: ${oc.cyan[6]};
+    color: ${oc.indigo[6]};
     padding: 0.5rem;
     cursor: pointer;
     border-radius: 3px;
@@ -276,7 +264,8 @@ function LoginModal({onSocial}) {
           })
           .then(res => {
             //console.log('로그인에 성공했습니다');
-            history.push('/')
+            //history.push('/')
+            handleCloseModal();
           })
           .catch((e) => {
             setErrorMessage('유효한 이메일 또는 비밀번호가 아닙니다');
@@ -311,7 +300,8 @@ function LoginModal({onSocial}) {
           })
           .then(res => {
             //console.log('로그인에 성공했습니다');
-            //history.push('/')
+            //history.push('/');
+            handleCloseModal();
           })
           .catch((e) => {
             setErrorMessage('유효한 이메일 또는 비밀번호가 아닙니다');

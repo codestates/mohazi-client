@@ -221,6 +221,7 @@ function MyPage() {
 
     const { userInfo, dailyCards, dailyCard } = state;
     const [ visibleCards, setVisibleCards ] = useState(dailyCards);
+    
     let cardSort = "전체 글";
     const cardSorts = ["전체 글", "내가 쓴 글", "태그 당한 글"]
     const cardSortOptions = cardSorts.map(cardSort => {
@@ -237,8 +238,9 @@ function MyPage() {
                 </Selection>
             });
 
-            console.log('photo', card.photo? card.photo: '')
-            let photo = card.photo
+            //console.log('photo', card.photo? JSON.parse(card.photo): '')
+            //let photo = JSON.parse(card.photo);
+            let photo = card.photo;
         
             return card.admin === userInfo.id? 
             <Card
@@ -247,7 +249,7 @@ function MyPage() {
                 onClick={(e) => handleShowCardDetails(e)}>
                 <DeleteCardButton className='deleteBtn' id={card.dailyCards_id} onClick={(e) => handleDeleteCard(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png"/>
                 <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
-                <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + card.photo[0]: defaultCardImg}/>
+                <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + photo[0]: defaultCardImg}/>
                 <Card_Selections id={card.dailyCards_id}>
                     {selections}
                 </Card_Selections>
@@ -261,7 +263,7 @@ function MyPage() {
                 color={oc.yellow[3]}
                 onClick={(e) => handleShowCardDetails(e)}>
             <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
-            <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + card.photo[0]: defaultCardImg}/>
+            <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + photo[0]: defaultCardImg}/>
             <Card_Selections id={card.dailyCards_id}>
                 {selections}
             </Card_Selections>
@@ -285,7 +287,7 @@ function MyPage() {
         const cardId = Number(event.target.id);
         let card = dailyCards.filter(el => el.dailyCards_id === cardId);
         dispatch(setCard(...card));
-        
+        console.log('id',cardId)
         axios
             .put(`${server}/dailycardinfo`, {
                 dailyCardId: cardId,
@@ -294,10 +296,11 @@ function MyPage() {
                 withCredentials: true,
             })
             .then(res => {
-                //console.log('friends', res.data.friends)
-                dispatch(setFriends(res.data.friends))
+                console.log('friends', res.data)
+                dispatch(setFriends(res.data.data.friends));
             })
-            .then(res => history.push('/showdetail'));
+            .then(res => history.push('/showdetail'))
+            .catch(err => console.log(err))
     }
 
     const handleDeleteCard = (event) => {
