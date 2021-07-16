@@ -12,6 +12,7 @@ import { useEffect } from "react";
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
 
+console.log(document.documentElement)
 const FixPosition = styled.div`
     display: flex;
     flex-direction: column;
@@ -55,15 +56,15 @@ const Space = styled.div`
 const MypageButton = styled(Link)`
     font-size: 0.9rem;
     font-weight: 600;
-    color: ${oc.indigo[6]};
+    color: ${oc.blue[8]};
     padding: 0.5rem;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 5px;
     text-decoration: none;
     transition: .2s all;
 
     &:hover {
-        background: ${oc.cyan[6]};
+        background: ${oc.blue[8]};
         color: white;
     }
 `;
@@ -71,16 +72,16 @@ const MypageButton = styled(Link)`
 const LogoutButton = styled(Link)`
     font-size: 0.9rem;
     font-weight: 600;
-    color: ${oc.indigo[6]};
+    color: ${oc.blue[8]};
     padding: 0.5rem;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 5px;
     text-decoration: none;
     transition: .2s all;
     outline: 'none';
 
     &:hover {
-        background: ${oc.cyan[6]};
+        background: ${oc.blue[8]};
         color: white;
     }
 `;
@@ -124,12 +125,12 @@ function Header() {
 
     // 글자색 바꾸기
     function SetTextColor(color){
-        document.querySelector('.sb').style.color = color;
+        document.documentElement.querySelector('.themed').style.color = color;
     }
 
     // 배경색 바꾸기
     function SetBackgroundColor(color){
-        document.querySelector('.sb').style.background = color;
+        document.querySelector('.themed').style.background = color;
     }
 
     function handleToggle(event) {
@@ -154,11 +155,11 @@ function Header() {
     
     return (
         <FixPosition>
-            <Background className="sb">
+            <Background className="themed">
                 <HeaderContents>
                     <Logo to='/landing'>MOHAZI</Logo>
                     <Space/>
-                    <Day_Night_Toggle name='day' src={toggleUrl} onClick={(e) => handleToggle(e)}/>
+                    <Day_Night_Toggle className="check" name='day' src={toggleUrl} onClick={(e) => handleToggle(e)}/>
                     {isLogin ?
                         <div>
                             <MypageButton to='/mypage'>Mypage</MypageButton>   <LogoutButton onClick={() => handleLogout()}>Logout</LogoutButton>

@@ -11,15 +11,19 @@ require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
 const s3ImageURl = process.env.REACT_APP_S3_IMAGE_URL;
 
+const Wrap = styled.div `
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+`;
+
 const UpdateBody = styled.div`
-    height: 700px;
+    height: 600px;
     width: 800px;
-    box-sizing: border-box;
+    background: white;
     text-align: center;
-    background-color: white;  
-    border: 1px solid black;
-    border-radius: 20px;
-    margin: 150px auto;
+    margin: 90px auto;
+    border: 4px dashed ${oc.gray[4]}
   `;
   
 const Title = styled.div`
@@ -49,6 +53,13 @@ const LeftField = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    >img {
+      width: 300px;
+      position: absolute;
+      z-index: 2;
+
+    }
 `;
 
 const ProfileImg = styled.div`
@@ -86,13 +97,20 @@ const UploadLink = styled.label`
     }
 `;
 
-const DesField = styled.input`
+const DesField = styled.textarea`
     margin: 45px 0 0 0;
-    border: 2px solid ${oc.gray[4]};
-    border-radius: 3px;
-    width: 80%;
-    height: 80px;
+    resize: none;
+    width: 180px;
+    height: 90px;
     background: white;
+    border: 3px solid ${oc.gray[4]};
+    border-radius: 5px;
+    wrap: hard;
+
+    &:hover {
+      background: ${oc.gray[1]};
+      transition: 0.2s;
+    }
 `;
 
 const RightField = styled.div`
@@ -129,6 +147,11 @@ const Input = styled.input`
     height: 40px;
     padding-left: 10px;
     margin-left: 10px;
+
+    &:hover {
+      background: ${oc.gray[1]};
+      transition: 0.2s;
+    }
 `;
 
 const Text = styled.span`
@@ -201,7 +224,7 @@ function UpdateUserPage() {
     Username: userInfo.username,
     Password: null,
     ConfirmPassword: null,
-    Description: '',
+    Description: userInfo.description,
   })
 
   const { Email, Password, ConfirmPassword, Username, Description } = inputs;
@@ -218,13 +241,12 @@ function UpdateUserPage() {
   const checkWord = /\W/;
 
   useEffect(() => {
-      
       if(!mount.current){
           mount.current = true;
       } else {
           PhotoUpload();
       }
-  }, [imgFile])
+  }, [imgFile]);
   
   useEffect(() => {
     if (Password !== ConfirmPassword) {
@@ -277,8 +299,8 @@ function UpdateUserPage() {
       })
       .then((res) => {
         const data = {
-          id: state.id,
-          email: state.email,
+          id: userInfo.id,
+          email: userInfo.email,
           username: Username,
           photo: photo,
           description: Description,
@@ -366,13 +388,13 @@ function UpdateUserPage() {
   }, []);
 
   return (
+    <Wrap>
     <UpdateBody>
       <Title>User Information</Title>
       <Field>
         <LeftField>
           <ProfileImg>
             <Img src ={photo? s3ImageURl + '/' +photo: defaultProfileImg}/>
-
             <UploadLink htmlFor="imgFile">
               <AddImg>
               <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNSA0aC0zdi0xaDN2MXptOCA2Yy0xLjY1NCAwLTMgMS4zNDYtMyAzczEuMzQ2IDMgMyAzIDMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zem0xMS01djE3aC0yNHYtMTdoNS45M2MuNjY5IDAgMS4yOTMtLjMzNCAxLjY2NC0uODkxbDEuNDA2LTIuMTA5aDhsMS40MDYgMi4xMDljLjM3MS41NTcuOTk1Ljg5MSAxLjY2NC44OTFoMy45M3ptLTE5IDRjMC0uNTUyLS40NDctMS0xLTFzLTEgLjQ0OC0xIDEgLjQ0NyAxIDEgMSAxLS40NDggMS0xem0xMyA0YzAtMi43NjEtMi4yMzktNS01LTVzLTUgMi4yMzktNSA1IDIuMjM5IDUgNSA1IDUtMi4yMzkgNS01eiIvPjwvc3ZnPg=="/>
@@ -380,14 +402,13 @@ function UpdateUserPage() {
             </UploadLink>
           </ProfileImg>
           <Upload id="imgFile" type="file" name="image" accept="image/jpeg" onChange={handleImage}></Upload>
-          <DesField name="Description" defaultValue={userInfo.description} onChange={onChange}></DesField>
+          <DesField name="Description" onChange={onChange}>{userInfo.description}</DesField>
         </LeftField>
         <RightField>
           <UpdateField>
             <Text>Email</Text>
             <EmailBody>{userInfo.email}</EmailBody>
           </UpdateField>
-
           <UpdateField>
             <Text>Username</Text>
             <Input name="Username" defaultValue={userInfo.username} onChange={onChange}></Input>
@@ -403,8 +424,6 @@ function UpdateUserPage() {
                 }
               }}
             />
-
-
           <UpdateField>
             <Text>Password</Text>
             <Input name="Password" type="password" onChange={onChange}></Input>
@@ -431,6 +450,7 @@ function UpdateUserPage() {
         </RightField>
       </Field>
     </UpdateBody>
+    </Wrap>
   )
 }
 export default withRouter(UpdateUserPage);

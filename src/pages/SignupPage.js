@@ -19,10 +19,16 @@ const Wrap = styled.div`
     justify-content: center;
     z-index: 30;
 
-    > img {
+    #firstImg {
       object-fit: fill;
-      width: 400px;
-      margin-right: 250px
+      width: 480px;
+      margin-right: 300px
+    }
+
+    #secondImg {
+      position: absolute;
+      width: 200px;
+      margin: 20px 0 0 130px;
     }
 `;
 
@@ -240,10 +246,11 @@ function SignupPage() {
             }
           })
         .then((res) => {
-          console.log('회원가입에 성공했습니다', res);
-          history.push('/landing')
+          alert('회원가입이 완료되었습니다');
+          history.push('/landing');
         })
         .catch((e) => {
+          alert('이미 존재하는 이메일입니다');
           console.log(e)
         })
 
@@ -252,7 +259,8 @@ function SignupPage() {
 
   return (
     <Wrap>
-    <img src="/img/pablo-193.png"/>
+    <img id="firstImg" src="/img/pablo-193.png"/>
+    <img id="secondImg" src="/img/pablo-168.png"/>
       <SignUpField>
         <Title>Sign Up</Title>
         <InputField>

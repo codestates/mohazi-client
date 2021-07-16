@@ -433,7 +433,7 @@ function UpdateSelectionPage() {
                     withCredentials: true,
                 })
                 .then(res => {
-                    alert(res.data.message)
+                    alert(res.data.message);
                     history.push('/updatedetail');
                 })
                 .catch(err => console.log(err))
