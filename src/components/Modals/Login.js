@@ -190,15 +190,15 @@ const LoginButton = styled.button`
     background: white;
     font-size: 0.9rem;
     font-weight: 600;
-    color: ${oc.indigo[6]};
+    color: ${oc.blue[8]};
     padding: 0.5rem;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 5px;
     text-decoration: none;
     transition: .2s all;
 
     &:hover {
-        background: ${oc.cyan[6]};
+        background: ${oc.blue[8]};
         color: white;
     }
 `;
@@ -259,11 +259,11 @@ function LoginModal({onSocial}) {
               }
             })
           .then((res) => {
-            //console.log('login', res.data)
+            console.log('login', res.data)
             dispatch(login(res.data.userinfo));
+            alert(`${res.data.userinfo.username}님, 반갑습니다!`);
           })
           .then(res => {
-            //console.log('로그인에 성공했습니다');
             //history.push('/')
             handleCloseModal();
           })
@@ -297,9 +297,9 @@ function LoginModal({onSocial}) {
           .then((res) => {
             //console.log('login', res.data)
             dispatch(login(res.data.userInfo));
+            alert(`${res.data.userinfo.username}님, 반갑습니다!`);
           })
           .then(res => {
-            //console.log('로그인에 성공했습니다');
             //history.push('/');
             handleCloseModal();
           })

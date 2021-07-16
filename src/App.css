@@ -26,11 +26,34 @@ body {
   #DetailBody {
     width : 90%;
   }
+
+
+  #region_search_bar {
+    flex-direction: row;
+    width: 310px;
+    right: 30px;
+    margin-top: 30px;
+  }
+
+  #region_search_bar div {
+    margin-left: 10px;
+  }
 }
 
 @media (max-width: 1024px) {
   #DetailBody {
     width : 95%;
+  }
+
+  #region_search_bar {
+    flex-direction: column;
+    width: 310px;
+    right: 0;
+    margin-top: 30px;
+  }
+
+  #region_search_bar select{
+    margin-bottom: 10px;
   }
 }
 
