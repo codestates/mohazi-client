@@ -41,6 +41,14 @@ const Title = styled.div`
     margin: 0 0 0 50px;
 `;
 
+const Admin = styled.div`
+    width: 80%;
+    padding: 10px;
+    font-weight: 600;
+    font-size: 3em;
+    margin: 0 0 0 450px;
+`;
+
 const Profile = styled.img`
     margin: 0 0 0 20px;
     width: 70px;
@@ -446,6 +454,7 @@ function ShowDetailPage() {
         <DetailBody id="DetailBody">
             <DetailTitle>
                 <Title>Date: {dailyCard.date}</Title>
+                <Admin>작성자:</Admin>
                 {dailyCard.friends.filter((el) => el.id === userInfo.id).map((el) => {
                     return (
                         <Profile src={s3ImageURl + '/' + el}/>
