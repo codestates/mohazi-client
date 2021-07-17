@@ -135,7 +135,7 @@ const ContentBox_Places = styled.div`
 
 const SearchResults = styled.div`
     margin: 0px 0px 0 340px;
-    background: ${oc.blue[8]};
+    background: ${oc.gray[8]};
     border-radius: 10px;
     width: 200px;
     height: 600px;
@@ -192,7 +192,7 @@ const Place = styled.div`
         > h3, h4 {
             color: white;
         }
-        background: ${oc.gray[7]};
+        background: ${oc.yellow[4]};
     }
 
 `;

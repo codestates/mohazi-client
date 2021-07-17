@@ -11,7 +11,7 @@ import GoogleLogin from 'react-google-login';
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
 
-const clientId = '626775549529-mgarkqol48n6optt5dd209ucc414sln0.apps.googleusercontent.com';
+const clientId = '344008906865-qfu4k5banudhmitspc333suic5tlfa0t.apps.googleusercontent.com'
 
 const Modal_wrap = styled.div`
     display: none;
@@ -281,7 +281,7 @@ function LoginModal({onSocial}) {
     	console.log(response);
         const { profileObj : { email, name, googleId } } = response;
 
-        axios
+        await axios
           .put(`${server}/sociallogin`,
             {
               email: email,
@@ -295,9 +295,9 @@ function LoginModal({onSocial}) {
               }
             })
           .then((res) => {
-            //console.log('login', res.data)
+            // console.log('login', res)
             dispatch(login(res.data.userInfo));
-            alert(`${res.data.userinfo.username}님, 반갑습니다!`);
+            alert(`${res.data.userInfo.username}님, 반갑습니다!`);
           })
           .then(res => {
             //history.push('/');

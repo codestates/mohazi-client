@@ -436,8 +436,8 @@ function UpdateSelectionPage() {
                 })
                 .then(res => {
                     alert(res.data.message);
-                    console.log(res)
-                    console.log(selections)
+                    //console.log(res)
+                    //console.log(selections)
                     dispatch(setSelection(selections));
                     history.push('/updatedetail');
                 })

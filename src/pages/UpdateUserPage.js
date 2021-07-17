@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { Link, withRouter, Route, useHistory } from "react-router-dom";
 import { useDispatch, useSelector, } from 'react-redux';
-import { userUpdate } from '../actions/actions.js';
+import { setFriends, userUpdate } from '../actions/actions.js';
 import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
 import imageCompression from "browser-image-compression";
@@ -15,15 +15,16 @@ const Wrap = styled.div `
     width: 100vw;
     height: 100vh;
     display: flex;
+    background: white;
+    z-index: 3;
 `;
 
 const UpdateBody = styled.div`
     height: 600px;
     width: 800px;
-    background: white;
     text-align: center;
     margin: 90px auto;
-    border: 4px dashed ${oc.gray[4]}
+    z-index: 5;
   `;
   
 const Title = styled.div`
@@ -32,7 +33,6 @@ const Title = styled.div`
     margin: 15px 0;
     padding: 20px;
     font-size: 4rem;
-    background: white;
     font-family: 'Fjalla One', sans-serif;
     color: ${oc.yellow[4]};
 `;
@@ -99,6 +99,7 @@ const UploadLink = styled.label`
 
 const DesField = styled.textarea`
     margin: 45px 0 0 0;
+    padding: 5px;
     resize: none;
     width: 180px;
     height: 90px;
@@ -117,6 +118,10 @@ const RightField = styled.div`
     height:80%;
     width:50%;
     margin-left: 10px;
+
+    > div {
+      float: left
+    }
 `;
 
 const UpdateField = styled.div`
@@ -168,14 +173,15 @@ const Alert = styled.div`
     text-align: center;
     font-weight: 500;
     font-size: 0.9rem;
-    color: ${oc.gray[8]}
+    color: ${oc.red[8]};
+    margin: 10px 0;
   `;
   
 const BtnField = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 15px
+    padding-top: 15px;
 `;
 
 const UpdateBtn = styled.button`
@@ -210,13 +216,27 @@ const WithdrawalBtn = styled.button`
     }
 `;
 
+const LoadingImg = styled.img`
+    width: 80px;
+    position: absolute;
+`;
+
+const Illustration = styled.img`
+    width: 200px;
+    object-fit: fill;
+    position: absolute;
+    margin-top: 32vh;
+    right: 20%;
+`;
+
 function UpdateUserPage() {
-  const defaultProfileImg = '/img/default_profile_img.png'
+  const defaultProfileImg = '/img/default_avatar.png' //'/img/default_profile_img.png'
 
   const history = useHistory();
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
   const { userInfo, isLogin } = state;
+  const [isLoading, setIsLoading] = useState(false);
   const [ photo, setPhoto ] = useState(userInfo.photo);
   const [inputs, setInputs] = useState({
     UserId: userInfo.id,
@@ -230,7 +250,7 @@ function UpdateUserPage() {
   const { UserId, Email, Password, ConfirmPassword, Username, Description } = inputs;
   const [errorInputs, setErrorInputs] = useState({
     ErrorAll: '',
-    ErrorUsername: '',
+    //ErrorUsername: '',
     ErrorPassword: '',
   })
   const { ErrorAll, ErrorUsername, ErrorPassword } = errorInputs;
@@ -250,24 +270,12 @@ function UpdateUserPage() {
   
   useEffect(() => {
     if (Password !== ConfirmPassword) {
-      handleError('ErrorPassword', '비밀번호가 일치하지 않습니다.')
+      handleError('ErrorPassword', '비밀번호가 일치하지 않습니다')
     } else {
       handleError('ErrorPassword', '');
     }
   }, [ConfirmPassword, Password])
   
-  useEffect(() => {
-    const checkUsername = checkWord.exec(Username);
-    if (checkUsername) {
-      handleError('ErrorUsername', '이름 형식이 아닙니다.')
-    } else {
-      handleError('ErrorUsername', '')
-    }
-    if (Username == '') {
-      handleError('ErrorUsername', '')
-    }
-  }, [Username])
-
   const onChange = (e) => {
     const { value, name } = e.currentTarget;
     setInputs({
@@ -353,8 +361,10 @@ function UpdateUserPage() {
                 },
               })
             .then((res) => {
+              console.log('upload success', res.data.key)
               // stateupdate
               setPhoto(res.data.key)
+              setIsLoading(false);
             })
         };
       })
@@ -383,8 +393,8 @@ function UpdateUserPage() {
   };
 
   const handleImage = (event) => {
-
     let reader = new FileReader();
+    
     reader.onloadend = (e) => {
       const base64 = reader.result;
       if (base64) setImgBase64(base64.toString());
@@ -393,6 +403,8 @@ function UpdateUserPage() {
       reader.readAsDataURL(event.target.files[0]);
       setImgFile(event.target.files[0]);
     }
+
+    setIsLoading(true);
   };
 
   useEffect(() => {
@@ -403,12 +415,14 @@ function UpdateUserPage() {
 
   return (
     <Wrap>
+    <Illustration src="/img/pablo-168.png" />
     <UpdateBody>
       <Title>User Information</Title>
       <Field>
         <LeftField>
           <ProfileImg>
-            <Img src ={photo? s3ImageURl + '/' +photo: defaultProfileImg}/>
+          {isLoading? <LoadingImg src="/img/Spinner.gif" />: null}
+            {isLoading? null: <Img src ={photo? s3ImageURl + '/' +photo: defaultProfileImg}/>}
             <UploadLink htmlFor="imgFile">
               <AddImg>
               <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNSA0aC0zdi0xaDN2MXptOCA2Yy0xLjY1NCAwLTMgMS4zNDYtMyAzczEuMzQ2IDMgMyAzIDMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zem0xMS01djE3aC0yNHYtMTdoNS45M2MuNjY5IDAgMS4yOTMtLjMzNCAxLjY2NC0uODkxbDEuNDA2LTIuMTA5aDhsMS40MDYgMi4xMDljLjM3MS41NTcuOTk1Ljg5MSAxLjY2NC44OTFoMy45M3ptLTE5IDRjMC0uNTUyLS40NDctMS0xLTFzLTEgLjQ0OC0xIDEgLjQ0NyAxIDEgMSAxLS40NDggMS0xem0xMyA0YzAtMi43NjEtMi4yMzktNS01LTVzLTUgMi4yMzktNSA1IDIuMjM5IDUgNSA1IDUtMi4yMzkgNS01eiIvPjwvc3ZnPg=="/>
@@ -427,17 +441,6 @@ function UpdateUserPage() {
             <Text>Username</Text>
             <Input name="Username" defaultValue={userInfo.username} onChange={onChange}></Input>
           </UpdateField>
-            <Route
-              render={() => {
-                if (ErrorUsername !== '') {
-                  return (
-                    <UpdateField>
-                    <Alert>{ErrorUsername}</Alert>
-                    </UpdateField>
-                  );
-                }
-              }}
-            />
           <UpdateField>
             <Text>Password</Text>
             <Input name="Password" type="password" onChange={onChange}></Input>
@@ -450,9 +453,7 @@ function UpdateUserPage() {
               render={() => {
                 if (ErrorPassword !== '') {
                   return (
-                    <UpdateField>
                     <Alert>{ErrorPassword}</Alert>
-                    </UpdateField>
                   );
                 }
               }}

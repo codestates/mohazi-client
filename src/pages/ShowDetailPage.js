@@ -40,6 +40,14 @@ const Title = styled.div`
     margin: 0;
 `;
 
+const Admin = styled.div`
+    width: 80%;
+    padding: 10px;
+    font-weight: 600;
+    font-size: 3em;
+    margin: 0 0 0 450px;
+`;
+
 const Profile = styled.img`
     margin: 0;
     width: 80px;
@@ -416,7 +424,7 @@ const Username = styled.div`
 function ShowDetailPage() {
 
     const history = useHistory();
-    const { dailyCard, userInfo } = useSelector((state) => state)
+    const { dailyCard, userInfo, isLogin } = useSelector((state) => state)
 
     console.log(dailyCard)
 
@@ -446,6 +454,12 @@ function ShowDetailPage() {
             )
         }
     }
+
+    useEffect(() => {
+        if(!isLogin) {
+            history.push('/pagenotfound');
+        }
+    },[]);
     
     return (
         <Body>
@@ -465,6 +479,7 @@ function ShowDetailPage() {
                         }
                     })}
                 </DetailTitle>
+
             <Box>
                 <LeftBox hei={dailyCard.type.length}>
                     <SelectionBox id="SelectionBox">

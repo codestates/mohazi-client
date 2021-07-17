@@ -447,6 +447,7 @@ const UploadBox = styled.div`
         transform: scale(1.05);
         cursor: pointer;
     }
+
 `;
 
 const UploadText = styled.div`
@@ -538,21 +539,23 @@ const DeleteBtn = styled.button`
     }
 `;
 
-
+const LoadingImg = styled.img`
+    width: 80px;
+    z-index: 1000;
+`;
 
 function UpdateDetailPage() {
 
     const history = useHistory();
     const dispatch = useDispatch();
-    const { dailyCard, userInfo } = useSelector((state) => state)
+    const { dailyCard, userInfo, isLogin } = useSelector((state) => state)
     console.log(dailyCard)
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [ photo, setPhoto ] = useState(JSON.parse(dailyCard.photo));
-
     const [ friends, setFriend ] = useState(dailyCard.friends);
-    
     const [imgBase64, setImgBase64] = useState("");
-
     const [imgFile, setImgFile] = useState(null);
     const [memo, setMemo] = useState(dailyCard.memo);
     const mount = useRef(false);
@@ -622,7 +625,8 @@ function UpdateDetailPage() {
                         .then((res) => {
                             console.log('key', res.data.key)
                             // stateupdate
-                            setPhoto([...photo, res.data.key])
+                            setPhoto([...photo, res.data.key]);
+                            setIsLoading(false);
                         })
                 };
             })
@@ -649,7 +653,7 @@ function UpdateDetailPage() {
     };
 
     const handleImage = (event) => {
-
+        
         let reader = new FileReader();
 
         reader.onloadend = (e) => {
@@ -661,6 +665,7 @@ function UpdateDetailPage() {
             setImgFile(event.target.files[0]);
         }
 
+        setIsLoading(true);
     };
 
     const PhotoDelete = (e, index) => {
@@ -739,6 +744,10 @@ function UpdateDetailPage() {
                         history.push('/showdetail');
                     })
             })
+            .catch(err => {
+                alert("수정 권한이 없습니다.")
+                history.push('/showdetail')
+            })
     }
 
     const handleDelete = () => {
@@ -774,6 +783,13 @@ function UpdateDetailPage() {
     useEffect(() => {
         console.log('rendering', friends)     
     }, [friends])
+
+    useEffect(() => {
+        if(!isLogin) {
+            history.push('/pagenotfound');
+        }
+    },[]);
+
     return (
         <Body>
             <DetailBody id="DetailBody">
@@ -838,6 +854,7 @@ function UpdateDetailPage() {
                             <Photo id="Photo">
                                 <UploadLink htmlFor="imgFile">
                                     <UploadBox>
+                                        {isLoading? <LoadingImg id="loadingImg" src="/img/Spinner.gif" />: null}
                                         <UploadText>⊕</UploadText>
                                     </UploadBox>
                                 </UploadLink>
@@ -846,7 +863,7 @@ function UpdateDetailPage() {
                             {photo.map((el, index) => {
                                 return (
                                     <Photo id="Photo" index={index}>
-                                        <PhotoImg id={`PhotoImg${index}`} src={s3ImageURl + '/' + el} />
+                                        <PhotoImg id={`PhotoImg${index}`} src={s3ImageURl + '/' + el}/>
                                         <PhotoBtn onClick={(e) => PhotoDelete(e, index)}>X</PhotoBtn>
                                     </Photo>
                                 )

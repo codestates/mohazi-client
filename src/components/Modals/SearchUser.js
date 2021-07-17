@@ -138,7 +138,7 @@ function SearchUserModal() {
     const [inputValue, setInputValue] = useState(null);
     const state = useSelector(state => state);
     const { dailyCard } = state; //친구를 추가하고 싶은 데일리 카드
-    const defaultProfileImg = '/img/default_profile_img.png'
+    const defaultProfileImg = '/img/default_avatar.png'
 
     function handleOpenModal() {
         document.querySelector('.search_user_modal').style.display ='block';
@@ -204,6 +204,12 @@ function SearchUserModal() {
         // dispatch(setFriend(friend[0]));
     }
 
+    const handleEnter = (event) => {
+        if(event.keyCode == 13){
+            handleSearchUser();
+       }
+    }
+
     function handleSearchUser() {
         axios
             .put(`${server}/usersearch`,
@@ -239,10 +245,10 @@ function SearchUserModal() {
             <Modal_bg className='search_user_bg'></Modal_bg>
             <Modal_wrap className='search_user_modal'>
                 <Modal_close onClick={handleCloseModal} src="https://img.icons8.com/windows/32/000000/delete-sign.png"></Modal_close>
-                <Title>Find your friend</Title>
+                <Title>Find your friend!</Title>
                 <Modal_content>
                     <SearchField>
-                        <input type='text' placeholder="친구 이메일 주소를 입력하세요" onChange={(e) => setInputValue(e.currentTarget.value)}></input>
+                        <input type='text' placeholder="친구의 이메일 주소를 입력하세요" onChange={(e) => setInputValue(e.currentTarget.value)} onKeyDown={(e) => handleEnter(e)}></input>
                         <img onClick={handleSearchUser} src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMjMuMTExIDIwLjA1OGwtNC45NzctNC45NzdjLjk2NS0xLjUyIDEuNTIzLTMuMzIyIDEuNTIzLTUuMjUxIDAtNS40Mi00LjQwOS05LjgzLTkuODI5LTkuODMtNS40MiAwLTkuODI4IDQuNDEtOS44MjggOS44M3M0LjQwOCA5LjgzIDkuODI5IDkuODNjMS44MzQgMCAzLjU1Mi0uNTA1IDUuMDIyLTEuMzgzbDUuMDIxIDUuMDIxYzIuMTQ0IDIuMTQxIDUuMzg0LTEuMDk2IDMuMjM5LTMuMjR6bS0yMC4wNjQtMTAuMjI4YzAtMy43MzkgMy4wNDMtNi43ODIgNi43ODItNi43ODJzNi43ODIgMy4wNDIgNi43ODIgNi43ODItMy4wNDMgNi43ODItNi43ODIgNi43ODItNi43ODItMy4wNDMtNi43ODItNi43ODJ6bTIuMDEtMS43NjRjMS45ODQtNC41OTkgOC42NjQtNC4wNjYgOS45MjIuNzQ5LTIuNTM0LTIuOTc0LTYuOTkzLTMuMjk0LTkuOTIyLS43NDl6Ii8+PC9zdmc+" />
                     </SearchField>
                     <ResultField>
