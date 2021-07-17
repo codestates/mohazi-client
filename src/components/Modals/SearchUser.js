@@ -192,7 +192,7 @@ function SearchUserModal() {
                         //     selections: res.data.selections,
                         //     friends: res.data.friends
                         // }))
-                        dispatch(setFriends(res.data.friends))
+                        dispatch(setCard(res.data.data))
 
                         document.querySelector('.search_user_modal').style.display = 'none';
                         document.querySelector('.search_user_bg').style.display = 'none';

@@ -68,7 +68,6 @@ const SelectCardSort = styled.select`
     border: 3px solid ${oc.gray[7]};
     color: ${oc.gray[7]};
     font-weight: 600;
-    width: 80px;
     height: 30px;
 `;
 
@@ -242,7 +241,7 @@ function MyPage() {
     const [ visibleCards, setVisibleCards ] = useState(dailyCards);
     
     let cardSort = "전체 글";
-    const cardSorts = ["전체 글", "내가 쓴 글", "태그 당한 글"]
+    const cardSorts = ["전체 글", "내가 쓴 글", "나를 태그한 글"]
     const cardSortOptions = cardSorts.map(cardSort => {
         return <option value={cardSort}>{cardSort}</option>;
     });
@@ -280,6 +279,7 @@ function MyPage() {
                 id={card.dailyCards_id}
                 color={oc.yellow[3]}
                 onClick={(e) => handleShowCardDetails(e)}>
+            <DeleteCardButton className='deleteBtn' id={card.dailyCards_id} onClick={(e) => handleUntag(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png"/>
             <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
             <Card_Img id={card.dailyCards_id} src={photo.length? s3ImageURl + '/' + photo[0]: defaultCardImg}/>
             <Card_Selections id={card.dailyCards_id}>
@@ -344,6 +344,33 @@ function MyPage() {
                 )
                 .then(res => {
                     alert("일정이 삭제되었습니다");
+                    setIsDeleteCard(cardId);
+                })
+                .catch(error => console.log(error));
+        }
+    }
+
+    const handleUntag = (event) => {
+        event.stopPropagation();
+        
+        console.log('delete card', event.target)
+        const cardId = Number(event.target.id);
+
+        if (confirm("태그를 취소하시겠습니까?") === true) {
+            axios
+                .put(`${server}/deletefriend`,
+                    {
+                        dailyCardId: cardId,
+                        userId: userInfo.id,
+                    },
+                    {
+                        'Content-Type': 'application/json',
+                        withCredentials: true,
+                    }
+                )
+                .then(res => {
+                    console.log(res.data.message)
+                    alert("태그가 취소되었습니다");
                     setIsDeleteCard(cardId);
                 })
                 .catch(error => console.log(error));
