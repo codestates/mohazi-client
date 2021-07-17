@@ -719,6 +719,10 @@ function UpdateDetailPage() {
                         history.push('/showdetail');
                     })
             })
+            .catch(err => {
+                alert("수정 권한이 없습니다.")
+                history.push('/showdetail')
+            })
     }
 
     const handleDelete = () => {
