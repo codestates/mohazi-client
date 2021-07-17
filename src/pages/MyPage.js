@@ -24,7 +24,7 @@ const Title = styled.div`
     
     div {
         text-align:center;
-        border-bottom: 8px solid ${oc.indigo[1]};
+        border-bottom: 8px solid ${oc.blue[1]};
         width: 85%;
         padding-bottom: 30px;
     }
@@ -165,7 +165,8 @@ const User_UpdateButton = styled.button`
 const Card_Date = styled.div`
     font-weight: 600;
     text-align: center;
-    margin: 8px 0 5px 0;
+    margin: 5px 0;
+    height: 20px;
 `;
 
 const Card_Img = styled.img`
@@ -209,7 +210,6 @@ const Admin = styled.div`
     font-size: 0.7rem;
     display: flex;
     font-weight: 500;
-    color: ${oc.indigo[4]};
 
     >img {
         width: 15px;
@@ -218,6 +218,14 @@ const Admin = styled.div`
 
     > span {
         margin-right: 5px;
+    }
+
+    #admin {
+        color: ${oc.blue[6]};
+    }
+    
+    #tagged {
+        color: ${oc.yellow[6]}
     }
 `;
 
@@ -264,7 +272,7 @@ function MyPage() {
                 </Card_Selections>
                 <Admin id={card.dailyCards_id}>
                     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMmMyLjc1NyAwIDUgMi4yNDMgNSA1LjAwMSAwIDIuNzU2LTIuMjQzIDUtNSA1cy01LTIuMjQ0LTUtNWMwLTIuNzU4IDIuMjQzLTUuMDAxIDUtNS4wMDF6bTAtMmMtMy44NjYgMC03IDMuMTM0LTcgNy4wMDEgMCAzLjg2NSAzLjEzNCA3IDcgN3M3LTMuMTM1IDctN2MwLTMuODY3LTMuMTM0LTcuMDAxLTctNy4wMDF6bTYuMzY5IDEzLjM1M2MtLjQ5Ny40OTgtMS4wNTcuOTMxLTEuNjU4IDEuMzAyIDIuODcyIDEuODc0IDQuMzc4IDUuMDgzIDQuOTcyIDcuMzQ2aC0xOS4zODdjLjU3Mi0yLjI5IDIuMDU4LTUuNTAzIDQuOTczLTcuMzU4LS42MDMtLjM3NC0xLjE2Mi0uODExLTEuNjU4LTEuMzEyLTQuMjU4IDMuMDcyLTUuNjExIDguNTA2LTUuNjExIDEwLjY2OWgyNGMwLTIuMTQyLTEuNDQtNy41NTctNS42MzEtMTAuNjQ3eiIvPjwvc3ZnPg=="/>
-                    <span>내가 작성한 글</span>
+                    <span id="admin">내가 작성한 글</span>
                 </Admin>
             </Card>
             : <Card
@@ -276,6 +284,10 @@ function MyPage() {
             <Card_Selections id={card.dailyCards_id}>
                 {selections}
             </Card_Selections>
+            <Admin id={card.dailyCards_id}>
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMmMyLjc1NyAwIDUgMi4yNDMgNSA1LjAwMSAwIDIuNzU2LTIuMjQzIDUtNSA1cy01LTIuMjQ0LTUtNWMwLTIuNzU4IDIuMjQzLTUuMDAxIDUtNS4wMDF6bTAtMmMtMy44NjYgMC03IDMuMTM0LTcgNy4wMDEgMCAzLjg2NSAzLjEzNCA3IDcgN3M3LTMuMTM1IDctN2MwLTMuODY3LTMuMTM0LTcuMDAxLTctNy4wMDF6bTYuMzY5IDEzLjM1M2MtLjQ5Ny40OTgtMS4wNTcuOTMxLTEuNjU4IDEuMzAyIDIuODcyIDEuODc0IDQuMzc4IDUuMDgzIDQuOTcyIDcuMzQ2aC0xOS4zODdjLjU3Mi0yLjI5IDIuMDU4LTUuNTAzIDQuOTczLTcuMzU4LS42MDMtLjM3NC0xLjE2Mi0uODExLTEuNjU4LTEuMzEyLTQuMjU4IDMuMDcyLTUuNjExIDguNTA2LTUuNjExIDEwLjY2OWgyNGMwLTIuMTQyLTEuNDQtNy41NTctNS42MzEtMTAuNjQ3eiIvPjwvc3ZnPg=="/>
+                <span id="tagged">나를 태그한 글</span>
+            </Admin>
         </Card>
         });
 
@@ -295,7 +307,7 @@ function MyPage() {
         //console.log('target id', event.target)
         const cardId = Number(event.target.id);
         let card = dailyCards.filter(el => el.dailyCards_id === cardId);
-        dispatch(setCard(...card));
+        //dispatch(setCard(...card));
         console.log('id',cardId)
         axios
             .put(`${server}/dailycardinfo`, {
@@ -306,7 +318,7 @@ function MyPage() {
             })
             .then(res => {
                 console.log('friends', res.data)
-                dispatch(setFriends(res.data.data.friends));
+                dispatch(setCard(res.data.data));
             })
             .then(res => history.push('/showdetail'))
             .catch(err => console.log(err))
