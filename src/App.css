@@ -69,6 +69,21 @@ body {
   }
 }
 
+@media (max-width: 1225px) {
+
+  #SearchImg {
+    display: none;
+  }
+}
+@keyframes target_image {
+
+  0% { transform: rotate(0deg); }
+ 
+  50% { transform: rotate(15deg) }
+ 
+  100% { transform: rotate(0deg); }
+ 
+ }
 
 
 

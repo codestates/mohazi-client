@@ -247,7 +247,7 @@ function UpdateUserPage() {
     Description: userInfo.description,
   })
 
-  const { Email, Password, ConfirmPassword, Username, Description } = inputs;
+  const { UserId, Email, Password, ConfirmPassword, Username, Description } = inputs;
   const [errorInputs, setErrorInputs] = useState({
     ErrorAll: '',
     //ErrorUsername: '',
@@ -321,6 +321,20 @@ function UpdateUserPage() {
       alert('비밀번호가 일치하지 않습니다')
     }
 
+  }
+
+  const Withdraw = () => {
+
+    if (window.confirm("삭제하면 내용을 복구할 수 없습니다. 삭제하시겠습니까?") === true) {
+      axios
+        .put(`${server}/userdelete`, {
+          userId: UserId,
+          headers: {
+            'Content-type': "application/json",
+            withCredentials: true,
+          }
+        })
+    }
   }
 
   const PhotoUpload = (event) => {
@@ -446,7 +460,7 @@ function UpdateUserPage() {
             />
           <BtnField>
             <UpdateBtn onClick={handleUpdate}>수정</UpdateBtn>
-            <WithdrawalBtn>회원탈퇴</WithdrawalBtn>
+            <WithdrawalBtn onClick={Withdraw}>회원탈퇴</WithdrawalBtn>
           </BtnField>
         </RightField>
       </Field>
