@@ -159,20 +159,21 @@ const IntroPage = styled.div`
         text-align: left;
         font-weight: 600;
         font-size: 4rem;
-        color: ${oc.yellow[5]};
+        color: black;
         width: 550px;
         }
 
-        > .subText {
+        > .subT1 {
         font-weight: 500;
         font-size: 1.5rem;
-        color: ${oc.gray[5]};
+        color: ${oc.gray[7]};
         margin-top: 20px;
         }
+
     }
 
     > img {
-        width: 800px;
+        width: 55vw;
         float: right;
     }
 `
@@ -190,6 +191,7 @@ const Category = styled.div`
     cursor: pointer;
     justify-content: center;
     align-items: center;
+    color: white;
         
     > img {
         width: 230px;
@@ -205,9 +207,14 @@ const Category = styled.div`
         font-size: 2rem;
         position: absolute;
         margin: 0 0 310px 180px;
+
+        &:hover {
+            transition: .2s all;
+        }
     }
     
     &:hover {
+        color: black;
         transition: all 0.5s ease 0s;
         transform: translateY(-15px);
     }
@@ -215,8 +222,41 @@ const Category = styled.div`
         transition: all 0.5s ease 0s;
         transform: translateX(100px);
     }
-    
-    `;
+`;
+
+const SeoulMapBtn = styled.button `
+    width: 120px;
+    height: 50px;
+    font-weight: 500;
+    font-size: 1rem;
+    margin: 50px 20px 0 0;
+    background: ${oc.yellow[4]};
+    border: 3px solid black;
+    border-radius: 5px;
+
+    &:hover {
+        cursor: pointer;
+        background: black;
+        color: white;
+    }
+`;
+
+const RegisterBtn = styled.button `
+    width: 120px;
+    height: 50px;
+    font-weight: 500;
+    font-size: 1rem;
+    margin: 50px 20px;
+    background: ${oc.yellow[4]};
+    border: 3px solid black;
+    border-radius: 5px;
+
+    &:hover {
+        cursor:pointer;
+        background: black;
+        color: white;
+    }
+`;
 
 function LandingPage() {
     const history = useHistory();
@@ -256,6 +296,11 @@ function LandingPage() {
         history.push('/register');
     }
 
+    function directRegister() {
+        dispatch(setCategory(null))
+        history.push('/register');
+    }
+
     function MouseWheelHandler(e) {
         e.preventDefault();
         // 휠값처리
@@ -288,7 +333,7 @@ function LandingPage() {
 
     return (
         <Landing id="Landing">
-            <Desc id="Desc">
+            <Desc id="Desc" className="themed">
                 {/* <DescBox>
                     <DescBoxText>
                         오늘<br />
@@ -329,7 +374,9 @@ function LandingPage() {
                 <IntroPage>
                     <div>
                         <span>오늘도 뭘 해야할지 모르겠다면?</span>
-                        <span className="subText">당신이 있는 그곳에서의 놀거리를 찾아보세요!</span>
+                        <span className="subT1">당신이 있는 그곳에서 놀거리를 찾아보세요!</span>
+                        <SeoulMapBtn id="landing-btn" onClick={() => goSearach()}>서울 지도보기</SeoulMapBtn>
+                        <RegisterBtn onClick={directRegister}>일정 만들기</RegisterBtn>
                     </div>
                     <img src='/img/pablo-isolation.png'></img>
                 </IntroPage>
@@ -337,7 +384,7 @@ function LandingPage() {
                     <img src='/img/pablo-839.png'></img>
                     <div>
                         <span>만나서 일정을 계획하기가 어렵다면?</span>
-                        <span className="subText">일정을 만들고 바로 친구들과 공유해요!</span>
+                        <span className="subT1">일정을 만들고 바로 친구들과 공유해요!</span>
                     </div>
                 </IntroPage>
             </Introductions>

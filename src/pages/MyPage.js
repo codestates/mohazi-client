@@ -13,12 +13,26 @@ const s3ImageURl = process.env.REACT_APP_S3_IMAGE_URL;
 
 const Title = styled.div`
     width: 100%;
-    text-align: center;
-    padding: 20px;
-    font-size: 5rem;
+    padding: 10px;
+    font-size: 4rem;
     background: white;
     font-family: 'Fjalla One', sans-serif;
     color: ${oc.yellow[4]};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    div {
+        text-align:center;
+        border-bottom: 8px solid ${oc.indigo[1]};
+        width: 85%;
+        padding-bottom: 30px;
+    }
+
+    div > img {
+        width: 100px;
+        margin: 0 30px 0 25px;
+    }
 `;
 
 const User = styled.div`
@@ -113,10 +127,8 @@ const User_ProfileImg = styled.img`
 
 const User_Description = styled.div`
     width: 180px;
-    height: 70px;
+    height: 90px;
     margin: 10px;
-    background: ${oc.gray[2]};
-    border-radius: 5px;
     padding: 5px;
     font-size: 0.9rem;
 `;
@@ -211,15 +223,14 @@ const Admin = styled.div`
 
 function MyPage() {
     const state = useSelector(state => state);
+    const { userInfo, dailyCards, dailyCard, isLogin } = state;
     const dispatch = useDispatch();
     const history = useHistory();
     
-    const defaultProfileImg = '/img/default_profile_img.png'
+    const defaultProfileImg = '/img/default_avatar.png'
     const defaultCardImg = '/img/landscape.jpeg'
 
-    const [isDeleteCard, setIsDeleteCard] = useState(-1)
-
-    const { userInfo, dailyCards, dailyCard } = state;
+    const [isDeleteCard, setIsDeleteCard] = useState(-1);
     const [ visibleCards, setVisibleCards ] = useState(dailyCards);
     
     let cardSort = "전체 글";
@@ -238,9 +249,7 @@ function MyPage() {
                 </Selection>
             });
 
-            //console.log('photo', card.photo? JSON.parse(card.photo): '')
-            //let photo = JSON.parse(card.photo);
-            let photo = card.photo;
+            let photo = card.photo? JSON.parse(card.photo): '';
         
             return card.admin === userInfo.id? 
             <Card
@@ -249,7 +258,7 @@ function MyPage() {
                 onClick={(e) => handleShowCardDetails(e)}>
                 <DeleteCardButton className='deleteBtn' id={card.dailyCards_id} onClick={(e) => handleDeleteCard(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png"/>
                 <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
-                <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + photo[0]: defaultCardImg}/>
+                <Card_Img id={card.dailyCards_id} src={photo.length? s3ImageURl + '/' + photo[0]: defaultCardImg}/>
                 <Card_Selections id={card.dailyCards_id}>
                     {selections}
                 </Card_Selections>
@@ -263,7 +272,7 @@ function MyPage() {
                 color={oc.yellow[3]}
                 onClick={(e) => handleShowCardDetails(e)}>
             <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
-            <Card_Img id={card.dailyCards_id} src={card.photo? s3ImageURl + '/' + photo[0]: defaultCardImg}/>
+            <Card_Img id={card.dailyCards_id} src={photo.length? s3ImageURl + '/' + photo[0]: defaultCardImg}/>
             <Card_Selections id={card.dailyCards_id}>
                 {selections}
             </Card_Selections>
@@ -333,6 +342,12 @@ function MyPage() {
     }
 
     useEffect(() => {
+        if(!isLogin) {
+            history.push('/pagenotfound');
+        }
+    },[]);
+
+    useEffect(() => {
         //삭제 할 때마다 카드정보 불러오기
         console.log('render after delete')
         axios
@@ -359,7 +374,11 @@ function MyPage() {
 
     return (
         <div>
-            <Title>Mypage</Title>
+            <Title>
+                <div>
+                    <span>Mypage</span>
+                </div>
+            </Title>
             <User>
                 <SelectCardSort onChange={(e) => handleSortCards(e)}>
                     {cardSortOptions}

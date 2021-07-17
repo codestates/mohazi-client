@@ -29,12 +29,37 @@ const DetailBody = styled.div`
 `;
 
 const DetailTitle = styled.div`
-    font-family: 'Nanum Pen Script', cursive;
-    font-weight: 600;
-    font-size: 4.4em;
-    margin: 120px 0 20px 15%;
-    height: 100px;
+    margin: 120px auto 0px;
     display: flex;
+    width: 80%;
+    height: 70px;
+    display: flex;
+    font-family: 'Nanum Pen Script', cursive;
+`;
+
+const Cover = styled.div`
+    width: 80%;
+    display: flex;
+`;
+
+const Date = styled.input`
+    height: 30px;
+    margin: 22px;
+`;
+
+const Title = styled.div`
+    padding: 10px;
+    font-weight: 600;
+    font-size: 3em;
+    margin: 0 0 0 50px;
+`;
+
+const Profile = styled.img`
+    margin: 0 0 0 20px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 1px solid black;
 `;
 
 const Box = styled.div`
@@ -69,7 +94,7 @@ const MemoBox = styled.div`
     border: 2px solid black;
     position: absolute;
     top: ${props => {
-        return 85 * props.hei + 144 * props.hei;
+        return 249 + 220 * (props.hei - 1) + 20;
     }}px;
     width: 90%;
     height: 250px;
@@ -456,11 +481,12 @@ const FriendPhotoBtn = styled.button`
 const Btn = styled.button`
     margin: auto;
     width: 100%;
-    height: 3%;
+    height: 40px;
+    vertical-align: center;
     border-radius: 20px;
     border: 2px solid black;
     font-family: 'Nanum Pen Script', cursive;
-    font-size: 2em;
+    font-size: 30px;
     background: ${oc.yellow[0]};
     &: focus {
         outline:none;
@@ -472,12 +498,7 @@ const Btn = styled.button`
     }
 `;
 
-const Date = styled.input`
-    height: 30px;
-    margin: 22px;
-`;
 
-const Title = styled.div``;
 
 function UpdateDetailPage() {
 
@@ -517,10 +538,10 @@ function UpdateDetailPage() {
 
         if (Div.style.display === 'none') {
             Div.style.display = 'block';
-            Btn.innerText = ' ↾';
+            Btn.innerText = '↾';
         } else {
             Div.style.display = 'none';
-            Btn.innerText = '⇂ ';
+            Btn.innerText = '⇂';
         }
     }
 
@@ -691,15 +712,21 @@ function UpdateDetailPage() {
     },[friends])
     return (
         <Body>
-        <DetailBody id="DetailBody">
-          <SearchUserModal/>
-            <DetailTitle>
-                <Title>Daily Note: </Title>
-            <Date id="inputDate" type="date"></Date>
-            </DetailTitle>
-            
-            <Box>
-            <LeftBox hei={dailyCard.type.length}>
+            <DetailBody id="DetailBody">
+                <SearchUserModal />
+                <DetailTitle>
+                    <Cover>
+                    <Title>Date: </Title>
+                    <Date id="inputDate" type="date"></Date>
+                    </Cover>
+                    {dailyCard.friends.filter((el) => el.id === userInfo.id).map((el) => {
+                        return (
+                            <Profile src={s3ImageURl + '/' + el} />
+                        )
+                    })}
+                </DetailTitle>
+                <Box>
+                    <LeftBox hei={dailyCard.type.length}>
                     <SelectionBox>
                         {dailyCard.type.map((el, index) => {
                             console.log(dailyCard.type.length);

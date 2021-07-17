@@ -53,7 +53,7 @@ const ContentLink = styled(Link)`
     line-height: 1.8;
 
     &:hover {
-        color: ${oc.cyan[6]};
+        color: ${oc.indigo[6]};
     }
 `;
 

@@ -6,6 +6,7 @@ export const SETCARD = 'SETCARD';
 export const AREAUPDATE = 'AREAUPDATE';
 export const SETFRIENDS = 'SETFRIENDS';
 export const SETCATEGORY = 'SETCATEGORY';
+export const SETSELECTION = 'SETSELECTION';
 
 export const login = (data) => {
     return {
@@ -31,6 +32,15 @@ export const userUpdate = (data) => {
         type: USERUPDATE,
         payload: {
             userInfo: data,
+        }
+    }
+}
+
+export const setSelection = (data) => {
+    return {
+        type: SETSELECTION,
+        payload: {
+            type: data,
         }
     }
 }

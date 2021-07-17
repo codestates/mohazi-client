@@ -1,10 +1,11 @@
 /*global kakao*/ 
 import { withRouter, Route, useHistory } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import oc from 'open-color';
 import axios from 'axios';
+import { setSelection } from '../actions/actions'
 
 const { kakao } = window;
 
@@ -271,8 +272,9 @@ const Search_wrap = styled.div`
 
 function UpdateSelectionPage() {
     const state = useSelector(state => state);
+    const dispatch = useDispatch();
     const history = useHistory();
-    const { region, dailyCard } = state;
+    const { region, dailyCard, isLogin } = state;
 
     const onDragStart = (event) => {
         event.dataTransfer.setData('text/plain', event.target.id);
@@ -433,7 +435,10 @@ function UpdateSelectionPage() {
                     withCredentials: true,
                 })
                 .then(res => {
-                    alert(res.data.message)
+                    alert(res.data.message);
+                    console.log(res)
+                    console.log(selections)
+                    dispatch(setSelection(selections));
                     history.push('/updatedetail');
                 })
                 .catch(err => console.log(err))
@@ -447,6 +452,10 @@ function UpdateSelectionPage() {
 
     //지도 생성
     useEffect(() => {
+        if(!isLogin) {
+            history.push('/pagenotfound');
+        }
+
         const mapContainer = document.getElementById('map'),
             mapOptions = {
                 center: new kakao.maps.LatLng(lat, lng),

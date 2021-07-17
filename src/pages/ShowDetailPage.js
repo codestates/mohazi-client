@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, withRouter, Route, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
@@ -26,10 +26,27 @@ const DetailBody = styled.div`
 `;
 
 const DetailTitle = styled.div`
+    width: 80%;
+    height: 70px;
+    display: flex;
     font-family: 'Nanum Pen Script', cursive;
+    margin: 120px auto 0px;
+`;
+
+const Title = styled.div`
+    width: 80%;
+    padding: 10px;
     font-weight: 600;
-    font-size: 4.4em;
-    margin: 120px 0 20px 15%;
+    font-size: 3em;
+    margin: 0 0 0 50px;
+`;
+
+const Profile = styled.img`
+    margin: 0 0 0 20px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 1px solid black;
 `;
 
 const Box = styled.div`
@@ -43,7 +60,7 @@ const LeftBox = styled.div`
     margin: 10px;
     width: 65%;
     height: ${props => {
-        return 85 * props.hei + 144 * props.hei + 300;
+        return 85 * props.hei + 144 * props.hei + 330;
     }}px;
     position: relative;
 `;
@@ -65,10 +82,10 @@ const MemoBox = styled.div`
     border: 2px solid black;
     position: absolute;
     top: ${props => {
-        return 85 * props.hei + 144 * props.hei;
+        return 249 + 220 * (props.hei - 1) + 20;
     }}px;
     width: 90%;
-    height: 250px;
+    height: 300px;
     white-space: pre-line;
     
     & > * {
@@ -169,12 +186,13 @@ const InfoBox = styled.div`
 `;
 
 const MemoTitle = styled.h4`
-    margin: 5px;
+    margin: 10px 0 0 25px;
     font-family: 'Nanum Pen Script', cursive;
     font-size: 2em;
 `;
 
 const MemoContent = styled.div`
+    margin: 0 0 0 25px;
     height: 120px;
     overflow-y: auto;
 
@@ -304,6 +322,7 @@ const FriendBox = styled.div`
     margin: 20px auto;
     background: ${oc.yellow[0]};
     overflow-y: auto;
+    overflow-x: hidden;
     width: 100%;
     height: 30%;
     border: 2px solid black;
@@ -372,7 +391,7 @@ const FriendName = styled.div`
 const Btn = styled.button`
     margin: auto;
     width: 100%;
-    height: 3%;
+    height: 40px;
     border-radius: 20px;
     border: 2px solid black;
     font-family: 'Nanum Pen Script', cursive;
@@ -400,10 +419,9 @@ function ShowDetailPage() {
     }
 
     const ShowHoverEvent = (e, index) => {
-        console.log('a');
         let Div = document.querySelector(`#HoverBox${index}`)
         let Btn = document.querySelector(`#PostItBtn${index}`)
-
+        
         if(Div.style.display === 'none'){
             Div.style.display = 'block';
             Btn.innerText = '↾';
@@ -411,18 +429,51 @@ function ShowDetailPage() {
             Div.style.display = 'none';
             Btn.innerText = '⇂';
         }
+
     }
 
+    const isME = () => {
+        console.log(dailyCard.admin, userInfo.id)
+        if(dailyCard.admin === userInfo.id){
+            return (
+                <Btn onClick={GoUpdateDetail}>수정하기</Btn>
+            )
+        }
+    }
 
+    const a = () => {
+
+        axios
+        .put(`${server}/dailycardinfo`, {
+            dailyCardId: dailyCard.dailyCards_id,
+        }, {
+            'Content-Type': 'application/json',
+            withCredentials: true,
+        })
+        .then(res => {
+            console.log('friends', res.data.data.friends);
+            dailyCard.friends = res.data.data.friends;
+            console.log(dailyCard)
+            return 
+        })
+
+    }
+    
     return (
         <Body>
         <DetailBody id="DetailBody">
-            <DetailTitle>Daily Note: {dailyCard.date}</DetailTitle>
+            <DetailTitle>
+                <Title>Date: {dailyCard.date}</Title>
+                {dailyCard.friends.filter((el) => el.id === userInfo.id).map((el) => {
+                    return (
+                        <Profile src={s3ImageURl + '/' + el}/>
+                    )
+                })}
+            </DetailTitle>
             <Box>
                 <LeftBox hei={dailyCard.type.length}>
-                    <SelectionBox>
+                    <SelectionBox id="SelectionBox">
                         {dailyCard.type.map((el, index) => {
-                            console.log(dailyCard.type.length);
                             return (
                                 <Selection>
                                     <PostIt>
@@ -455,8 +506,8 @@ function ShowDetailPage() {
                                 </MemoContent> 
                         </MemoBox>
                 </LeftBox>
-                <RightBox id="RightBox" hei={dailyCard.type.length}>
-                    <PhotoBox>
+                <RightBox  hei={dailyCard.type.length}>
+                    <PhotoBox id="PhotoBox">
                         {JSON.parse(dailyCard.photo).map((el, index) => {
                             return (
                                 <Photo id="Photo" index={index}>
@@ -466,6 +517,7 @@ function ShowDetailPage() {
                         })}
                     </PhotoBox>
                     <FriendBox>
+                        {console.log(dailyCard.friends)}
                         {dailyCard.friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
                             console.log(el.photo)
                             return (
@@ -480,7 +532,7 @@ function ShowDetailPage() {
                             )
                         })}
                     </FriendBox>
-                    <Btn onClick={GoUpdateDetail}>수정하기</Btn>
+                    {isME()}
                 </RightBox>
             </Box>
         </DetailBody>
