@@ -418,7 +418,7 @@ const Btn = styled.button`
 function ShowDetailPage() {
 
     const history = useHistory();
-    const { dailyCard, userInfo } = useSelector((state) => state)
+    const { dailyCard, userInfo, isLogin } = useSelector((state) => state)
 
     console.log(dailyCard)
 
@@ -448,6 +448,12 @@ function ShowDetailPage() {
             )
         }
     }
+
+    useEffect(() => {
+        if(!isLogin) {
+            history.push('/pagenotfound');
+        }
+    },[]);
     
     return (
         <Body>

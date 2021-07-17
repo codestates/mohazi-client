@@ -138,7 +138,7 @@ function SearchUserModal() {
     const [inputValue, setInputValue] = useState(null);
     const state = useSelector(state => state);
     const { dailyCard } = state; //친구를 추가하고 싶은 데일리 카드
-    const defaultProfileImg = '/img/default_profile_img.png'
+    const defaultProfileImg = '/img/default_avatar.png'
 
     function handleOpenModal() {
         document.querySelector('.search_user_modal').style.display ='block';
