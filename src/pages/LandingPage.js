@@ -125,8 +125,6 @@ const Box = styled.div`
         height: 350px;
     `;
 
-    // ------------------css------------------ //
-
 const Introductions = styled.div`
     width: 100vw;
 `;
@@ -139,32 +137,32 @@ const IntroPage = styled.div`
     flex-direction: row;
     align-items: center;
 
-    > div {
-        margin-left: 70px;
+    > img {
+        width: 55vw;
+        float: right;
+    }
+`;
 
-        > span {
+const FirstText = styled.div`
+    margin-left: 70px;
+
+    > div {
         float: left;
         text-align: left;
         font-weight: 600;
         font-size: 4rem;
         color: black;
         width: 550px;
-        }
+    }
 
-        > .subT1 {
+    > .subT1 {
         font-weight: 500;
         font-size: 1.5rem;
         color: ${oc.gray[7]};
         margin-top: 20px;
-        }
-
     }
+`;
 
-    > img {
-        width: 55vw;
-        float: right;
-    }
-`
 const Category = styled.div`
     height: 350px;
     width: 250px;
@@ -246,6 +244,10 @@ const RegisterBtn = styled.button `
     }
 `;
 
+const BtnField = styled.div `
+    padding-left: 100px
+`;
+
 function LandingPage() {
     const history = useHistory();
     const dispatch = useDispatch();
@@ -322,50 +324,24 @@ function LandingPage() {
     return (
         <Landing id="Landing">
             <Desc id="Desc" className="themed">
-                {/* <DescBox>
-                    <DescBoxText>
-                        오늘<br />
-                        추천장소
-                    </DescBoxText>
-                </DescBox> */}
                 <DescriptionImg src='/img/pablo-212.png'/>
                 <RecBox>
-                    {/* {selections.map((el, index) => {
-                        return (
-                            <Rec id={index} className="Rec" left={(index)*150} index={index} onClick={() => goRegister(el)}>
-                                <RecImg className="RecImg" src="img/cafe.jpg" />
-                            </Rec>
-                        )
-                    })} */}
                     {categories.map((category, index) => <Category className="Rec" left={index * 150} index={index} onClick={() => goRegister(category[2])}>
                         <span>{category[0]}</span>
                         <img id={category[1]} src={'/img/pablo-' + index + '.png'}/>
                     </Category> )}
                 </RecBox>
             </Desc>
-            {/* <IntroBox id="introbox">
-                {introes.map((el) => {
-                    return (
-                        <Box className="box" onWheel={(e) => MouseWheelHandler(e)}>
-                            <IntroBoxText>
-                                뭐하고 놀까 고민이 있는 그대!<br />
-                                MOHAZI와 하루를 함께해요!{el}
-                            </IntroBoxText>                        
-                            <Btn>
-                                <LandingBtn id="landing-btn" onClick={() => goSearach()}>MOHAZI</LandingBtn>
-                            </Btn>
-                        </Box>
-                    )
-                })}
-            </IntroBox> */}
             <Introductions>
                 <IntroPage>
-                    <div>
-                        <span>오늘도 뭘 해야할지 모르겠다면?</span>
-                        <span className="subT1">당신이 있는 그곳에서 놀거리를 찾아보세요!</span>
-                        <SeoulMapBtn id="landing-btn" onClick={() => goSearach()}>서울 지도보기</SeoulMapBtn>
-                        <RegisterBtn onClick={directRegister}>일정 만들기</RegisterBtn>
-                    </div>
+                    <FirstText>
+                        <div>오늘도 뭘 해야할지 모르겠다면?</div>
+                        <div className="subT1">당신이 있는 그곳에서 놀거리를 찾아보세요!</div>
+                        <BtnField>
+                            <SeoulMapBtn id="landing-btn" onClick={() => goSearach()}>서울 지도보기</SeoulMapBtn>
+                            <RegisterBtn onClick={directRegister}>일정 만들기</RegisterBtn>
+                        </BtnField>
+                    </FirstText>
                     <img src='/img/pablo-isolation.png'></img>
                 </IntroPage>
                 <IntroPage>
