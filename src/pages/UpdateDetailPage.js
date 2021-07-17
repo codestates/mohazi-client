@@ -28,12 +28,38 @@ const DetailBody = styled.div`
     background-repeat: no-repeat;
 `;
 
-
-
 const DetailTitle = styled.div`
-    font-family: 'Fjalla One', sans-serif;
-    font-size: 4em;
-    margin: 120px 0 20px 150px;
+    margin: 120px auto 0px;
+    display: flex;
+    width: 80%;
+    height: 70px;
+    display: flex;
+    font-family: 'Nanum Pen Script', cursive;
+`;
+
+const Cover = styled.div`
+    width: 80%;
+    display: flex;
+`;
+
+const Date = styled.input`
+    height: 30px;
+    margin: 22px;
+`;
+
+const Title = styled.div`
+    padding: 10px;
+    font-weight: 600;
+    font-size: 3em;
+    margin: 0 0 0 50px;
+`;
+
+const Profile = styled.img`
+    margin: 0 0 0 20px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 1px solid black;
 `;
 
 const Box = styled.div`
@@ -46,36 +72,49 @@ const Box = styled.div`
 const LeftBox = styled.div`
     margin: 10px;
     width: 65%;
+    height: ${props => {
+        return 85 * props.hei + 144 * props.hei + 300;
+    }}px;
     position: relative;
-`;
-
-const LeftTitle = styled.div`
-    position: absolute;
-    font-family: 'Fjalla One', sans-serif;
-    font-size: 1.5em;
-    top: -15px;
-    left: 20px;
 `;
 
 const SelectionBox = styled.div`
     margin: 0 0 0 50px;
+    background: ${oc.yellow[0]};
     border-radius: 20px;
     border: 2px solid black;
-    position: relative;
+    position: absolute;
+    width: 90%;
+`;
+
+const MemoBox = styled.div`
+    margin: 0 0 0 50px;
+    background: ${oc.yellow[0]};
+    border-radius: 20px;
+    border: 2px solid black;
+    position: absolute;
+    top: ${props => {
+        return 249 + 220 * (props.hei - 1) + 20;
+    }}px;
+    width: 90%;
+    height: 250px;
+    white-space: pre-line;
+    
+    & > * {
+        font-family: 'Nanum Pen Script', cursive;
+        font-size: 1.7em;
+    }
 `;
 
 const Selection = styled.div`
     margin: 25px;
-    & > * {
-        
-    }
 `;
 
 const PostIt = styled.div`
     display: flex;
 `;
 
-const PostIt1 = styled.div`
+const PostItLeft = styled.div`
     width: 50px;
     height:50px;
     border: 1px solid black;
@@ -101,62 +140,15 @@ const PostItNum = styled.h2`
 
 `;
 
-const PostIt2 = styled.div`
-    width: 40%;
+const PostItRight = styled.div`
+    width: 330px;
     height: 50px;
     border: 1px solid black;
     background-color: ${oc.gray[3]};
-    display: flex;
-`;
-
-const PostItTitle = styled.h2`
-    margin: 5px;
-    height: 50px;
-    font-family: 'Nanum Pen Script', cursive;
-    font-size: 2.2em;
-`;
-
-const PostItBtn = styled.button`
-    width: 20px;
-    height: 20px;
-    margin: 15px auto;
-`;
-
-const PostItBtn2 = styled.button`
-    width: 20px;
-    height: 20px;
-    margin: 15px auto;
-`;
-
-const MemoBox = styled.div`
-    width: 80%;   
-    margin: 20px 0 0 50px;   
-`;
-
-const PostItMemo = styled.div`
-    white-space: pre-line;
-    
-    & > * {
-        font-family: 'Nanum Pen Script', cursive;
-        font-size: 1.7em;
-    }
-`;
-
-const Memo1 = styled.h4`
-    margin: 5px;
-    font-family: 'Nanum Pen Script', cursive;
-    font-size: 2em;
-`;
-
-const Memo2Box = styled.textarea`
-    height: 120px;
     overflow-y: auto;
-    width: 90%;
-    resize: none;
 
     &::-webkit-scrollbar{
-        width: 5px;
-        height: 100px;
+        width: 2px;
       }
 
     &::-webkit-scrollbar-thumb{
@@ -169,11 +161,105 @@ const Memo2Box = styled.textarea`
       }
 `;
 
+const PostItTitle = styled.div`
+    float: left;
+    margin: 5px;
+    height: 50px;
+    font-family: 'Nanum Pen Script', cursive;
+    font-weight: 1000;
+    font-size: 2.2em;
+`;
+
+const PostItBtn = styled.button`
+    float:right;
+    width: 20px;
+    height: 50px;
+    border: 1px solid black;
+    font-size: 1.3em;
+
+    &: focus {
+        outline:none;
+    }
+`;
+
+const GoSelection = styled.button`
+    border: 1px solid black;
+    width:50px;
+    height:50px;
+    font-size: 1.3em;
+`;
+
+const PostItInfo = styled.div`
+    width: 80%;   
+    margin: 20px 0 0 50px;   
+`;
+
+const InfoBox = styled.div`
+    white-space: pre-line;
+    
+    & > * {
+        font-family: 'Nanum Pen Script', cursive;
+        font-size: 1.7em;
+    }
+
+`;
+
+const MemoTitle = styled.h4`
+    margin: 5px;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 2em;
+`;
+
+const MemoContent = styled.div`
+    height: 160px;
+
+`;
+
+const MemoText = styled.textarea`
+    width: 95%;
+    height: 160px;
+    margin: 5px;
+    resize: none;
+    background: ${oc.yellow[1]};
+    border: 2px solid black;
+
+    overflow-y: auto;
+
+    &::-webkit-scrollbar{
+        width: 5px;
+      }
+
+    &::-webkit-scrollbar-thumb{
+        background-color: ${oc.gray[7]};
+
+      }
+
+    &::-webkit-scrollbar-track{
+        background: transparent;
+      }
+`;
 
 const HoverBox = styled.div`
     margin: 5px;
     width: 95%;
-    display: none;
+    height: 125px;
+    display: block;
+
+    overflow-y: auto;
+
+    &::-webkit-scrollbar{
+        width: 0px;
+      }
+
+    &::-webkit-scrollbar-thumb{
+        background-color: ${oc.gray[7]};
+
+      }
+
+    &::-webkit-scrollbar-track{
+        background: transparent;
+      }
+
     & > * {
         margin: 5px;
     }
@@ -192,19 +278,22 @@ const HoverPhone = styled.h5`
 `;
 
 const RightBox = styled.div`
-    position: relative;    
     margin: 10px;
     width: 35%; 
+    height: ${props => {
+        return 85 * props.hei + 144 * props.hei + 300;
+    }}px;
 `;
 
 const PhotoBox = styled.div`
     margin: 0px auto;
+    background: ${oc.yellow[0]};
     border: 2px solid black;
     border-radius: 20px;
     overflow-y: auto;
-    text-align: center;
+    overflow-x: hidden;
     width: 100%;
-    height: 600px;
+    height: 60%;
 
     &::-webkit-scrollbar{
         width: 5px;
@@ -229,143 +318,207 @@ const PhotoBox = styled.div`
         background: transparent;
         margin-top: 15px;
     }
+`;
+
+const Photo = styled.div`
+    width: 45%;
+    float: left;
+    margin: 2.5%;
+    border-radius: 20px;
+    position: relative;
+    &:after {
+      content: "";
+      display: block;
+      padding-bottom: 100%;
+    }  
+   
+`;
+
+const PhotoImg = styled.img`
+    position: absolute;
+    border-radius: 20px;
+    border: 4px solid black;
+    width:100%;
+    height: 100%;
+    object-fit: cover;
+`;
+
+const PhotoBtn = styled.button`
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    position:absolute;
+    top: 0%;
+    left: 87%;
+
+    &: focus {
+        outline:none;
+    }
+    &: hover {
+        background: ${oc.red[2]};
+        transform: scale(1.05);
+    }
+`;
+
+const FriendBox = styled.div`
+    margin: 20px auto;
+    background: ${oc.yellow[0]};
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    height: 30%;
+    border: 2px solid black;
+    border-radius: 20px;
+
+    &::-webkit-scrollbar{
+        width: 5px;
+        height: 100px;
+      }
+
+    &::-webkit-scrollbar-thumb{
+        background-color: ${oc.gray[7]};
+        border-radius: 30px;
+      }
+
+    &::-webkit-scrollbar-track{
+        background: transparent;
+      }
+
+    &::-webkit-scrollbar-track-piece:end {
+        background: transparent;
+        margin-bottom: 15px;
+    }
+
+    &::-webkit-scrollbar-track-piece:start {
+        background: transparent;
+        margin-top: 15px;
+    }
+
+`;
+
+const Friend = styled.div`
+    float: left;
+    width: 30%;
+    position: relative;
+    margin: 10px 1.65%;
+    position: relative;
+    &:after {
+        content: "";
+        display: block;
+        padding-bottom: 120%;
+    }
+`;
+
+const FriendPhoto = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 80%;
+`;
+
+const FriendPhotoImg = styled.img`
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid black;
+`;
+
+const FriendName = styled.div`
+    position: absolute;
+    top: 77%;
+    width: 100%;
+    height: 20%;
+    text-align: center;
+`;
+
+const UploadBox = styled.div`
+    position: absolute;
+    border-radius: 20px;
+    border : 4px solid black;
+    width:100%;
+    height: 100%;
+`;
+
+const UploadText = styled.div`
+    font-size: 2em;
+    position: absolute;
+    top:50%;
+    left:50%;
+    margin-left: -16px;
+    margin-top: -23px;
+    
+`;
+
+const AddFriendBtn = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 80%;
+    border-radius: 50%;
+    border: 3px solid black;
+`;
+
+const UploadLink = styled.label`
 `;
 
 const Upload = styled.input`
     display: none;
 `;
 
-const UploadBox = styled.div`
-    width: 90%;
-    height: 150px;
-    margin: 10px auto;
-    border-radius: 20px;
-    border : 1px solid black;
-    font-size: 6em;
-    test-align: center;
-`;
-
-const UploadLink = styled.label`
-
-`;
-
-const Photo = styled.div`
-    width: 90%;
-    height: 150px;
-    margin: 10px auto;
-    border-radius: 20px;
-    position: relative;
-`;
-
-const PhotoImg = styled.img`
-    border-radius: 20px;
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-`;
-
-const PhotoBtn = styled.button`
-    width: 21px;
-    height: 21px;
-    position:absolute;
-    top: 0%;
-    left: 90%;
-`;
-
-const FriendBox = styled.div`
-    margin: 10px auto;
-    overflow-y: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: center;
-    width: 100%;
-    height: 320px;
-    border: 2px solid black;
-    border-radius: 20px;
-
-    &::-webkit-scrollbar{
-        width: 5px;
-        height: 100px;
-      }
-
-    &::-webkit-scrollbar-thumb{
-        background-color: ${oc.gray[7]};
-        border-radius: 30px;
-      }
-
-    &::-webkit-scrollbar-track{
-        background: transparent;
-      }
-
-    &::-webkit-scrollbar-track-piece:end {
-        background: transparent;
-        margin-bottom: 15px;
-    }
-
-    &::-webkit-scrollbar-track-piece:start {
-        background: transparent;
-        margin-top: 15px;
-    }
-`;
-
-const Friend = styled.div`
-    margin: 10px;
-    position: relative;
-`;
-
-const AddFriendBtn = styled.div`
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
-    border: 1px solid black;
-    font-size: 2em;
-    padding: 12px;
-`;
-
-const FriendPhoto = styled.div`
-    width: 90px;
-`;
-
-const FriendPhotoImg = styled.img`
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
-    border: 1px solid black;
-`;
-
-const FriendName = styled.div`
-
-`;
-
 const FriendPhotoBtn = styled.button`
-    width: 21px;
-    height: 21px;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
     position:absolute;
     top: 0%;
-    left: 70%;
+    left: 72%;
+    &: focus {
+        outline:none;
+    }
+    &: hover {
+        background: ${oc.red[2]};
+        transform: scale(1.05);
+    }
 `;
 
 const Btn = styled.button`
+    margin: 0 0 0 10px;
+    width: 45%;
+    height: 40px;
 
-`;
-
-const AddFriend = styled.div`
-    width: 50px;
-    font-weight: 500;
-    font-size: 0.8rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 5px;
-
-    > img {
-        border-radius: 50%;
-        width: 45px;
-        height: 45px;
-        margin: 5px;
+    border-radius: 20px;
+    border: 2px solid black;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 30px;
+    background: ${oc.yellow[0]};
+    &: focus {
+        outline:none;
+    }
+    &: hover {
+        background: ${oc.red[2]};
+        transform: scale(1.01);
+        cursor: pointer;
     }
 `;
+
+const DeleteBtn = styled.button`
+    margin: 0 10px 0 0;
+    width: 45%;
+    height: 40px;
+    border-radius: 20px;
+    border: 2px solid black;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 30px;
+    background: ${oc.yellow[0]};
+    &: focus {
+        outline:none;
+    }
+    &: hover {
+        background: ${oc.red[2]};
+        transform: scale(1.01);
+        cursor: pointer;
+    }
+`;
+
+
 
 function UpdateDetailPage() {
 
@@ -373,12 +526,6 @@ function UpdateDetailPage() {
     const dispatch = useDispatch();
     const { dailyCard, userInfo } = useSelector((state) => state)
     console.log(dailyCard)
-
-    const GoUpdateDetail = () => {
-        //저장할 때 state의 friend를 초기화시켜줘야 합니다
-        dispatch(setFriend({}));
-        history.push('/showdetail');
-    }
 
     const [ photo, setPhoto ] = useState(JSON.parse(dailyCard.photo));
 
@@ -399,22 +546,24 @@ function UpdateDetailPage() {
         }
     }, [imgFile])
 
+    
     useEffect(() => {
         console.log(dailyCard.friends);
         setFriend(dailyCard.friends);
+
     },[dailyCard.friends]);
+    
       
     const ShowHoverEvent = (e, index) => {
-        console.log('a');
         let Div = document.querySelector(`#HoverBox${index}`)
         let Btn = document.querySelector(`#PostItBtn${index}`)
 
         if (Div.style.display === 'none') {
             Div.style.display = 'block';
-            Btn.innerText = 'X';
+            Btn.innerText = '↾';
         } else {
             Div.style.display = 'none';
-            Btn.innerText = 'O';
+            Btn.innerText = '⇂';
         }
     }
 
@@ -479,7 +628,7 @@ function UpdateDetailPage() {
 
     };
 
-      const handleImage = (event) => {
+    const handleImage = (event) => {
 
         let reader = new FileReader();
 
@@ -503,7 +652,9 @@ function UpdateDetailPage() {
         console.log(Div);
 
         axios
-            .put(`${server}/s3delete`, { key: Div },
+            .put(`${server}/s3delete`, {
+                key: Div
+            },
                 {
                     'Content-Type': 'application/json',
                     withCredentials: true,
@@ -511,7 +662,7 @@ function UpdateDetailPage() {
             )
             .then((res) => {
                 console.log('delete')
-                 setPhoto(set);
+                setPhoto(set);
             })
     }
 
@@ -532,6 +683,7 @@ function UpdateDetailPage() {
                 },
             })
             .then((res) => {
+                console.log('delete')
                 setFriend(set);
             })
     }
@@ -541,8 +693,8 @@ function UpdateDetailPage() {
 
         const Div = document.querySelector('#inputDate').value;
         console.log(Div);
-
         console.log('최종 포토', photo)
+
         axios
             .put(`${server}/dailycardupdate`, {
                 date: Div || dailyCard.date,
@@ -552,6 +704,7 @@ function UpdateDetailPage() {
             })
             .then((res) => {
                 console.log(res);
+
                 axios
                     .put(`${server}/dailycardinfo`, {
                         dailyCardId: dailyCard.dailyCards_id,
@@ -568,7 +721,28 @@ function UpdateDetailPage() {
             })
     }
 
+    const handleDelete = () => {
+        if (window.confirm("삭제하면 내용을 복구할 수 없습니다. 삭제하시겠습니까?") === true) {
+            axios
+                .put(`${server}/dailycarddelete`,
+                    {
+                        dailycardId: dailyCard.dailyCards_id,
+                    },
+                    {
+                        'Content-Type': 'application/json',
+                        withCredentials: true,
+                    }
+                )
+                .then(res => {
+                    alert("일정이 삭제되었습니다");
+                    history.push('/mypage');
+                })
+                .catch(error => console.log(error));
+        }
+    }
+
     const goUpdateSelection = () => {
+        console.log('a');
         history.push('/updateselection');
     }
 
@@ -578,72 +752,89 @@ function UpdateDetailPage() {
     }
 
     useEffect(() => {
-       console.log('rendering') 
-    },[friends])
+        console.log('rendering', friends)     
+    }, [friends])
     return (
         <Body>
-        <DetailBody id="DetailBody">
-          <SearchUserModal/>
-            <DetailTitle>Daily Note: {dailyCard.date}</DetailTitle>
-            <Box>
-                <LeftBox>
+            <DetailBody id="DetailBody">
+                <SearchUserModal />
+                <DetailTitle>
+                    <Cover>
+                    <Title>Date: </Title>
+                    <Date id="inputDate" type="date"></Date>
+                    </Cover>
+                    {dailyCard.friends.filter((el) => el.id === userInfo.id).map((el) => {
+                        return (
+                            <Profile src={s3ImageURl + '/' + el} />
+                        )
+                    })}
+                </DetailTitle>
+                <Box>
+                    <LeftBox hei={dailyCard.type.length}>
                     <SelectionBox>
                         {dailyCard.type.map((el, index) => {
                             return (
                                 <Selection>
                                     <PostIt>
-                                        <PostIt1 index={index}>
+                                        <PostItLeft index={index}>
                                             <PostItNum>{index + 1}</PostItNum>
-                                        </PostIt1>
-                                        <PostIt2>
-                                            <PostItTitle>{el.place_name}</PostItTitle>
-                                            <PostItBtn id={`PostItBtn${index}`} onClick={(e) => ShowHoverEvent(e, index)}>O</PostItBtn>
-                                            <PostItBtn2 onClick={goUpdateSelection}>o</PostItBtn2>
-                                        </PostIt2>
+                                        </PostItLeft>
+                                        <PostItRight>
+                                            <PostItTitle>{el.place_name}</PostItTitle>               
+                                        </PostItRight>
+                                        <GoSelection onClick={goUpdateSelection}>  ↻</GoSelection>
+                                        <PostItBtn id={`PostItBtn${index}`} onClick={(e) => ShowHoverEvent(e, index)}> ↾</PostItBtn>                      
                                     </PostIt>
-                                    <MemoBox>
-                
-                                      
-                                        <PostItMemo>     
+                                    <PostItInfo>
+                                        <InfoBox>
                                             <HoverBox id={`HoverBox${index}`}>
                                                 <h4>-Info-</h4>
                                                 <HoverTitle>name: {el.place_name}</HoverTitle>
                                                 <HoverPhone>phone: {el.phone}</HoverPhone>
                                                 <HoverAdd>add: {el.address_name}</HoverAdd>
                                             </HoverBox>
-                                        </PostItMemo>
-                                    </MemoBox>
+                                        </InfoBox>
+                                    </PostItInfo>
                                 </Selection>
                             )
                         })}
-                                               <PostItMemo>
-                                        <Memo1>Memo: </Memo1>
-                                        <Memo2Box defaultValue={dailyCard.memo} onChange={onChange}>
-                                                
-                                                </Memo2Box>     
-                                        </PostItMemo>
-                    </SelectionBox>
+                        </SelectionBox>
+                        <MemoBox hei={dailyCard.type.length}> 
+                                <MemoTitle>Memo: </MemoTitle>
+                                <MemoContent id="MemoContent">
+                                    <MemoText defaultValue={dailyCard.memo} onChange={onChange}></MemoText>
+                                </MemoContent> 
+                        </MemoBox>
                 </LeftBox>
-                <RightBox>
-                    <PhotoBox id="PhotoBox">
-                    <UploadLink htmlFor="imgFile"><UploadBox>⊕</UploadBox></UploadLink>
-                    <Upload id="imgFile" type="file" name="image" accept="image/jpeg, image/jpg" onChange={(e) => handleImage(e)}></Upload>     
-                        {photo.map((el, index) => {
-                            return (         
-                                <Photo  className="Photo" index={index}>
-                                    <PhotoImg id={`PhotoImg${index}`} src={s3ImageURl + '/' + el} />
-                                    <PhotoBtn onClick={(e) => PhotoDelete(e, index)}>X</PhotoBtn>
-                                </Photo>
-                            )
-                        })}
-                    </PhotoBox>
+                <RightBox id="RightBox">
+                        <PhotoBox id="PhotoBox">
+                            <Photo id="Photo">
+                                <UploadLink htmlFor="imgFile">
+                                    <UploadBox>
+                                        <UploadText>⊕</UploadText>
+                                    </UploadBox>
+                                </UploadLink>
+                            </Photo>
+                            <Upload id="imgFile" type="file" name="image" accept="image/jpeg, image/jpg" onChange={(e) => handleImage(e)}></Upload>
+                            {photo.map((el, index) => {
+                                return (
+                                    <Photo id="Photo" index={index}>
+                                        <PhotoImg id={`PhotoImg${index}`} src={s3ImageURl + '/' + el} />
+                                        <PhotoBtn onClick={(e) => PhotoDelete(e, index)}>X</PhotoBtn>
+                                    </Photo>
+                                )
+                            })}
+                        </PhotoBox>
                     <FriendBox>
-                        <Friend>
-                        <AddFriendBtn onClick={handleOpenModal}>⊕</AddFriendBtn>
+                        <Friend id="Friend">
+                            <AddFriendBtn onClick={handleOpenModal}>
+                            <UploadText>⊕</UploadText>
+                            </AddFriendBtn>
                         </Friend>
+                        {console.log('div', friends)}
                         {friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
                             return (
-                                <Friend>
+                                <Friend id="Friend">
                                     <FriendPhoto className="FriendsPhoto" index={index}>
                                         <FriendPhotoImg id={`FriendPhotoImg${index}`} src={s3ImageURl + '/' + el.photo} />
                                     </FriendPhoto>
@@ -655,7 +846,7 @@ function UpdateDetailPage() {
                             )
                         })}
                     </FriendBox>
-                    <input id="inputDate" type="date"></input>
+                    <DeleteBtn onClick={handleDelete}>삭제하기</DeleteBtn>
                     <Btn onClick={handleUpdate}>수정완료</Btn>
                 </RightBox>
             </Box>

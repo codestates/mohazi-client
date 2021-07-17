@@ -27,11 +27,11 @@ const Modal_bg = styled.div`
     display: none;
     position: absolute;
     content: "";
-    width: 100vw;
-    height: 100vh;
+    width: 133%;
+    height: 100%;
     background-color:rgba(0, 0,0, 0.5);
     top:0;
-    left: 0;
+    left: -20%;
     z-index: 1;
 `;
 
@@ -39,7 +39,7 @@ const Modal_close = styled.img`
     width: 26px;
     height: 26px;
     position: absolute;
-    top: -30px;
+    top: 0px;
     right: 0;
     cursor: pointer;
 `;
@@ -192,7 +192,7 @@ function SearchUserModal() {
                         //     selections: res.data.selections,
                         //     friends: res.data.friends
                         // }))
-                        dispatch(setFriends(res.data.friends))
+                        dispatch(setCard(res.data.data))
 
                         document.querySelector('.search_user_modal').style.display = 'none';
                         document.querySelector('.search_user_bg').style.display = 'none';

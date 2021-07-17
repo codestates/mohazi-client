@@ -1,10 +1,11 @@
 /*global kakao*/ 
 import { withRouter, Route, useHistory } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import oc from 'open-color';
 import axios from 'axios';
+import { setSelection } from '../actions/actions'
 
 const { kakao } = window;
 
@@ -271,6 +272,7 @@ const Search_wrap = styled.div`
 
 function UpdateSelectionPage() {
     const state = useSelector(state => state);
+    const dispatch = useDispatch();
     const history = useHistory();
     const { region, dailyCard, isLogin } = state;
 
@@ -434,6 +436,9 @@ function UpdateSelectionPage() {
                 })
                 .then(res => {
                     alert(res.data.message);
+                    console.log(res)
+                    console.log(selections)
+                    dispatch(setSelection(selections));
                     history.push('/updatedetail');
                 })
                 .catch(err => console.log(err))

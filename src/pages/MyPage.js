@@ -257,7 +257,6 @@ function MyPage() {
                 </Selection>
             });
 
-            //console.log('photo', card.photo? 'true': 'false')
             let photo = card.photo? JSON.parse(card.photo): '';
         
             return card.admin === userInfo.id? 

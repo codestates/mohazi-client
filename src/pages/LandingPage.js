@@ -24,19 +24,7 @@ const Desc = styled.div`
         position: relative;
         display: flex;
         justify-content: center;
-
         border: 10px dashed ${oc.yellow[3]};
-    `;
-
-const DescBox = styled.div`
-        height: 350px;
-        width: 200px;
-        margin: 25px;
-        position: relative;
-        flex-grow: 0;
-        background: linear-gradient(0deg, ${oc.cyan[4]} 0%, ${oc.pink[4]} 100%);
-        box-shadow: rgb(180 180 180) -1px 1px 8px;
-        border-radius: 20px;
     `;
 
 const DescriptionImg = styled.img`
