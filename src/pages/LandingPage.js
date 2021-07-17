@@ -163,6 +163,26 @@ const FirstText = styled.div`
     }
 `;
 
+const SecondText = styled.div`
+    margin-left: 70px;
+
+    > div {
+        float: left;
+        text-align: left;
+        font-weight: 600;
+        font-size: 4rem;
+        color: black;
+        width: 550px;
+    }
+
+    > .subT2 {
+        font-weight: 500;
+        font-size: 1.5rem;
+        color: ${oc.gray[7]};
+        margin-top: 20px;
+    }
+`;
+
 const Category = styled.div`
     height: 350px;
     width: 250px;
@@ -346,10 +366,10 @@ function LandingPage() {
                 </IntroPage>
                 <IntroPage>
                     <img src='/img/pablo-839.png'></img>
-                    <div>
-                        <span>만나서 일정을 계획하기가 어렵다면?</span>
-                        <span className="subT1">일정을 만들고 바로 친구들과 공유해요!</span>
-                    </div>
+                    <SecondText>
+                        <div>만나서 일정을 계획하기가 어렵다면?</div>
+                        <div className="subT2">일정을 만들고 바로 친구들과 공유해요!</div>
+                    </SecondText>
                 </IntroPage>
             </Introductions>
         </Landing>
