@@ -364,6 +364,7 @@ const FriendBox = styled.div`
     margin: 20px auto;
     background: ${oc.yellow[0]};
     overflow-y: auto;
+    overflow-x: hidden;
     width: 100%;
     height: 30%;
     border: 2px solid black;
@@ -479,10 +480,29 @@ const FriendPhotoBtn = styled.button`
 `;
 
 const Btn = styled.button`
-    margin: auto;
-    width: 100%;
+    margin: 0 0 0 10px;
+    width: 45%;
     height: 40px;
-    vertical-align: center;
+
+    border-radius: 20px;
+    border: 2px solid black;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 30px;
+    background: ${oc.yellow[0]};
+    &: focus {
+        outline:none;
+    }
+    &: hover {
+        background: ${oc.red[2]};
+        transform: scale(1.01);
+        cursor: pointer;
+    }
+`;
+
+const DeleteBtn = styled.button`
+    margin: 0 10px 0 0;
+    width: 45%;
+    height: 40px;
     border-radius: 20px;
     border: 2px solid black;
     font-family: 'Nanum Pen Script', cursive;
@@ -526,11 +546,13 @@ function UpdateDetailPage() {
         }
     }, [imgFile])
 
+    
     useEffect(() => {
         console.log(dailyCard.friends);
         setFriend(dailyCard.friends);
 
     },[dailyCard.friends]);
+    
       
     const ShowHoverEvent = (e, index) => {
         let Div = document.querySelector(`#HoverBox${index}`)
@@ -606,7 +628,7 @@ function UpdateDetailPage() {
 
     };
 
-      const handleImage = (event) => {
+    const handleImage = (event) => {
 
         let reader = new FileReader();
 
@@ -630,7 +652,9 @@ function UpdateDetailPage() {
         console.log(Div);
 
         axios
-            .put(`${server}/s3delete`, { key: Div },
+            .put(`${server}/s3delete`, {
+                key: Div
+            },
                 {
                     'Content-Type': 'application/json',
                     withCredentials: true,
@@ -638,7 +662,7 @@ function UpdateDetailPage() {
             )
             .then((res) => {
                 console.log('delete')
-                 setPhoto(set);
+                setPhoto(set);
             })
     }
 
@@ -659,6 +683,7 @@ function UpdateDetailPage() {
                 },
             })
             .then((res) => {
+                console.log('delete')
                 setFriend(set);
             })
     }
@@ -668,8 +693,8 @@ function UpdateDetailPage() {
 
         const Div = document.querySelector('#inputDate').value;
         console.log(Div);
-
         console.log('최종 포토', photo)
+
         axios
             .put(`${server}/dailycardupdate`, {
                 date: Div || dailyCard.date,
@@ -693,8 +718,27 @@ function UpdateDetailPage() {
                         alert('성공적으로 수정되었습니다. ');
                         history.push('/showdetail');
                     })
-
             })
+    }
+
+    const handleDelete = () => {
+        if (window.confirm("삭제하면 내용을 복구할 수 없습니다. 삭제하시겠습니까?") === true) {
+            axios
+                .put(`${server}/dailycarddelete`,
+                    {
+                        dailycardId: dailyCard.dailyCards_id,
+                    },
+                    {
+                        'Content-Type': 'application/json',
+                        withCredentials: true,
+                    }
+                )
+                .then(res => {
+                    alert("일정이 삭제되었습니다");
+                    history.push('/mypage');
+                })
+                .catch(error => console.log(error));
+        }
     }
 
     const goUpdateSelection = () => {
@@ -708,8 +752,8 @@ function UpdateDetailPage() {
     }
 
     useEffect(() => {
-       console.log('rendering') 
-    },[friends])
+        console.log('rendering', friends)     
+    }, [friends])
     return (
         <Body>
             <DetailBody id="DetailBody">
@@ -729,7 +773,6 @@ function UpdateDetailPage() {
                     <LeftBox hei={dailyCard.type.length}>
                     <SelectionBox>
                         {dailyCard.type.map((el, index) => {
-                            console.log(dailyCard.type.length);
                             return (
                                 <Selection>
                                     <PostIt>
@@ -788,6 +831,7 @@ function UpdateDetailPage() {
                             <UploadText>⊕</UploadText>
                             </AddFriendBtn>
                         </Friend>
+                        {console.log('div', friends)}
                         {friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
                             return (
                                 <Friend id="Friend">
@@ -802,6 +846,7 @@ function UpdateDetailPage() {
                             )
                         })}
                     </FriendBox>
+                    <DeleteBtn onClick={handleDelete}>삭제하기</DeleteBtn>
                     <Btn onClick={handleUpdate}>수정완료</Btn>
                 </RightBox>
             </Box>

@@ -440,24 +440,6 @@ function ShowDetailPage() {
             )
         }
     }
-
-    const a = () => {
-
-        axios
-        .put(`${server}/dailycardinfo`, {
-            dailyCardId: dailyCard.dailyCards_id,
-        }, {
-            'Content-Type': 'application/json',
-            withCredentials: true,
-        })
-        .then(res => {
-            console.log('friends', res.data.data.friends);
-            dailyCard.friends = res.data.data.friends;
-            console.log(dailyCard)
-            return 
-        })
-
-    }
     
     return (
         <Body>
@@ -517,7 +499,6 @@ function ShowDetailPage() {
                         })}
                     </PhotoBox>
                     <FriendBox>
-                        {console.log(dailyCard.friends)}
                         {dailyCard.friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
                             console.log(el.photo)
                             return (

@@ -16,6 +16,7 @@ body {
 #root {
   margin: auto;
   justify-content: center;
+  background: white;
 }
 
 *, *:before, *:after {
