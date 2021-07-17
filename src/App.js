@@ -30,13 +30,29 @@ function App() {
       <Route
         render={() => {
           const pathname = window.location.pathname;
-          console.log(pathname)
-          const isTrue = pathname !== '/login' &&
-            pathname !== '/signup' &&
-            pathname !== '/updateuser' &&
-            pathname !== '/pagenotfound';
+          //console.log(pathname)
+          const isTrue = pathname !== '/signup' &&
+            pathname !== '/updateuser';
           if (isTrue) {
             return <Header />
+          }
+        }}
+      />
+      <Route
+        render={() => {
+          const pathname = window.location.pathname;
+          //console.log(pathname)
+          const isTrue = pathname === '/landing' ||
+            pathname === '/updateuser' ||
+            pathname === '/register' ||
+            pathname === '/search' ||
+            pathname === '/showdetail' ||
+            pathname === '/signup' ||
+            pathname === '/updatedetail' ||
+            pathname === '/updateselection' ||
+            pathname === '/mypage';
+          if (!isTrue) {
+            return <PageNotFound />
           }
         }}
       />
@@ -59,10 +75,8 @@ function App() {
       <Route
         render={() => {
           const pathname = window.location.pathname;
-          const isTrue = pathname !== '/login' &&
-            pathname !== '/signup' &&
-            pathname !== '/updateuser' &&
-            pathname !== '/pagenotfound';
+          const isTrue = pathname !== '/signup' &&
+            pathname !== '/updateuser';
           if (isTrue) {
             return <Footer />
           }

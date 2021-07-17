@@ -124,34 +124,34 @@ function Header() {
     }
 
     // 글자색 바꾸기
-    function SetTextColor(color){
-        document.documentElement.querySelector('.themed').style.color = color;
-    }
+    // function SetTextColor(color){
+    //     document.documentElement.querySelector('.themed').style.color = color;
+    // }
 
     // 배경색 바꾸기
-    function SetBackgroundColor(color){
-        document.querySelector('.themed').style.background = color;
-    }
+    // function SetBackgroundColor(color){
+    //     document.querySelector('.themed').style.background = color;
+    // }
 
-    function handleToggle(event) {
-        if(event.target.name === 'day') {
-            setToggleUrl(nightToggleUrl);
-            event.target.name = 'night'
-        } else {
-            setToggleUrl(dayToggleUrl);
-            event.target.name = 'day'
-        }
-    }
+    // function handleToggle(event) {
+    //     if(event.target.name === 'day') {
+    //         setToggleUrl(nightToggleUrl);
+    //         event.target.name = 'night'
+    //     } else {
+    //         setToggleUrl(dayToggleUrl);
+    //         event.target.name = 'day'
+    //     }
+    // }
 
-    useEffect(() => {
-        if(toggleUrl === nightToggleUrl){
-            SetBackgroundColor('RGB(26,36,54)');
-            SetTextColor('white');
-        } else if(toggleUrl === dayToggleUrl) {
-            SetBackgroundColor('white');
-            SetTextColor('black');
-        }
-    }, [toggleUrl])
+    // useEffect(() => {
+    //     if(toggleUrl === nightToggleUrl){
+    //         SetBackgroundColor('RGB(26,36,54)');
+    //         SetTextColor('white');
+    //     } else if(toggleUrl === dayToggleUrl) {
+    //         SetBackgroundColor('white');
+    //         SetTextColor('black');
+    //     }
+    // }, [toggleUrl])
     
     return (
         <FixPosition>
@@ -159,7 +159,7 @@ function Header() {
                 <HeaderContents>
                     <Logo to='/landing'>MOHAZI</Logo>
                     <Space/>
-                    <Day_Night_Toggle className="check" name='day' src={toggleUrl} onClick={(e) => handleToggle(e)}/>
+                    {/* <Day_Night_Toggle className="check" name='day' src={toggleUrl} onClick={(e) => handleToggle(e)}/> */}
                     {isLogin ?
                         <div>
                             <MypageButton to='/mypage'>Mypage</MypageButton>   <LogoutButton onClick={() => handleLogout()}>Logout</LogoutButton>

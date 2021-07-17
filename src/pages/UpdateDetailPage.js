@@ -530,7 +530,7 @@ function UpdateDetailPage() {
 
     const history = useHistory();
     const dispatch = useDispatch();
-    const { dailyCard, userInfo } = useSelector((state) => state)
+    const { dailyCard, userInfo, isLogin } = useSelector((state) => state)
     console.log(dailyCard)
 
     const [isLoading, setIsLoading] = useState(false);
@@ -765,6 +765,12 @@ function UpdateDetailPage() {
     useEffect(() => {
         console.log('rendering', friends)     
     }, [friends])
+
+    useEffect(() => {
+        if(!isLogin) {
+            history.push('/pagenotfound');
+        }
+    },[]);
 
     return (
         <Body>
