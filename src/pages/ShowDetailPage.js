@@ -20,31 +20,30 @@ const DetailBody = styled.div`
     margin: 0 auto;
     border: 1px solid white;
     position: relative;
-    background-image: url('img/Memo.jpg');
+    background-image: url('img/bermuda-231.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
 `;
 
 const DetailTitle = styled.div`
     width: 80%;
-    height: 70px;
+    height: 80px;
     display: flex;
     font-family: 'Nanum Pen Script', cursive;
-    margin: 120px auto 0px;
+    margin: 240px auto 0px;
 `;
 
 const Title = styled.div`
-    width: 80%;
     padding: 10px;
     font-weight: 600;
     font-size: 3em;
-    margin: 0 0 0 50px;
+    margin: 0;
 `;
 
 const Profile = styled.img`
-    margin: 0 0 0 20px;
-    width: 70px;
-    height: 70px;
+    margin: 0;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     border: 1px solid black;
 `;
@@ -67,19 +66,19 @@ const LeftBox = styled.div`
 
 
 const SelectionBox = styled.div`
-    margin: 0 0 0 50px;
+    margin: 0 auto;
     background: ${oc.yellow[0]};
     border-radius: 20px;
-    border: 2px solid black;
+    
     position: absolute;
     width: 90%;
 `;
 
 const MemoBox = styled.div`
-    margin: 0 0 0 50px;
+    margin: 0 auto;
     background: ${oc.yellow[0]};
     border-radius: 20px;
-    border: 2px solid black;
+    
     position: absolute;
     top: ${props => {
         return 249 + 220 * (props.hei - 1) + 20;
@@ -132,7 +131,7 @@ const PostItRight = styled.div`
     width: 330px;
     height: 50px;
     border: 1px solid black;
-    background-color: ${oc.gray[3]};
+    background-color: white;
     overflow-y: auto;
 
     &::-webkit-scrollbar{
@@ -162,7 +161,7 @@ const PostItBtn = styled.button`
     float:right;
     width: 20px;
     height: 50px;
-    border: 2px solid black;
+    
     border-left-width: 2px;
 
     &: focus {
@@ -263,7 +262,7 @@ const RightBox = styled.div`
 const PhotoBox = styled.div`
     margin: 0px auto;
     background: ${oc.yellow[0]};
-    border: 2px solid black;
+    
     border-radius: 20px;
     overflow-y: auto;
     width: 100%;
@@ -311,7 +310,6 @@ const Photo = styled.div`
 const PhotoImg = styled.img`
     position: absolute;
     border-radius: 20px;
-    border: 4px solid black;
     width:100%;
     height: 100%;
     object-fit: cover;
@@ -325,7 +323,7 @@ const FriendBox = styled.div`
     overflow-x: hidden;
     width: 100%;
     height: 30%;
-    border: 2px solid black;
+    
     border-radius: 20px;
 
     &::-webkit-scrollbar{
@@ -381,10 +379,11 @@ const FriendPhotoImg = styled.img`
 `;
 
 const FriendName = styled.div`
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 30px;
     position: absolute;
     top: 77%;
     width: 100%;
-    height: 20%;
     text-align: center;
 `;
 
@@ -393,7 +392,7 @@ const Btn = styled.button`
     width: 100%;
     height: 40px;
     border-radius: 20px;
-    border: 2px solid black;
+    border: none;
     font-family: 'Nanum Pen Script', cursive;
     font-size: 2em;
     background: ${oc.yellow[0]};
@@ -404,7 +403,14 @@ const Btn = styled.button`
         background: ${oc.red[2]};
         transform: scale(1.01);
         cursor: pointer;
+        border: 2px solid black;
     }
+`;
+
+const Username = styled.div`
+    font-size: 22px;
+    font-weight: 600;
+    padding: 10px;
 `;
 
 function ShowDetailPage() {
@@ -445,13 +451,20 @@ function ShowDetailPage() {
         <Body>
         <DetailBody id="DetailBody">
             <DetailTitle>
-                <Title>Date: {dailyCard.date}</Title>
-                {dailyCard.friends.filter((el) => el.id === userInfo.id).map((el) => {
-                    return (
-                        <Profile src={s3ImageURl + '/' + el}/>
-                    )
-                })}
-            </DetailTitle>
+                <Title>날짜: {dailyCard.date}</Title>
+                    <Username>작성자:<br />{userInfo.username}</Username>
+                    {dailyCard.friends.filter((el) => el.id === userInfo.id).map((el) => {
+                        if (el.photo !== null) {
+                            return (
+                                <Profile src={s3ImageURl + '/' + el.photo} />
+                            )
+                        } else {
+                            return (
+                                <Profile src="/img/default_avatar.png" />
+                            )
+                        }
+                    })}
+                </DetailTitle>
             <Box>
                 <LeftBox hei={dailyCard.type.length}>
                     <SelectionBox id="SelectionBox">
@@ -497,21 +510,34 @@ function ShowDetailPage() {
                                 </Photo>
                             )
                         })}
-                    </PhotoBox>
-                    <FriendBox>
-                        {dailyCard.friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
-                            console.log(el.photo)
-                            return (
-                                <Friend id="Friend">
-                                    <FriendPhoto index={index}>
-                                        <FriendPhotoImg src={s3ImageURl + '/' + el.photo} />
-                                    </FriendPhoto>
-                                    <FriendName>
-                                        {el.username}
-                                    </FriendName>
-                                </Friend>
-                            )
-                        })}
+                        </PhotoBox>
+                        <FriendBox>
+                            {dailyCard.friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
+                                console.log(el.photo)
+                                if (el.photo !== null) {
+                                    return (
+                                        <Friend id="Friend">
+                                            <FriendPhoto index={index}>
+                                                <FriendPhotoImg src={s3ImageURl + '/' + el.photo} />
+                                            </FriendPhoto>
+                                            <FriendName>
+                                                {el.username}
+                                            </FriendName>
+                                        </Friend>
+                                    )
+                                } else {
+                                    return (
+                                        <Friend id="Friend">
+                                            <FriendPhoto index={index}>
+                                                <FriendPhotoImg src="/img/default_avatar.png" />
+                                            </FriendPhoto>
+                                            <FriendName>
+                                                {el.username}
+                                            </FriendName>
+                                        </Friend>
+                                    )
+                                }
+                            })}
                     </FriendBox>
                     {isME()}
                 </RightBox>

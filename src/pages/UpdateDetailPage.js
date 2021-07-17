@@ -23,22 +23,20 @@ const DetailBody = styled.div`
     margin: 0 auto;
     border: 1px solid white;
     position: relative;
-    background-image: url('img/Memo.jpg');
+    background-image: url('img/bermuda-231.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
 `;
 
 const DetailTitle = styled.div`
-    margin: 120px auto 0px;
-    display: flex;
     width: 80%;
-    height: 70px;
+    height: 80px;
     display: flex;
     font-family: 'Nanum Pen Script', cursive;
+    margin: 240px auto 0px;
 `;
 
 const Cover = styled.div`
-    width: 80%;
     display: flex;
 `;
 
@@ -51,7 +49,13 @@ const Title = styled.div`
     padding: 10px;
     font-weight: 600;
     font-size: 3em;
-    margin: 0 0 0 50px;
+    margin: 0;
+`;
+
+const Username = styled.div`
+    font-size: 22px;
+    font-weight: 600;
+    padding: 10px;
 `;
 
 const Profile = styled.img`
@@ -79,19 +83,19 @@ const LeftBox = styled.div`
 `;
 
 const SelectionBox = styled.div`
-    margin: 0 0 0 50px;
+    margin: 0 auto;
     background: ${oc.yellow[0]};
     border-radius: 20px;
-    border: 2px solid black;
+    
     position: absolute;
     width: 90%;
 `;
 
 const MemoBox = styled.div`
-    margin: 0 0 0 50px;
+    margin: 0 auto;
     background: ${oc.yellow[0]};
     border-radius: 20px;
-    border: 2px solid black;
+    
     position: absolute;
     top: ${props => {
         return 249 + 220 * (props.hei - 1) + 20;
@@ -144,7 +148,7 @@ const PostItRight = styled.div`
     width: 330px;
     height: 50px;
     border: 1px solid black;
-    background-color: ${oc.gray[3]};
+    background-color: white;
     overflow-y: auto;
 
     &::-webkit-scrollbar{
@@ -221,7 +225,7 @@ const MemoText = styled.textarea`
     margin: 5px;
     resize: none;
     background: ${oc.yellow[1]};
-    border: 2px solid black;
+    
 
     overflow-y: auto;
 
@@ -288,7 +292,7 @@ const RightBox = styled.div`
 const PhotoBox = styled.div`
     margin: 0px auto;
     background: ${oc.yellow[0]};
-    border: 2px solid black;
+    
     border-radius: 20px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -337,7 +341,6 @@ const Photo = styled.div`
 const PhotoImg = styled.img`
     position: absolute;
     border-radius: 20px;
-    border: 4px solid black;
     width:100%;
     height: 100%;
     object-fit: cover;
@@ -349,7 +352,8 @@ const PhotoBtn = styled.button`
     border-radius: 20px;
     position:absolute;
     top: 0%;
-    left: 87%;
+    left: 83%;
+    font-weight: 600;
 
     &: focus {
         outline:none;
@@ -367,7 +371,7 @@ const FriendBox = styled.div`
     overflow-x: hidden;
     width: 100%;
     height: 30%;
-    border: 2px solid black;
+    
     border-radius: 20px;
 
     &::-webkit-scrollbar{
@@ -419,10 +423,12 @@ const FriendPhotoImg = styled.img`
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 3px solid black;
+    border: 1px solid black;
 `;
 
 const FriendName = styled.div`
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 30px;
     position: absolute;
     top: 77%;
     width: 100%;
@@ -436,6 +442,11 @@ const UploadBox = styled.div`
     border : 4px solid black;
     width:100%;
     height: 100%;
+
+    &: hover {
+        transform: scale(1.05);
+        cursor: pointer;
+    }
 `;
 
 const UploadText = styled.div`
@@ -454,6 +465,10 @@ const AddFriendBtn = styled.div`
     height: 80%;
     border-radius: 50%;
     border: 3px solid black;
+    &: hover {
+        transform: scale(1.05);
+        cursor: pointer;
+    }
 `;
 
 const UploadLink = styled.label`
@@ -470,6 +485,8 @@ const FriendPhotoBtn = styled.button`
     position:absolute;
     top: 0%;
     left: 72%;
+    font-weight: 600;
+    z-index: 1;
     &: focus {
         outline:none;
     }
@@ -483,12 +500,12 @@ const Btn = styled.button`
     margin: 0 0 0 10px;
     width: 45%;
     height: 40px;
-
     border-radius: 20px;
-    border: 2px solid black;
     font-family: 'Nanum Pen Script', cursive;
     font-size: 30px;
     background: ${oc.yellow[0]};
+    border: 0;
+
     &: focus {
         outline:none;
     }
@@ -496,6 +513,7 @@ const Btn = styled.button`
         background: ${oc.red[2]};
         transform: scale(1.01);
         cursor: pointer;
+        border: 2px solid black;
     }
 `;
 
@@ -504,10 +522,11 @@ const DeleteBtn = styled.button`
     width: 45%;
     height: 40px;
     border-radius: 20px;
-    border: 2px solid black;
     font-family: 'Nanum Pen Script', cursive;
     font-size: 30px;
     background: ${oc.yellow[0]};
+    border: 0;
+
     &: focus {
         outline:none;
     }
@@ -515,6 +534,7 @@ const DeleteBtn = styled.button`
         background: ${oc.red[2]};
         transform: scale(1.01);
         cursor: pointer;
+        border: 2px solid black;
     }
 `;
 
@@ -763,10 +783,17 @@ function UpdateDetailPage() {
                     <Title>Date: </Title>
                     <Date id="inputDate" type="date"></Date>
                     </Cover>
+                    <Username>작성자:<br />{userInfo.username}</Username>
                     {dailyCard.friends.filter((el) => el.id === userInfo.id).map((el) => {
-                        return (
-                            <Profile src={s3ImageURl + '/' + el} />
-                        )
+                        if (el.photo !== null) {
+                            return (
+                                <Profile src={s3ImageURl + '/' + el.photo} />
+                            )
+                        } else {
+                            return (
+                                <Profile src="/img/default_avatar.png" />
+                            )
+                        }
                     })}
                 </DetailTitle>
                 <Box>
@@ -832,19 +859,34 @@ function UpdateDetailPage() {
                             </AddFriendBtn>
                         </Friend>
                         {console.log('div', friends)}
-                        {friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
-                            return (
-                                <Friend id="Friend">
-                                    <FriendPhoto className="FriendsPhoto" index={index}>
-                                        <FriendPhotoImg id={`FriendPhotoImg${index}`} src={s3ImageURl + '/' + el.photo} />
-                                    </FriendPhoto>
-                                    <FriendName>
-                                        {el.username}
-                                    </FriendName>
-                                    <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, index, el)}>X</FriendPhotoBtn>
-                                </Friend>
-                            )
-                        })}
+                        {dailyCard.friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
+                                console.log(el.photo)
+                                if (el.photo !== null) {
+                                    return (
+                                        <Friend id="Friend">
+                                            <FriendPhotoBtn onClick={FriendPhotoDelete}>X</FriendPhotoBtn>
+                                            <FriendPhoto index={index}>
+                                                <FriendPhotoImg src={s3ImageURl + '/' + el.photo} />
+                                            </FriendPhoto>
+                                            <FriendName>
+                                                {el.username}
+                                            </FriendName>
+                                        </Friend>
+                                    )
+                                } else {
+                                    return (
+                                        <Friend id="Friend">
+                                            <FriendPhotoBtn onClick={FriendPhotoDelete}>X</FriendPhotoBtn>
+                                            <FriendPhoto index={index}>
+                                                <FriendPhotoImg src="/img/default_avatar.png" />
+                                            </FriendPhoto>
+                                            <FriendName>
+                                                {el.username}
+                                            </FriendName>
+                                        </Friend>
+                                    )
+                                }
+                            })}
                     </FriendBox>
                     <DeleteBtn onClick={handleDelete}>삭제하기</DeleteBtn>
                     <Btn onClick={handleUpdate}>수정완료</Btn>

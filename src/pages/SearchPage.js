@@ -21,9 +21,13 @@ const SearchBody = styled.div`
     border: 10px dashed ${oc.yellow[3]};  
 `;
 
-const Right = styled.img`
-    height: 480px;
-
+const Left = styled.img`
+    margin: 70px 0 0 0;
+    height: 500px;
+    width: 480px;
+    animation: target_image 3s; 
+    animation-iteration-count: infinite;
+    transform-origin: 60% 60%; 
 `;
 
 const Area = styled.area`
@@ -69,6 +73,7 @@ function SearchPage() {
         history.push('/register');
     }
 
+    console.log(window.innerWidth);
     const change = (e) => {
         console.log(e.target.id);
         const {id} = e.currentTarget;
@@ -77,6 +82,7 @@ function SearchPage() {
     }
     return (
         <Box>
+            <Left id="SearchImg" src="../img/pablo-819.png"/>
         <SearchBody>
             <img src="../img/map/seoulMap_00.jpg" alt="서울시 지도" useMap="#city-map" id="seoul-city-map"/>
         <map name="city-map" id="city-map-link">
