@@ -14,11 +14,11 @@
 
 ## Link
 
-### :point_right: [https://mohazi.site](https://mohazi.site)
+#### :point_right: [https://mohazi.site](https://mohazi.site)
 
 <br>
 
 ## Github Repository
 
-### :point_right: `Client` [https://github.com/codestates/mohazi-client](https://github.com/codestates/mohazi-client)
-### :point_right: `Server` [https://github.com/codestates/mohazi-server](https://github.com/codestates/mohazi-server)
+#### :point_right: `Client` [https://github.com/codestates/mohazi-client](https://github.com/codestates/mohazi-client)
+#### :point_right: `Server` [https://github.com/codestates/mohazi-server](https://github.com/codestates/mohazi-server)
