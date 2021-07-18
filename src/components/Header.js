@@ -28,7 +28,7 @@ const Background = styled.div`
 `;
 
 const HeaderContents = styled.div`
-    width: 1250px;
+    width: 1450px;
     height: 70px;
     display: flex;
     flex-direction: row;
