@@ -58,7 +58,7 @@ const Selections = styled.div`
     border: 2px solid ${oc.gray[3]};
     border-radius: 10px;
     width: 320px;
-    height: 650px;
+    height: 640px;
     border-radius: 10px;
     position: absolute;
     padding: 20px;
