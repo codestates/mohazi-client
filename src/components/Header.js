@@ -28,7 +28,7 @@ const Background = styled.div`
 `;
 
 const HeaderContents = styled.div`
-    width: 1200px;
+    margin: 0 30px;
     height: 70px;
     display: flex;
     flex-direction: row;
@@ -42,7 +42,7 @@ const Space = styled.div`
 `;
 
 const MypageButton = styled(Link)`
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: ${oc.blue[8]};
     padding: 0.5rem;
@@ -58,7 +58,7 @@ const MypageButton = styled(Link)`
 `;
 
 const LogoutButton = styled(Link)`
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: ${oc.blue[8]};
     padding: 0.5rem;
@@ -75,8 +75,10 @@ const LogoutButton = styled(Link)`
 `;
 
 const LogoImg = styled.img`
-    height: 50px;
+    left:0;
+    height: 70px;
     cursor: pointer;
+    margin-top: 20px;
     
     &:hover {
         content: url('/img/logo2.png');
@@ -156,7 +158,6 @@ function Header() {
     
     return (
         <FixPosition>
-            <Background>
                 <HeaderContents>
                     <LogoImg onClick={handleLogo} src='/img/logo.png'/>
                     <Space/>
@@ -168,7 +169,6 @@ function Header() {
                         :<LoginModal/>
                     }
                 </HeaderContents>
-            </Background>
         </FixPosition>
     )
 }

@@ -188,7 +188,7 @@ const GoogleBtn = styled(Link)`
 const LoginButton = styled.button`
     border: none;
     background: white;
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: ${oc.blue[8]};
     padding: 0.5rem;
