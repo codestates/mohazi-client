@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import oc from 'open-color';
 import { Link } from 'react-router-dom';
 
-//============== CSS - basics =================
 const FixPosition = styled.div`
     display: flex;
     flex-direction: column;
@@ -46,14 +45,14 @@ const Content = styled.div`
     padding-top: 1rem;
 `;
 
-const ContentLink = styled(Link)`
+const ContentLink = styled.a`
     text-decoration: none;
     color: ${oc.gray[8]};
     font-size: 0.9rem;
     line-height: 1.8;
 
     &:hover {
-        color: ${oc.indigo[6]};
+        color: ${oc.blue[6]};
     }
 `;
 
@@ -64,16 +63,16 @@ function Footer() {
                 <FooterContents>
                     <ContentCategory>About us<br/>
                         <Content>
-                            <ContentLink to="https://github.com/mohazi-client/wiki">Wiki</ContentLink><br/>
-                            <ContentLink to="https://github.com/mohazi-client">Repository</ContentLink><br/>
+                            <ContentLink href="https://github.com/codestates/mohazi-client/wiki">Wiki</ContentLink><br/>
+                            <ContentLink href="https://github.com/codestates/mohazi-client">Repository</ContentLink><br/>
                         </Content>
                     </ContentCategory>
                     <ContentCategory>Created by<br/>
                         <Content>
-                            Hyehyun Kim <ContentLink to="https://github.com/franhhk">@github</ContentLink><br/>
-                            Hyunjun Kim <ContentLink to="https://github.com/boltang2">@github</ContentLink><br/>
-                            Junghyun Jo <ContentLink to="https://github.com/whThswh">@github</ContentLink><br/>
-                            Jihoon Baek <ContentLink to="https://github.com/hoon6653">@github</ContentLink><br/>
+                            Hyehyun Kim <ContentLink href="https://github.com/franhhk">@github</ContentLink><br/>
+                            Hyunjun Kim <ContentLink href="https://github.com/boltang2">@github</ContentLink><br/>
+                            Junghyun Jo <ContentLink href="https://github.com/whThswh">@github</ContentLink><br/>
+                            Jihoon Baek <ContentLink href="https://github.com/hoon6653">@github</ContentLink><br/>
                         </Content>
                     </ContentCategory>
                 </FooterContents>

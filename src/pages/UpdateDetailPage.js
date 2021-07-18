@@ -452,8 +452,11 @@ const UploadBox = styled.div`
     border : 4px solid black;
     width:100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    &: hover {
+    &:hover {
         transform: scale(1.05);
         cursor: pointer;
     }
@@ -476,7 +479,8 @@ const AddFriendBtn = styled.div`
     height: 80%;
     border-radius: 50%;
     border: 3px solid black;
-    &: hover {
+    
+    &:hover {
         transform: scale(1.05);
         cursor: pointer;
     }

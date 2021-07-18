@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { Link, withRouter, Route, useHistory } from "react-router-dom";
 import { useDispatch, useSelector, } from 'react-redux';
-import { setFriends, userUpdate } from '../actions/actions.js';
+import { setFriends, userUpdate, logout} from '../actions/actions.js';
 import styled, { keyframes } from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
 import imageCompression from "browser-image-compression";
@@ -335,7 +335,9 @@ function UpdateUserPage() {
           }
         })
         .then((res) => {
+          console.log(res.message)
           alert('회원탈퇴가 완료되었습니다.');
+          dispatch(logout());
           history.push('/landing');
         })
     }
