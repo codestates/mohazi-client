@@ -325,7 +325,7 @@ function UpdateUserPage() {
 
   const Withdraw = () => {
 
-    if (window.confirm("삭제하면 내용을 복구할 수 없습니다. 삭제하시겠습니까?") === true) {
+    if (window.confirm("회원 탈퇴하시겠습니까?") === true) {
       axios
         .put(`${server}/userdelete`, {
           userId: UserId,
@@ -333,6 +333,10 @@ function UpdateUserPage() {
             'Content-type': "application/json",
             withCredentials: true,
           }
+        })
+        .then((res) => {
+          alert('회원탈퇴가 완료되었습니다.');
+          history.push('/landing');
         })
     }
   }

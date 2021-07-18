@@ -37,6 +37,7 @@ const DetailTitle = styled.div`
 `;
 
 const Cover = styled.div`
+    width: 80%;
     display: flex;
 `;
 
@@ -53,13 +54,21 @@ const Title = styled.div`
 `;
 
 const Username = styled.div`
-    font-size: 22px;
+    width: 150px;
+    font-size: 32px;
     font-weight: 600;
-    padding: 10px;
+    text-align: right;
+    padding: 20px 0 0 0;
 `;
 
+const Name = styled.div`
+    font-size: 32px;
+    font-weight: 600;
+    padding: 20px 15px 0 10px;
+`;
+
+
 const Profile = styled.img`
-    margin: 0 0 0 20px;
     width: 70px;
     height: 70px;
     border-radius: 50%;
@@ -224,6 +233,7 @@ const MemoText = styled.textarea`
     height: 160px;
     margin: 5px;
     resize: none;
+    padding: 10px;
     background: ${oc.yellow[1]};
     
 
@@ -796,10 +806,11 @@ function UpdateDetailPage() {
                 <SearchUserModal />
                 <DetailTitle>
                     <Cover>
-                    <Title>Date: </Title>
-                    <Date id="inputDate" type="date"></Date>
+                        <Title>Date: </Title>
+                        <Date id="inputDate" type="date"></Date>
                     </Cover>
-                    <Username>작성자:<br />{userInfo.username}</Username>
+                    <Username>작성자:</Username>
+                    <Name>{userInfo.username}</Name>
                     {dailyCard.friends.filter((el) => el.id === userInfo.id).map((el) => {
                         if (el.photo !== null) {
                             return (
