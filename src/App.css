@@ -39,6 +39,23 @@ body {
   #region_search_bar div {
     margin-left: 10px;
   }
+
+  .mainT {
+    font-size: 4rem;
+    width: 550px;
+  }
+
+  .subT1, .subT2 {
+    font-size: 1.5rem;
+  }
+
+  .desc_img {
+    display: block;
+  }
+
+  .category_box {
+    margin-left: 270px;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -55,7 +72,6 @@ body {
     margin: 10px 2.5%;
   }
 
-
   #region_search_bar {
     flex-direction: column;
     width: 310px;
@@ -67,6 +83,23 @@ body {
     margin-bottom: 10px;
 
   }
+
+  .mainT {
+    font-size: 2rem;
+    width: 550px;
+  }
+
+  .subT1, .subT2 {
+    font-size: 0.9rem;
+  }
+
+  .desc_img {
+    display: none;
+  }
+
+  .category_box {
+    margin-left: 0px;
+  }
 }
 
 @media (max-width: 1225px) {
@@ -75,6 +108,7 @@ body {
     display: none;
   }
 }
+
 @keyframes target_image {
 
   0% { transform: rotate(0deg); }
