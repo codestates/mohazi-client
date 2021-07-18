@@ -5,10 +5,10 @@
 
 |Name|Position|Github|
 |---|---|---|
-|🦹‍♀️김현준|`front-end`|[https://github.com/boltang2](https://github.com/boltang2)|
-|👩‍💻김혜현|`front-end`|[https://github.com/franhhk](https://github.com/franhhk)|
-|:guard:조정현|`back-end`|[https://github.com/whThswh](https://github.com/whThswh)|
-|🐻백지훈|`back-end`|[https://github.com/hoon6653](https://github.com/hoon6653)|
+|🦹‍♀️김현준|`Front-end`|[https://github.com/boltang2](https://github.com/boltang2)|
+|👩‍💻김혜현|`Front-end`|[https://github.com/franhhk](https://github.com/franhhk)|
+|:guard:조정현|`Back-end`|[https://github.com/whThswh](https://github.com/whThswh)|
+|🐻백지훈|`Back-end`|[https://github.com/hoon6653](https://github.com/hoon6653)|
 
 <br>
 
