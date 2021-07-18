@@ -396,14 +396,35 @@ const FriendName = styled.div`
 `;
 
 const Btn = styled.button`
-    margin: auto;
-    width: 100%;
+    margin: 0 10px 0 0;
+    width: 45%;
     height: 40px;
     border-radius: 20px;
-    border: none;
+    border: 0;
     font-family: 'Nanum Pen Script', cursive;
     font-size: 2em;
     background: ${oc.yellow[0]};
+    &: focus {
+        outline:none;
+    }
+    &: hover {
+        background: ${oc.red[2]};
+        transform: scale(1.01);
+        cursor: pointer;
+        border: 2px solid black;
+    }
+`;
+
+const MyPageBtn = styled.button`
+    margin: 0 0 0 10px;
+    width: 45%;
+    height: 40px;
+    border-radius: 20px;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 30px;
+    background: ${oc.yellow[0]};
+    border: 0;
+
     &: focus {
         outline:none;
     }
@@ -453,6 +474,10 @@ function ShowDetailPage() {
                 <Btn onClick={GoUpdateDetail}>수정하기</Btn>
             )
         }
+    }
+
+    const goMypage = () => {
+        history.push('/mypage');
     }
 
     useEffect(() => {
@@ -555,6 +580,7 @@ function ShowDetailPage() {
                             })}
                     </FriendBox>
                     {isME()}
+                    <MyPageBtn onClick={goMypage}>돌아가기</MyPageBtn>
                 </RightBox>
             </Box>
         </DetailBody>
