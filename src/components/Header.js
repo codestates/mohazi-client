@@ -28,7 +28,7 @@ const Background = styled.div`
 `;
 
 const HeaderContents = styled.div`
-    width: 1450px;
+    margin: 0 30px;
     height: 70px;
     display: flex;
     flex-direction: row;
@@ -75,6 +75,7 @@ const LogoutButton = styled(Link)`
 `;
 
 const LogoImg = styled.img`
+    left:0;
     height: 70px;
     cursor: pointer;
     margin-top: 20px;
@@ -157,7 +158,6 @@ function Header() {
     
     return (
         <FixPosition>
-            <Background>
                 <HeaderContents>
                     <LogoImg onClick={handleLogo} src='/img/logo.png'/>
                     <Space/>
@@ -169,7 +169,6 @@ function Header() {
                         :<LoginModal/>
                     }
                 </HeaderContents>
-            </Background>
         </FixPosition>
     )
 }

@@ -18,7 +18,7 @@ const Landing = styled.div`
 
 const Desc = styled.div`
     padding: 20px 0 0 0;
-    margin: auto;
+    margin: 0 40px;
     width: 90%;
     position: relative;
     display: flex;
