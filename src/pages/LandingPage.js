@@ -61,6 +61,12 @@ const IntroPage = styled.div`
         width: 55vw;
         float: right;
     }
+
+    .gif {
+        width: 90vw;
+        margin-left: 50px;
+        border: 8px solid black;
+    }
 `;
 
 const FirstText = styled.div`
@@ -310,18 +316,18 @@ function LandingPage() {
                     <img src='/img/pablo-isolation.png'></img>
                 </IntroPage>
                 <IntroPage>
-                    
+                    <img className="gif" src="/img/landing.gif"></img>
                     <SecondText>
                         <div className="mainT">장소를 찾고 일정으로 만들 수 있어요</div>
-                        <div></div>
+                        <div className="subT2">나만의 일기장으로 일정을 관리해보세요!</div>
                     </SecondText>
                 </IntroPage>
                 <IntroPage>
-                    <img src='/img/pablo-839.png'></img>
                     <ThirdText>
                         <div className="mainT">만나서 일정을 계획하기가 어렵다면?</div>
                         <div className="subT2">일정을 만들고 바로 친구들과 공유해요!</div>
                     </ThirdText>
+                    <img src='/img/pablo-973.png'></img>
                 </IntroPage>
             </Introductions>
         </Landing>
