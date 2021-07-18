@@ -42,7 +42,7 @@ const Space = styled.div`
 `;
 
 const MypageButton = styled(Link)`
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: ${oc.blue[8]};
     padding: 0.5rem;
@@ -58,7 +58,7 @@ const MypageButton = styled(Link)`
 `;
 
 const LogoutButton = styled(Link)`
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: ${oc.blue[8]};
     padding: 0.5rem;
@@ -75,8 +75,9 @@ const LogoutButton = styled(Link)`
 `;
 
 const LogoImg = styled.img`
-    height: 50px;
+    height: 70px;
     cursor: pointer;
+    margin-top: 20px;
     
     &:hover {
         content: url('/img/logo2.png');
