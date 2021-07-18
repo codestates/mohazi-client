@@ -82,6 +82,24 @@ const FirstText = styled.div`
     }
 `;
 
+const ThirdText = styled.div`
+    margin-left: 70px;
+
+    > div {
+        float: left;
+        text-align: left;
+        font-weight: 600;
+        color: black;
+        width: 550px;
+    }
+
+    > .subT2 {
+        font-weight: 500;
+        color: ${oc.gray[7]};
+        margin-top: 20px;
+    }
+`;
+
 const SecondText = styled.div`
     margin-left: 70px;
 
@@ -190,7 +208,7 @@ const DescriptionText = styled.div `
     text-align: left;
     padding-left: 70px;
     padding-bottom: 10px;
-    margin-top: 20px;
+    margin-top: 40px;
     font-size: 2rem;
 `;
 
@@ -292,11 +310,18 @@ function LandingPage() {
                     <img src='/img/pablo-isolation.png'></img>
                 </IntroPage>
                 <IntroPage>
-                    <img src='/img/pablo-839.png'></img>
+                    
                     <SecondText>
+                        <div className="mainT">장소를 찾고 일정으로 만들 수 있어요</div>
+                        <div></div>
+                    </SecondText>
+                </IntroPage>
+                <IntroPage>
+                    <img src='/img/pablo-839.png'></img>
+                    <ThirdText>
                         <div className="mainT">만나서 일정을 계획하기가 어렵다면?</div>
                         <div className="subT2">일정을 만들고 바로 친구들과 공유해요!</div>
-                    </SecondText>
+                    </ThirdText>
                 </IntroPage>
             </Introductions>
         </Landing>
