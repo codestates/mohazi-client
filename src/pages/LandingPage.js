@@ -10,22 +10,21 @@ import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
 
-// ------------------css------------------ //
 const Landing = styled.div`
-        box-sizing: border-box;
-        background-color: white;
-        text-align: center;
-    `;
+    box-sizing: border-box;
+    background-color: white;
+    text-align: center;
+`;
 
 const Desc = styled.div`
-        padding: 20px 0 0 0;
-        margin: auto;
-        width: 90%;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        border: 10px dashed ${oc.yellow[3]};
-    `;
+    padding: 20px 0 0 0;
+    margin: auto;
+    width: 90%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    border: 10px dashed ${oc.yellow[3]};
+`;
 
 const DescriptionImg = styled.img`
     height: 350px;
@@ -36,94 +35,15 @@ const DescriptionImg = styled.img`
     left: 10px;
 `;
 
-const DescBoxText = styled.div`
-        margin-top: 150px;
-        margin-bottom: 20px;
-        font-family: 'Gugi', cursive;
-    `;
-
 const RecBox = styled.div`
-        height: 400px;
-        width: 1000px;
-        margin-left: 270px;
-        padding: 25px;
-        display: flex;
-        float: left;
-        position: relative;
-        overflow-x: auto;
-    `;
-
-const Rec = styled.div`
-        height: 350px;
-        width: 250px;
-        background-color: white;
-        box-shadow: rgb(180 180 180) -1px 1px 8px;
-        display: flex;
-        flex-direction: column;
-        z-index: ${(props) => props.index};
-        clear: both;
-        border-radius: 20px;
-        position: absolute;
-        left: ${(props) => props.left}px;
-        transition: all 0.5s linear;
-        cursor: pointer;
-        justify-content: center;
-        align-items: center;
-        
-        > img {
-            width: 250px
-        }
-        &:hover {
-            transition: all 0.5s ease 0s;
-            transform: translateY(-15px);
-        }
-        &:hover ~ .Rec {
-            transition: all 0.5s ease 0s;
-            transform: translateX(100px);
-        }
-    
-    `;
-
-const RecImg = styled.img`
-    height: 350px;
-    width: 250px;
-    border-radius: 20px;
+    height: 400px;
+    width: 1000px;
+    padding: 25px;
+    display: flex;
+    float: left;
+    position: relative;
+    overflow-x: auto;
 `;
-
-const IntroBox = styled(Landing)`
-        height: 350px;
-        width: 100%;
-        position: relative;
-        overflow-y: hidden;
-    `;
-
-const IntroBoxText = styled.div`
-        padding: 200px 0 0 0;
-        font-family: 'Big Shoulders Stencil Display', cursive;
-    `;
-
-const Btn = styled.div`
-        position: absolute;
-        left: 50%;
-        top: 80%;
-        margin-left: -40px;
-        margin-top: -20px;
-    `;
-
-const LandingBtn = styled.button`
-        width:90px;
-        height:40px;
-        appearance: none;
-        font-family: 'Big Shoulders Stencil Display', cursive;
-        font-size: 20px;
-        border: none;
-        cursor: pointer;
-        border-radius: 10px;
-    `;
-
-const Box = styled.div`
-        height: 350px;
-    `;
 
 const Introductions = styled.div`
     width: 100vw;
@@ -145,19 +65,18 @@ const IntroPage = styled.div`
 
 const FirstText = styled.div`
     margin-left: 70px;
+    float: left;
 
     > div {
         float: left;
         text-align: left;
         font-weight: 600;
-        font-size: 4rem;
         color: black;
         width: 550px;
     }
 
     > .subT1 {
         font-weight: 500;
-        font-size: 1.5rem;
         color: ${oc.gray[7]};
         margin-top: 20px;
     }
@@ -170,14 +89,12 @@ const SecondText = styled.div`
         float: left;
         text-align: left;
         font-weight: 600;
-        font-size: 4rem;
         color: black;
         width: 550px;
     }
 
     > .subT2 {
         font-weight: 500;
-        font-size: 1.5rem;
         color: ${oc.gray[7]};
         margin-top: 20px;
     }
@@ -190,7 +107,6 @@ const Category = styled.div`
     flex-direction: column;
     z-index: ${(props) => props.index};
     clear: both;
-    border-radius: 20px;
     position: absolute;
     left: ${(props) => props.left}px;
     transition: all 0.5s linear;
@@ -210,9 +126,9 @@ const Category = styled.div`
     
     > span {
         font-weight: 600;
-        font-size: 2rem;
+        font-size: 1.7rem;
         position: absolute;
-        margin: 0 0 310px 180px;
+        margin: 0 0 310px 200px;
 
         &:hover {
             transition: .2s all;
@@ -268,13 +184,23 @@ const BtnField = styled.div `
     padding-left: 100px
 `;
 
+const DescriptionText = styled.div `
+    color: ${oc.yellow[4]};
+    font-weight: 600;
+    text-align: left;
+    padding-left: 70px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+    font-size: 2rem;
+`;
+
 function LandingPage() {
     const history = useHistory();
     const dispatch = useDispatch();
     const [selections, setSelections] = useState([1, 2, 3, 4, 5]);
     const [introes, setIntroes] = useState([1, 2, 3, 4, 5]);
     const region = {};
-    const categories = [['관광', 'first', "AT4"], ['커피', 'second', "CE7"], ['음식', 'third', "FD6"], ['문화', 'fourth', "CT1"], ['쇼핑', 'fifth', "MT1"]]
+    const categories = [['sights', 'first', "AT4"], ['cafes', 'second', "CE7"], ['restaurants', 'third', "FD6"], ['exhibitions', 'fourth', "CT1"], ['markets', 'fifth', "MT1"]]
 
     useEffect(() => {
         axios
@@ -343,10 +269,11 @@ function LandingPage() {
 
     return (
         <Landing id="Landing">
-            <Desc id="Desc" className="themed">
-                <DescriptionImg src='/img/pablo-212.png'/>
-                <RecBox>
-                    {categories.map((category, index) => <Category className="Rec" left={index * 150} index={index} onClick={() => goRegister(category[2])}>
+            <DescriptionText>You might wanna go for...</DescriptionText>
+            <Desc id="Desc">
+                <DescriptionImg className="desc_img" src='/img/pablo-212.png'/>
+                <RecBox className="category_box">
+                    {categories.map((category, index) => <Category className="Rec" left={index * 160} index={index} onClick={() => goRegister(category[2])}>
                         <span>{category[0]}</span>
                         <img id={category[1]} src={'/img/pablo-' + index + '.png'}/>
                     </Category> )}
@@ -354,8 +281,8 @@ function LandingPage() {
             </Desc>
             <Introductions>
                 <IntroPage>
-                    <FirstText>
-                        <div>오늘도 뭘 해야할지 모르겠다면?</div>
+                    <FirstText >
+                        <div className="mainT">오늘도 뭘 해야할지 모르겠다면?</div>
                         <div className="subT1">당신이 있는 그곳에서 놀거리를 찾아보세요!</div>
                         <BtnField>
                             <SeoulMapBtn id="landing-btn" onClick={() => goSearach()}>서울 지도보기</SeoulMapBtn>
@@ -367,7 +294,7 @@ function LandingPage() {
                 <IntroPage>
                     <img src='/img/pablo-839.png'></img>
                     <SecondText>
-                        <div>만나서 일정을 계획하기가 어렵다면?</div>
+                        <div className="mainT">만나서 일정을 계획하기가 어렵다면?</div>
                         <div className="subT2">일정을 만들고 바로 친구들과 공유해요!</div>
                     </SecondText>
                 </IntroPage>

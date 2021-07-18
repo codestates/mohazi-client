@@ -37,18 +37,6 @@ const HeaderContents = styled.div`
     padding-left: 1rem;
 `;
 
-const Logo = styled(Link)`
-    font-size: 1.7rem;
-    letter-spacing: 2px;
-    color: ${oc.cyan[7]};
-    font-family: 'Big Shoulders Stencil Display', cursive;
-    text-decoration: none;
-
-    &:hover {
-        color: ${oc.cyan[9]};
-    }
-`;
-
 const Space = styled.div`
     flex-grow: 1;
 `;
@@ -86,6 +74,15 @@ const LogoutButton = styled(Link)`
     }
 `;
 
+const LogoImg = styled.img`
+    height: 50px;
+    cursor: pointer;
+    
+    &:hover {
+        content: url('/img/logo2.png');
+    }
+`;
+
 const Day_Night_Toggle = styled.img`
     cursor: pointer;
     margin: 0 20px;
@@ -109,7 +106,7 @@ function Header() {
     } else {
         initialToggleUrl = nightToggleUrl;
     }
-    const [toggleUrl, setToggleUrl] = useState(initialToggleUrl);
+    //const [toggleUrl, setToggleUrl] = useState(initialToggleUrl);
 
     function handleLogout() {
         if(confirm("로그아웃 하시겠습니까?") === true) {
@@ -121,6 +118,10 @@ function Header() {
                 history.push('/landing');
             })
         }
+    }
+
+    function handleLogo() {
+        history.push('/landing');
     }
 
     // 글자색 바꾸기
@@ -155,9 +156,9 @@ function Header() {
     
     return (
         <FixPosition>
-            <Background className="themed">
+            <Background>
                 <HeaderContents>
-                    <Logo to='/landing'>MOHAZI</Logo>
+                    <LogoImg onClick={handleLogo} src='/img/logo.png'/>
                     <Space/>
                     {/* <Day_Night_Toggle className="check" name='day' src={toggleUrl} onClick={(e) => handleToggle(e)}/> */}
                     {isLogin ?
