@@ -1,7 +1,7 @@
 # Welcome to Mohazi 🙌
 
 
-# 팀
+## 팀
 
 |Name|Position|Github|
 |---|---|---|
@@ -12,13 +12,13 @@
 
 <br>
 
-# Link
+## Link
 
 ### :point_right: [https://mohazi.site](https://mohazi.site)
 
 <br>
 
-# Github Repository
+## Github Repository
 
 ### :point_right: `Client` [https://github.com/codestates/mohazi-client](https://github.com/codestates/mohazi-client)
 ### :point_right: `Server` [https://github.com/codestates/mohazi-server](https://github.com/codestates/mohazi-server)
