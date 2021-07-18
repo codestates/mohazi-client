@@ -34,6 +34,7 @@ const DetailTitle = styled.div`
 `;
 
 const Title = styled.div`
+    width:85%;
     padding: 10px;
     font-weight: 600;
     font-size: 3em;
@@ -437,9 +438,17 @@ const MyPageBtn = styled.button`
 `;
 
 const Username = styled.div`
-    font-size: 22px;
+    width: 150px;
+    font-size: 32px;
     font-weight: 600;
-    padding: 10px;
+    text-align: right;
+    padding: 20px 0 0 0;
+`;
+
+const Name = styled.div`
+    font-size: 32px;
+    font-weight: 600;
+    padding: 20px 15px 0 10px;
 `;
 
 function ShowDetailPage() {
@@ -488,10 +497,11 @@ function ShowDetailPage() {
     
     return (
         <Body>
-        <DetailBody id="DetailBody">
-            <DetailTitle>
-                <Title>날짜: {dailyCard.date}</Title>
-                    <Username>작성자:<br />{userInfo.username}</Username>
+            <DetailBody id="DetailBody">
+                <DetailTitle>
+                    <Title>날짜: {dailyCard.date}</Title>
+                    <Username>작성자:</Username>
+                    <Name>{userInfo.username}</Name>
                     {dailyCard.friends.filter((el) => el.id === userInfo.id).map((el) => {
                         if (el.photo !== null) {
                             return (
