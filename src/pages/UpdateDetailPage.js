@@ -583,7 +583,7 @@ function UpdateDetailPage() {
 
     
     useEffect(() => {
-        setFriend(dailyCard.friends);
+        //setFriend(dailyCard.friends);
     },[dailyCard.friends]);
     
       
@@ -697,7 +697,12 @@ function UpdateDetailPage() {
     const FriendPhotoDelete = (e, index, el) => {
 
         const set = friends.slice(0);
+        console.log('1', set)
         set.splice(index, 1);
+        console.log('2', set)
+
+        console.log(el)
+        console.log(index)
 
         axios
             .put(`${server}/deletefriend`, {
@@ -875,7 +880,7 @@ function UpdateDetailPage() {
                                 if (el.photo !== null) {
                                     return (
                                         <Friend id="Friend">
-                                            <FriendPhotoBtn onClick={FriendPhotoDelete}>X</FriendPhotoBtn>
+                                            <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, index, el)}>X</FriendPhotoBtn>
                                             <FriendPhoto index={index}>
                                                 <FriendPhotoImg src={s3ImageURl + '/' + el.photo} />
                                             </FriendPhoto>
@@ -885,9 +890,10 @@ function UpdateDetailPage() {
                                         </Friend>
                                     )
                                 } else {
+                                    console.log(el)
                                     return (
                                         <Friend id="Friend">
-                                            <FriendPhotoBtn onClick={FriendPhotoDelete}>X</FriendPhotoBtn>
+                                            <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, index, el)}>X</FriendPhotoBtn>
                                             <FriendPhoto index={index}>
                                                 <FriendPhotoImg src="/img/default_avatar.png" />
                                             </FriendPhoto>
