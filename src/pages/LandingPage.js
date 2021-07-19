@@ -3,7 +3,7 @@ import { withRouter, useHistory } from "react-router-dom";
 import { areaUpdate } from '../actions/actions';
 import { useDispatch } from 'react-redux';
 import { setCategory } from '../actions/actions';
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
 import oc from 'open-color'; 
 
@@ -221,6 +221,7 @@ const DescriptionText = styled.div `
 function LandingPage() {
     const history = useHistory();
     const dispatch = useDispatch();
+    const [selections, setSelections] = useState([1, 2, 3, 4, 5]);
     const region = {};
     const categories = [['sights', 'first', "AT4"], ['cafes', 'second', "CE7"], ['restaurants', 'third', "FD6"], ['exhibitions', 'fourth', "CT1"], ['markets', 'fifth', "MT1"]]
 
@@ -232,16 +233,21 @@ function LandingPage() {
                     withCredentials: true,
                 })
             .then((res) => {
+                console.log(res.data.recommendations);
                 setSelections(res.data.recommendations);
             })
-            .catch((e) => console.log(e));
+            .catch((e) => console.log(e))
     }, [])
 
     function goSearach() {
-        history.push('/search');
+        history.push('/search')
     }
 
     function goRegister(categoryCode) {
+        //const {x,y} = el;
+        //console.log(el)
+        //console.log(x,y)
+
         //사용자 위치
         dispatch(areaUpdate(region));
         //선택한 카테고리
@@ -256,20 +262,22 @@ function LandingPage() {
 
     function MouseWheelHandler(e) {
         e.preventDefault();
-        // 휠값 처리
+        // 휠값처리
         let delta = 0;
         delta = -e.deltaY / 53;
+        console.log(delta);
+        
     }
 
     function getLocation() {
-        if (navigator.geolocation) { // GPS를 지원
-        navigator.geolocation.getCurrentPosition(function(position) {
+        if (navigator.geolocation) { // GPS를 지원하면
+          navigator.geolocation.getCurrentPosition(function(position) {
            region.y = position.coords.latitude;
            region.x = position.coords.longitude;
            console.log(region)
 
           }, function(error) {
-            console.log(error);
+            console.error(error);
           }, {
             enableHighAccuracy: false,
             maximumAge: 0,
