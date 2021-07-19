@@ -211,19 +211,6 @@ function SignupPage() {
     }
   }, [Email])
 
-  useEffect(() => {
-    const checkUsername = checkWord.exec(Username);
-    //console.log(Username)
-    if (checkUsername) {
-      handleError('ErrorUsername', '이름 형식이 아닙니다')
-    } else {
-      handleError('ErrorUsername', '')
-    }
-    if (Username === '') {
-      handleError('ErrorUsername', '')
-    }
-  }, [Username])
-
   const handleSignup = () => {
     const isTrue = Email !== '' && Password !== '' &&
       ConfirmPassword !== '' && Username !== '';
@@ -275,15 +262,6 @@ function SignupPage() {
             }}
           />
           <UsernameBody name="Username" placeholder="아이디" onChange={onChange}></UsernameBody>
-          <Route
-            render={() => {
-              if (ErrorUsername !== '') {
-                return (
-                  <Alert>{ErrorUsername}</Alert>
-                );
-              }
-            }}
-          />
           <PasswordBody name="Password" type="password" placeholder="비밀번호" onChange={onChange}></PasswordBody>
           <ConfirmPasswordBody name="ConfirmPassword" type="password" placeholder="비밀번호 확인" onChange={onChange}></ConfirmPasswordBody>
           <Route

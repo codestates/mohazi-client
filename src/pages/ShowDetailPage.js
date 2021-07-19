@@ -446,6 +446,7 @@ const Username = styled.div`
 `;
 
 const Name = styled.div`
+    width: 150px;
     font-size: 32px;
     font-weight: 600;
     padding: 20px 15px 0 10px;
