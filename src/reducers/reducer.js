@@ -16,8 +16,8 @@ const reducer = (state = initialState, action) => {
                 userInfo: {
                     id: '',
                     email: '',
-                    username: 'guest', //default name (ex. guest)
-                    photo: '', //default photo
+                    username: 'guest',
+                    photo: '',
                     description: '',
                 },
               });
