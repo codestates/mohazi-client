@@ -1,9 +1,9 @@
-import { Link, withRouter, Route, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFriends, setCard } from '../../actions/actions.js';
+import { setCard } from '../../actions/actions.js';
 import oc from 'open-color';
 
 require("dotenv").config();
@@ -132,7 +132,6 @@ const ResultField = styled.div`
 
 function SearchUserModal() {
     const dispatch = useDispatch();
-    const history = useHistory();
     const [users, setUsers] = useState([]);
     const [showUsers, setShowUsers] = useState([]);
     const [inputValue, setInputValue] = useState(null);
@@ -140,18 +139,12 @@ function SearchUserModal() {
     const { dailyCard } = state; //친구를 추가하고 싶은 데일리 카드
     const defaultProfileImg = '/img/default_avatar.png'
 
-    function handleOpenModal() {
-        document.querySelector('.search_user_modal').style.display ='block';
-        document.querySelector('.search_user_bg').style.display ='block';
-    } 
-
     function handleCloseModal() {
         document.querySelector('.search_user_modal').style.display ='none';
         document.querySelector('.search_user_bg').style.display ='none';
     }
 
     function handleBgClick(event) {
-        //console.log(event.target.classList)
         if(event.target.classList.contains("search_user_bg")) {
             document.querySelector('.search_user_modal').style.display ='none';
             document.querySelector('.search_user_bg').style.display ='none';
@@ -160,7 +153,6 @@ function SearchUserModal() {
 
     function handleSelectUser(event) {
         const friendId = event.target.id;
-        console.log('friendId', friendId);
         
         axios
             .put(`${server}/addfriend`,
@@ -173,7 +165,6 @@ function SearchUserModal() {
                 withCredentials: true,
             })
             .then(res => {
-              console.log(res.data);
                 axios
                     .put(`${server}/dailycardinfo`,
                         {
@@ -184,28 +175,16 @@ function SearchUserModal() {
                             withCredentials: true,
                         })
                     .then(res => {
-                        console.log('dailycard', res)
-                        // dispatch(setCard({
-                        //     date: res.data.date,
-                        //     userId: 1,
-                        //     photo: res.data.photo, // 사용자가 찍은 사진들
-                        //     selections: res.data.selections,
-                        //     friends: res.data.friends
-                        // }))
                         dispatch(setCard(res.data.data))
-
                         document.querySelector('.search_user_modal').style.display = 'none';
                         document.querySelector('.search_user_bg').style.display = 'none';
                         })
             })
             .catch(err => console.log(err))
-        // const friend = users.filter(user => user.id === Number(friendId));
-        // console.log('친구추가',friend[0])
-        // dispatch(setFriend(friend[0]));
     }
 
     const handleEnter = (event) => {
-        if(event.keyCode == 13){
+        if(event.keyCode === 13){
             handleSearchUser();
        }
     }
@@ -221,8 +200,6 @@ function SearchUserModal() {
                 }
                 )
             .then(res => {
-                console.log(res.data)
-                //let users = res.data.userInfo;
                 setUsers([...res.data.userInfo]);
             })
             .catch(err => {
@@ -234,7 +211,7 @@ function SearchUserModal() {
         if(users) {
             setShowUsers(users.map(user => 
                 <User id={user.id} onClick={handleSelectUser}>
-                    <img src={user.photo? s3ImageURl + '/' + user.photo : defaultProfileImg}/>
+                    <img alt="img" src={user.photo? s3ImageURl + '/' + user.photo : defaultProfileImg}/>
                     <div>{user.username}</div>
                 </User>));
         }
@@ -248,7 +225,7 @@ function SearchUserModal() {
                 <Title>Find your friend!</Title>
                 <Modal_content>
                     <SearchField>
-                        <input type='text' placeholder="친구의 이메일 주소를 입력하세요" onChange={(e) => setInputValue(e.currentTarget.value)} onKeyDown={(e) => handleEnter(e)}></input>
+                        <input alt="img" type='text' placeholder="친구의 이메일 주소를 입력하세요" onChange={(e) => setInputValue(e.currentTarget.value)} onKeyDown={(e) => handleEnter(e)}></input>
                         <img onClick={handleSearchUser} src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMjMuMTExIDIwLjA1OGwtNC45NzctNC45NzdjLjk2NS0xLjUyIDEuNTIzLTMuMzIyIDEuNTIzLTUuMjUxIDAtNS40Mi00LjQwOS05LjgzLTkuODI5LTkuODMtNS40MiAwLTkuODI4IDQuNDEtOS44MjggOS44M3M0LjQwOCA5LjgzIDkuODI5IDkuODNjMS44MzQgMCAzLjU1Mi0uNTA1IDUuMDIyLTEuMzgzbDUuMDIxIDUuMDIxYzIuMTQ0IDIuMTQxIDUuMzg0LTEuMDk2IDMuMjM5LTMuMjR6bS0yMC4wNjQtMTAuMjI4YzAtMy43MzkgMy4wNDMtNi43ODIgNi43ODItNi43ODJzNi43ODIgMy4wNDIgNi43ODIgNi43ODItMy4wNDMgNi43ODItNi43ODIgNi43ODItNi43ODItMy4wNDMtNi43ODItNi43ODJ6bTIuMDEtMS43NjRjMS45ODQtNC41OTkgOC42NjQtNC4wNjYgOS45MjIuNzQ5LTIuNTM0LTIuOTc0LTYuOTkzLTMuMjk0LTkuOTIyLS43NDl6Ii8+PC9zdmc+" />
                     </SearchField>
                     <ResultField>

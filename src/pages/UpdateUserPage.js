@@ -335,7 +335,6 @@ function UpdateUserPage() {
           }
         })
         .then((res) => {
-          console.log(res.message)
           alert('회원탈퇴가 완료되었습니다.');
           dispatch(logout());
           history.push('/landing');
@@ -367,8 +366,6 @@ function UpdateUserPage() {
                 },
               })
             .then((res) => {
-              console.log('upload success', res.data.key)
-              // stateupdate
               setPhoto(res.data.key)
               setIsLoading(false);
             })
@@ -387,14 +384,10 @@ function UpdateUserPage() {
 
     const blob = new Blob([ia], { type: "image/jpeg" });
     const file = new File([blob], "image.jpg");
-    console.log('file = ', file);
 
     const formData = new FormData();
     formData.append("image", file);
 
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
     return formData;
   };
 

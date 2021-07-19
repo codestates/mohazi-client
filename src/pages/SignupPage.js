@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { login } from '../actions/actions';
 import { Link, withRouter, Route, useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-import styled, { keyframes } from 'styled-components';
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
 
 require("dotenv").config();
@@ -165,7 +164,6 @@ function SignupPage() {
   }
 
   function handleBgClick(event) {
-    //console.log(event.target.classList)
     if (event.target.classList.contains("black_bg")) {
       document.querySelector('.modal_wrap').style.display = 'none';
       document.querySelector('.black_bg').style.display = 'none';
@@ -238,7 +236,6 @@ function SignupPage() {
         })
         .catch((e) => {
           alert('이미 존재하는 이메일입니다');
-          console.log(e)
         })
 
     }

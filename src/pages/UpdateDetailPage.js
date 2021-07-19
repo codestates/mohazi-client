@@ -564,12 +564,8 @@ function UpdateDetailPage() {
     const history = useHistory();
     const dispatch = useDispatch();
     const { dailyCard, userInfo, isLogin } = useSelector((state) => state)
-    console.log(dailyCard)
-
     const [isLoading, setIsLoading] = useState(false);
-
     const [ photo, setPhoto ] = useState(JSON.parse(dailyCard.photo));
-    const [ friends, setFriend ] = useState(dailyCard.friends);
     const [imgBase64, setImgBase64] = useState("");
     const [imgFile, setImgFile] = useState(null);
     const [memo, setMemo] = useState(dailyCard.memo);
@@ -586,9 +582,7 @@ function UpdateDetailPage() {
 
     
     useEffect(() => {
-        console.log(dailyCard.friends);
-        setFriend(dailyCard.friends);
-
+        //setFriend(dailyCard.friends);
     },[dailyCard.friends]);
     
       
@@ -607,13 +601,13 @@ function UpdateDetailPage() {
 
     const onChange = (e, index) => {
         const { value, name } = e.currentTarget;
-        console.log(value);
-        //console.log(e.currentTarget)
         const set = value;
         setMemo(set);
       }
 
     const PhotoUpload = (event) => {
+
+        console.log('a');
 
         const options = {
             maxSizeMB: 0.2,
@@ -638,8 +632,7 @@ function UpdateDetailPage() {
                                 },
                             })
                         .then((res) => {
-                            console.log('key', res.data.key)
-                            // stateupdate
+                            console.log(res);
                             setPhoto([...photo, res.data.key]);
                             setIsLoading(false);
                         })
@@ -659,7 +652,6 @@ function UpdateDetailPage() {
 
         const blob = new Blob([ia], { type: "image/jpeg" });
         const file = new File([blob], "image.jpg");
-        console.log('file = ', file);
 
         const formData = new FormData();
         formData.append("image", file);
@@ -684,12 +676,11 @@ function UpdateDetailPage() {
     };
 
     const PhotoDelete = (e, index) => {
+
         let Div = document.querySelector(`#PhotoImg${index}`).src.split('/')[3];
 
         const set = photo.slice(0);
         set.splice(index, 1)
-
-        console.log(Div);
 
         axios
             .put(`${server}/s3delete`, {
@@ -701,17 +692,12 @@ function UpdateDetailPage() {
                 }
             )
             .then((res) => {
-                console.log('delete')
                 setPhoto(set);
             })
     }
 
 
-    const FriendPhotoDelete = (e, index, el) => {
-
-        const set = friends.slice(0);
-        set.splice(index, 1);
-
+    const FriendPhotoDelete = (e, el) => {
         axios
             .put(`${server}/deletefriend`, {
                 userId: el.id,
@@ -723,8 +709,19 @@ function UpdateDetailPage() {
                 },
             })
             .then((res) => {
-                console.log('delete')
-                setFriend(set);
+                axios
+                .put(`${server}/dailycardinfo`,{
+                    dailyCardId: dailyCard.dailyCards_id,
+
+                    headers: {
+                        'Content-Type': 'application/json',
+                        withCredentials: true,
+                    },
+                })
+                .then((res) => {
+                    console.log(res);
+                    dispatch(setCard(res.data.data))           
+                });
             })
     }
 
@@ -732,8 +729,6 @@ function UpdateDetailPage() {
     const handleUpdate = () => {
 
         const Div = document.querySelector('#inputDate').value;
-        console.log(Div);
-        console.log('최종 포토', photo)
 
         axios
             .put(`${server}/dailycardupdate`, {
@@ -743,8 +738,6 @@ function UpdateDetailPage() {
                 dailycardId: dailyCard.dailyCards_id,
             })
             .then((res) => {
-                console.log(res);
-
                 axios
                     .put(`${server}/dailycardinfo`, {
                         dailyCardId: dailyCard.dailyCards_id,
@@ -753,7 +746,6 @@ function UpdateDetailPage() {
                         withCredentials: true,
                     })
                     .then(response => {
-                        console.log('friends', response.data.data)
                         dispatch(setCard(response.data.data));
                         alert('성공적으로 수정되었습니다. ');
                         history.push('/showdetail');
@@ -786,7 +778,6 @@ function UpdateDetailPage() {
     }
 
     const goUpdateSelection = () => {
-        console.log('a');
         history.push('/updateselection');
     }
 
@@ -796,15 +787,13 @@ function UpdateDetailPage() {
     }
 
     useEffect(() => {
-        console.log('rendering', friends)     
-    }, [friends])
-
-    useEffect(() => {
         if(!isLogin) {
             history.push('/pagenotfound');
         }
     },[]);
 
+
+    console.log(dailyCard);
     return (
         <Body>
             <DetailBody id="DetailBody">
@@ -891,13 +880,11 @@ function UpdateDetailPage() {
                             <UploadText>⊕</UploadText>
                             </AddFriendBtn>
                         </Friend>
-                        {console.log('div', friends)}
                         {dailyCard.friends.filter((el) => el.id !== userInfo.id).map((el, index) => {
-                                console.log(el.photo)
                                 if (el.photo !== null) {
                                     return (
                                         <Friend id="Friend">
-                                            <FriendPhotoBtn onClick={FriendPhotoDelete}>X</FriendPhotoBtn>
+                                            <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, el)}>X</FriendPhotoBtn>
                                             <FriendPhoto index={index}>
                                                 <FriendPhotoImg src={s3ImageURl + '/' + el.photo} />
                                             </FriendPhoto>
@@ -907,9 +894,10 @@ function UpdateDetailPage() {
                                         </Friend>
                                     )
                                 } else {
+                                    console.log(el)
                                     return (
                                         <Friend id="Friend">
-                                            <FriendPhotoBtn onClick={FriendPhotoDelete}>X</FriendPhotoBtn>
+                                            <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, el)}>X</FriendPhotoBtn>
                                             <FriendPhoto index={index}>
                                                 <FriendPhotoImg src="/img/default_avatar.png" />
                                             </FriendPhoto>

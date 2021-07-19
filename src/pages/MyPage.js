@@ -1,11 +1,10 @@
-import { withRouter, Route, useHistory } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import oc from 'open-color';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setCards, setCard, userUpdate, setFriends } from '../actions/actions.js';
-import { isValidElementType } from "react-is";
+import { setCards, setCard } from '../actions/actions.js';
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
@@ -208,7 +207,7 @@ const Admin = styled.div`
     }
 `;
 
-const User_Update_Btn = styled.img `
+const User_Update_Btn = styled.img`
     width: 30px;
     cursor: pointer;
 
@@ -223,70 +222,68 @@ function MyPage() {
     const { userInfo, dailyCards, dailyCard, isLogin } = state;
     const dispatch = useDispatch();
     const history = useHistory();
-    
+
     const defaultProfileImg = '/img/default_avatar.png'
     const defaultCardImg = '/img/landscape.jpeg'
 
     const [isDeleteCard, setIsDeleteCard] = useState(-1);
-    const [ visibleCards, setVisibleCards ] = useState(dailyCards);
-    
+    const [visibleCards, setVisibleCards] = useState(dailyCards);
+
     let cardSort = "전체 글";
     const cardSorts = ["전체 글", "내가 쓴 글", "나를 태그한 글"]
     const cardSortOptions = cardSorts.map(cardSort => {
         return <option value={cardSort}>{cardSort}</option>;
     });
-    //console.log('visible', visibleCards)
-    //let showCards = '';
     let showCards = visibleCards.map(
         card => {
             let selections = card.type.map(selection => {
                 return <Selection>
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAxMGMtMS4xMDQgMC0yLS44OTYtMi0ycy44OTYtMiAyLTIgMiAuODk2IDIgMi0uODk2IDItMiAybTAtNWMtMS42NTcgMC0zIDEuMzQzLTMgM3MxLjM0MyAzIDMgMyAzLTEuMzQzIDMtMy0xLjM0My0zLTMtM20tNyAyLjYwMmMwLTMuNTE3IDMuMjcxLTYuNjAyIDctNi42MDJzNyAzLjA4NSA3IDYuNjAyYzAgMy40NTUtMi41NjMgNy41NDMtNyAxNC41MjctNC40ODktNy4wNzMtNy0xMS4wNzItNy0xNC41MjdtNy03LjYwMmMtNC4xOTggMC04IDMuNDAzLTggNy42MDIgMCA0LjE5OCAzLjQ2OSA5LjIxIDggMTYuMzk4IDQuNTMxLTcuMTg4IDgtMTIuMiA4LTE2LjM5OCAwLTQuMTk5LTMuODAxLTcuNjAyLTgtNy42MDIiLz48L3N2Zz4="></img>
+                    <img alt="img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAxMGMtMS4xMDQgMC0yLS44OTYtMi0ycy44OTYtMiAyLTIgMiAuODk2IDIgMi0uODk2IDItMiAybTAtNWMtMS42NTcgMC0zIDEuMzQzLTMgM3MxLjM0MyAzIDMgMyAzLTEuMzQzIDMtMy0xLjM0My0zLTMtM20tNyAyLjYwMmMwLTMuNTE3IDMuMjcxLTYuNjAyIDctNi42MDJzNyAzLjA4NSA3IDYuNjAyYzAgMy40NTUtMi41NjMgNy41NDMtNyAxNC41MjctNC40ODktNy4wNzMtNy0xMS4wNzItNy0xNC41MjdtNy03LjYwMmMtNC4xOTggMC04IDMuNDAzLTggNy42MDIgMCA0LjE5OCAzLjQ2OSA5LjIxIDggMTYuMzk4IDQuNTMxLTcuMTg4IDgtMTIuMiA4LTE2LjM5OCAwLTQuMTk5LTMuODAxLTcuNjAyLTgtNy42MDIiLz48L3N2Zz4="></img>
                     <span>{selection.place_name}</span>
                 </Selection>
             });
 
-            let photo = card.photo? JSON.parse(card.photo): '';
-        
-            return card.admin === userInfo.id? 
-            <Card
-                id={card.dailyCards_id}
-                color={oc.grape[3]}
-                onClick={(e) => handleShowCardDetails(e)}>
-                <DeleteCardButton className='deleteBtn' id={card.dailyCards_id} onClick={(e) => handleDeleteCard(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png"/>
-                <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
-                <Card_Img id={card.dailyCards_id} src={photo.length? s3ImageURl + '/' + photo[0]: defaultCardImg}/>
-                <Card_Selections id={card.dailyCards_id}>
-                    {selections}
-                </Card_Selections>
-                <Admin id={card.dailyCards_id}>
-                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMmMyLjc1NyAwIDUgMi4yNDMgNSA1LjAwMSAwIDIuNzU2LTIuMjQzIDUtNSA1cy01LTIuMjQ0LTUtNWMwLTIuNzU4IDIuMjQzLTUuMDAxIDUtNS4wMDF6bTAtMmMtMy44NjYgMC03IDMuMTM0LTcgNy4wMDEgMCAzLjg2NSAzLjEzNCA3IDcgN3M3LTMuMTM1IDctN2MwLTMuODY3LTMuMTM0LTcuMDAxLTctNy4wMDF6bTYuMzY5IDEzLjM1M2MtLjQ5Ny40OTgtMS4wNTcuOTMxLTEuNjU4IDEuMzAyIDIuODcyIDEuODc0IDQuMzc4IDUuMDgzIDQuOTcyIDcuMzQ2aC0xOS4zODdjLjU3Mi0yLjI5IDIuMDU4LTUuNTAzIDQuOTczLTcuMzU4LS42MDMtLjM3NC0xLjE2Mi0uODExLTEuNjU4LTEuMzEyLTQuMjU4IDMuMDcyLTUuNjExIDguNTA2LTUuNjExIDEwLjY2OWgyNGMwLTIuMTQyLTEuNDQtNy41NTctNS42MzEtMTAuNjQ3eiIvPjwvc3ZnPg=="/>
-                    <span id="admin">내가 작성한 글</span>
-                </Admin>
-            </Card>
-            : <Card
-                id={card.dailyCards_id}
-                color={oc.yellow[3]}
-                onClick={(e) => handleShowCardDetails(e)}>
-            <DeleteCardButton className='deleteBtn' id={card.dailyCards_id} onClick={(e) => handleUntag(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png"/>
-            <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
-            <Card_Img id={card.dailyCards_id} src={photo.length? s3ImageURl + '/' + photo[0]: defaultCardImg}/>
-            <Card_Selections id={card.dailyCards_id}>
-                {selections}
-            </Card_Selections>
-            <Admin id={card.dailyCards_id}>
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMmMyLjc1NyAwIDUgMi4yNDMgNSA1LjAwMSAwIDIuNzU2LTIuMjQzIDUtNSA1cy01LTIuMjQ0LTUtNWMwLTIuNzU4IDIuMjQzLTUuMDAxIDUtNS4wMDF6bTAtMmMtMy44NjYgMC03IDMuMTM0LTcgNy4wMDEgMCAzLjg2NSAzLjEzNCA3IDcgN3M3LTMuMTM1IDctN2MwLTMuODY3LTMuMTM0LTcuMDAxLTctNy4wMDF6bTYuMzY5IDEzLjM1M2MtLjQ5Ny40OTgtMS4wNTcuOTMxLTEuNjU4IDEuMzAyIDIuODcyIDEuODc0IDQuMzc4IDUuMDgzIDQuOTcyIDcuMzQ2aC0xOS4zODdjLjU3Mi0yLjI5IDIuMDU4LTUuNTAzIDQuOTczLTcuMzU4LS42MDMtLjM3NC0xLjE2Mi0uODExLTEuNjU4LTEuMzEyLTQuMjU4IDMuMDcyLTUuNjExIDguNTA2LTUuNjExIDEwLjY2OWgyNGMwLTIuMTQyLTEuNDQtNy41NTctNS42MzEtMTAuNjQ3eiIvPjwvc3ZnPg=="/>
-                <span id="tagged">나를 태그한 글</span>
-            </Admin>
-        </Card>
+            let photo = card.photo ? JSON.parse(card.photo) : '';
+
+            return card.admin === userInfo.id ?
+                <Card
+                    id={card.dailyCards_id}
+                    color={oc.grape[3]}
+                    onClick={(e) => handleShowCardDetails(e)}>
+                    <DeleteCardButton className='deleteBtn' id={card.dailyCards_id} onClick={(e) => handleDeleteCard(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png" />
+                    <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
+                    <Card_Img id={card.dailyCards_id} src={photo.length ? s3ImageURl + '/' + photo[0] : defaultCardImg} />
+                    <Card_Selections id={card.dailyCards_id}>
+                        {selections}
+                    </Card_Selections>
+                    <Admin id={card.dailyCards_id}>
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMmMyLjc1NyAwIDUgMi4yNDMgNSA1LjAwMSAwIDIuNzU2LTIuMjQzIDUtNSA1cy01LTIuMjQ0LTUtNWMwLTIuNzU4IDIuMjQzLTUuMDAxIDUtNS4wMDF6bTAtMmMtMy44NjYgMC03IDMuMTM0LTcgNy4wMDEgMCAzLjg2NSAzLjEzNCA3IDcgN3M3LTMuMTM1IDctN2MwLTMuODY3LTMuMTM0LTcuMDAxLTctNy4wMDF6bTYuMzY5IDEzLjM1M2MtLjQ5Ny40OTgtMS4wNTcuOTMxLTEuNjU4IDEuMzAyIDIuODcyIDEuODc0IDQuMzc4IDUuMDgzIDQuOTcyIDcuMzQ2aC0xOS4zODdjLjU3Mi0yLjI5IDIuMDU4LTUuNTAzIDQuOTczLTcuMzU4LS42MDMtLjM3NC0xLjE2Mi0uODExLTEuNjU4LTEuMzEyLTQuMjU4IDMuMDcyLTUuNjExIDguNTA2LTUuNjExIDEwLjY2OWgyNGMwLTIuMTQyLTEuNDQtNy41NTctNS42MzEtMTAuNjQ3eiIvPjwvc3ZnPg==" />
+                        <span id="admin">내가 작성한 글</span>
+                    </Admin>
+                </Card>
+                : <Card
+                    id={card.dailyCards_id}
+                    color={oc.yellow[3]}
+                    onClick={(e) => handleShowCardDetails(e)}>
+                    <DeleteCardButton className='deleteBtn' id={card.dailyCards_id} onClick={(e) => handleUntag(e)} src="https://img.icons8.com/windows/32/000000/delete-sign.png" />
+                    <Card_Date id={card.dailyCards_id}>{card.date}</Card_Date>
+                    <Card_Img id={card.dailyCards_id} src={photo.length ? s3ImageURl + '/' + photo[0] : defaultCardImg} />
+                    <Card_Selections id={card.dailyCards_id}>
+                        {selections}
+                    </Card_Selections>
+                    <Admin id={card.dailyCards_id}>
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMmMyLjc1NyAwIDUgMi4yNDMgNSA1LjAwMSAwIDIuNzU2LTIuMjQzIDUtNSA1cy01LTIuMjQ0LTUtNWMwLTIuNzU4IDIuMjQzLTUuMDAxIDUtNS4wMDF6bTAtMmMtMy44NjYgMC03IDMuMTM0LTcgNy4wMDEgMCAzLjg2NSAzLjEzNCA3IDcgN3M3LTMuMTM1IDctN2MwLTMuODY3LTMuMTM0LTcuMDAxLTctNy4wMDF6bTYuMzY5IDEzLjM1M2MtLjQ5Ny40OTgtMS4wNTcuOTMxLTEuNjU4IDEuMzAyIDIuODcyIDEuODc0IDQuMzc4IDUuMDgzIDQuOTcyIDcuMzQ2aC0xOS4zODdjLjU3Mi0yLjI5IDIuMDU4LTUuNTAzIDQuOTczLTcuMzU4LS42MDMtLjM3NC0xLjE2Mi0uODExLTEuNjU4LTEuMzEyLTQuMjU4IDMuMDcyLTUuNjExIDguNTA2LTUuNjExIDEwLjY2OWgyNGMwLTIuMTQyLTEuNDQtNy41NTctNS42MzEtMTAuNjQ3eiIvPjwvc3ZnPg==" />
+                        <span id="tagged">나를 태그한 글</span>
+                    </Admin>
+                </Card>
         });
 
     const handleSortCards = (event) => {
         cardSort = event.target.value;
 
-        if(cardSort === "전체 글"){
+        if (cardSort === "전체 글") {
             setVisibleCards(dailyCards);
-        } else if(cardSort === "내가 쓴 글"){
+        } else if (cardSort === "내가 쓴 글") {
             setVisibleCards(dailyCards.filter(el => el.admin === userInfo.id));
         } else {
             setVisibleCards(dailyCards.filter(el => el.admin !== userInfo.id));
@@ -294,20 +291,16 @@ function MyPage() {
     }
 
     const handleShowCardDetails = (event) => {
-        //console.log('target id', event.target)
         const cardId = Number(event.target.id);
-        let card = dailyCards.filter(el => el.dailyCards_id === cardId);
-        //dispatch(setCard(...card));
-        console.log('id',cardId)
+
         axios
             .put(`${server}/dailycardinfo`, {
                 dailyCardId: cardId,
-            },{
+            }, {
                 'Content-Type': 'application/json',
                 withCredentials: true,
             })
             .then(res => {
-                console.log('friends', res.data)
                 dispatch(setCard(res.data.data));
             })
             .then(res => history.push('/showdetail'))
@@ -316,8 +309,7 @@ function MyPage() {
 
     const handleDeleteCard = (event) => {
         event.stopPropagation();
-        
-        console.log('delete card', event.target)
+
         const cardId = Number(event.target.id);
 
         if (confirm("삭제하면 내용을 복구할 수 없습니다. 삭제하시겠습니까?") === true) {
@@ -341,8 +333,6 @@ function MyPage() {
 
     const handleUntag = (event) => {
         event.stopPropagation();
-        
-        console.log('delete card', event.target)
         const cardId = Number(event.target.id);
 
         if (confirm("태그를 취소하시겠습니까?") === true) {
@@ -358,7 +348,6 @@ function MyPage() {
                     }
                 )
                 .then(res => {
-                    console.log(res.data.message)
                     alert("태그가 취소되었습니다");
                     setIsDeleteCard(cardId);
                 })
@@ -371,34 +360,31 @@ function MyPage() {
     }
 
     useEffect(() => {
-        if(!isLogin) {
+        if (!isLogin) {
             history.push('/pagenotfound');
         }
-    },[]);
+    }, []);
 
     useEffect(() => {
-        //삭제 할 때마다 카드정보 불러오기
-        console.log('render after delete')
         axios
             .put(`${server}/mypage`, {
-                    userId: userInfo.id,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        withCredentials: true,
-                      }
-                    })
+                userId: userInfo.id,
+                headers: {
+                    'Content-Type': 'application/json',
+                    withCredentials: true,
+                }
+            })
             .then(res => {
-                console.log('mypage',res.data)
                 dispatch(setCards([...res.data.myCardsInfo, ...res.data.taggedCardsInfo]));
             })
-    },[isDeleteCard]);
+    }, [isDeleteCard]);
 
     useEffect(() => {
         setVisibleCards(dailyCards);
     }, [dailyCards])
 
     useEffect(() => {
-        console.log('2', dailyCard)
+
     }, [dailyCard])
 
     return (
@@ -413,10 +399,10 @@ function MyPage() {
                     {cardSortOptions}
                 </SelectCardSort>
                 <UserInfo>
-                    <User_ProfileImg src={userInfo.photo? s3ImageURl + '/' + userInfo.photo: defaultProfileImg}/>
+                    <User_ProfileImg src={userInfo.photo ? s3ImageURl + '/' + userInfo.photo : defaultProfileImg} />
                     <User_Name>{userInfo.username} 님</User_Name>
                     <User_Description>{userInfo.description}</User_Description>
-                    <User_Update_Btn onClick={handleUpdateUser} src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMjQgMTMuNjE2di0zLjIzMmMtMS42NTEtLjU4Ny0yLjY5NC0uNzUyLTMuMjE5LTIuMDE5di0uMDAxYy0uNTI3LTEuMjcxLjEtMi4xMzQuODQ3LTMuNzA3bC0yLjI4NS0yLjI4NWMtMS41NjEuNzQyLTIuNDMzIDEuMzc1LTMuNzA3Ljg0N2gtLjAwMWMtMS4yNjktLjUyNi0xLjQzNS0xLjU3Ni0yLjAxOS0zLjIxOWgtMy4yMzJjLS41ODIgMS42MzUtLjc0OSAyLjY5Mi0yLjAxOSAzLjIxOWgtLjAwMWMtMS4yNzEuNTI4LTIuMTMyLS4wOTgtMy43MDctLjg0N2wtMi4yODUgMi4yODVjLjc0NSAxLjU2OCAxLjM3NSAyLjQzNC44NDcgMy43MDctLjUyNyAxLjI3MS0xLjU4NCAxLjQzOC0zLjIxOSAyLjAydjMuMjMyYzEuNjMyLjU4IDIuNjkyLjc0OSAzLjIxOSAyLjAxOS41MyAxLjI4Mi0uMTE0IDIuMTY2LS44NDcgMy43MDdsMi4yODUgMi4yODZjMS41NjItLjc0MyAyLjQzNC0xLjM3NSAzLjcwNy0uODQ3aC4wMDFjMS4yNy41MjYgMS40MzYgMS41NzkgMi4wMTkgMy4yMTloMy4yMzJjLjU4Mi0xLjYzNi43NS0yLjY5IDIuMDI3LTMuMjIyaC4wMDFjMS4yNjItLjUyNCAyLjEyLjEwMSAzLjY5OC44NTFsMi4yODUtMi4yODZjLS43NDQtMS41NjMtMS4zNzUtMi40MzMtLjg0OC0zLjcwNi41MjctMS4yNzEgMS41ODgtMS40NCAzLjIyMS0yLjAyMXptLTEyIDIuMzg0Yy0yLjIwOSAwLTQtMS43OTEtNC00czEuNzkxLTQgNC00IDQgMS43OTEgNCA0LTEuNzkxIDQtNCA0eiIvPjwvc3ZnPg=="/>
+                    <User_Update_Btn onClick={handleUpdateUser} src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMjQgMTMuNjE2di0zLjIzMmMtMS42NTEtLjU4Ny0yLjY5NC0uNzUyLTMuMjE5LTIuMDE5di0uMDAxYy0uNTI3LTEuMjcxLjEtMi4xMzQuODQ3LTMuNzA3bC0yLjI4NS0yLjI4NWMtMS41NjEuNzQyLTIuNDMzIDEuMzc1LTMuNzA3Ljg0N2gtLjAwMWMtMS4yNjktLjUyNi0xLjQzNS0xLjU3Ni0yLjAxOS0zLjIxOWgtMy4yMzJjLS41ODIgMS42MzUtLjc0OSAyLjY5Mi0yLjAxOSAzLjIxOWgtLjAwMWMtMS4yNzEuNTI4LTIuMTMyLS4wOTgtMy43MDctLjg0N2wtMi4yODUgMi4yODVjLjc0NSAxLjU2OCAxLjM3NSAyLjQzNC44NDcgMy43MDctLjUyNyAxLjI3MS0xLjU4NCAxLjQzOC0zLjIxOSAyLjAydjMuMjMyYzEuNjMyLjU4IDIuNjkyLjc0OSAzLjIxOSAyLjAxOS41MyAxLjI4Mi0uMTE0IDIuMTY2LS44NDcgMy43MDdsMi4yODUgMi4yODZjMS41NjItLjc0MyAyLjQzNC0xLjM3NSAzLjcwNy0uODQ3aC4wMDFjMS4yNy41MjYgMS40MzYgMS41NzkgMi4wMTkgMy4yMTloMy4yMzJjLjU4Mi0xLjYzNi43NS0yLjY5IDIuMDI3LTMuMjIyaC4wMDFjMS4yNjItLjUyNCAyLjEyLjEwMSAzLjY5OC44NTFsMi4yODUtMi4yODZjLS43NDQtMS41NjMtMS4zNzUtMi40MzMtLjg0OC0zLjcwNi41MjctMS4yNzEgMS41ODgtMS40NCAzLjIyMS0yLjAyMXptLTEyIDIuMzg0Yy0yLjIwOSAwLTQtMS43OTEtNC00czEuNzkxLTQgNC00IDQgMS43OTEgNCA0LTEuNzkxIDQtNCA0eiIvPjwvc3ZnPg==" />
                 </UserInfo>
             </User>
             <Cards>

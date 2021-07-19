@@ -309,7 +309,6 @@ function UpdateSelectionPage() {
         for(let i=0; i<places.length; i++) {
             if (places[i].id === draggedDataId && !selections.includes(places[i])) {
                 setSelections([...selections, places[i]]);
-                console.log('selections', selections)
                 setPlaces(places.filter((place, index) => index !== i));
             }
         }
@@ -416,8 +415,6 @@ function UpdateSelectionPage() {
                 let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
                 setLatLng([result[0].y, result[0].x]);
 
-                console.log(keyword, `region: {y: ${result[0].y}, x: ${result[0].x}}`)
-
                 // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
                 map.setCenter(coords);
             }
@@ -436,8 +433,7 @@ function UpdateSelectionPage() {
                 })
                 .then(res => {
                     alert(res.data.message);
-                    //console.log(res)
-                    //console.log(selections)
+
                     dispatch(setSelection(selections));
                     history.push('/updatedetail');
                 })
