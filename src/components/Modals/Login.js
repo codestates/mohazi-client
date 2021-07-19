@@ -11,7 +11,8 @@ import GoogleLogin from 'react-google-login';
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
 
-const clientId = '344008906865-qfu4k5banudhmitspc333suic5tlfa0t.apps.googleusercontent.com'
+//const clientId = '344008906865-qfu4k5banudhmitspc333suic5tlfa0t.apps.googleusercontent.com'
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const Modal_wrap = styled.div`
     display: none;

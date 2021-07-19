@@ -62,6 +62,7 @@ const Username = styled.div`
 `;
 
 const Name = styled.div`
+    width: 150px;
     font-size: 32px;
     font-weight: 600;
     padding: 20px 15px 0 10px;
@@ -810,7 +811,7 @@ function UpdateDetailPage() {
                 <SearchUserModal />
                 <DetailTitle>
                     <Cover>
-                        <Title>Date: </Title>
+                        <Title>날짜: </Title>
                         <Date id="inputDate" type="date"></Date>
                     </Cover>
                     <Username>작성자:</Username>
