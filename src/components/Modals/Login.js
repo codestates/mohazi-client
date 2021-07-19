@@ -1,8 +1,7 @@
-import { Link, withRouter, Route, useHistory } from "react-router-dom";
+import { Route, useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import React, { useState } from 'react';
 import axios from 'axios';
-//import LoginPage from '../pages/LoginPage';
 import { login } from '../../actions/actions';
 import { useDispatch } from 'react-redux';
 import oc from 'open-color';
@@ -11,7 +10,6 @@ import GoogleLogin from 'react-google-login';
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
 
-//const clientId = '344008906865-qfu4k5banudhmitspc333suic5tlfa0t.apps.googleusercontent.com'
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const Modal_wrap = styled.div`
@@ -46,26 +44,6 @@ const Modal_close = styled.img`
     top: -30px;
     right: 0;
     cursor: pointer;
-`;
-
-const User = styled.div`
-    color: yellow;
-`;
-
-const InputForm = styled.div`
-    margin: 10px;
-`;
-
-const SearchResults = styled.div`
-    margin: 10px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-    }
-    ::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera*/
-    }
 `;
 
 const Title = styled.div`
@@ -154,35 +132,6 @@ const SignUpBtn = styled.button`
 
     &:hover {
         background: ${oc.gray[5]}
-    }
-`;
-
-const GoogleBtn = styled(Link)`
-    width: 200px;
-    height: 35px;
-    margin-bottom: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    color: black;
-    background: ${oc.gray[2]};
-    display:flex;
-    flex-direction: row;
-    justify-content: center;
-
-    > img {
-        height: 30px;
-        float: left;
-    }
-
-    > span {
-        float: right;
-        margin-top: 5px;
-    }
-
-    &:hover {
-        background: ${oc.gray[2]}
     }
 `;
 

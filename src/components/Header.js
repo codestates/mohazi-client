@@ -2,17 +2,15 @@ import { withRouter, Route, useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import oc from 'open-color'; //색상 참고: https://www.npmjs.com/package/open-color
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../actions/actions.js';
 import axios from 'axios';
 import LoginModal from './Modals/Login';
-import { useEffect } from "react";
 
 require("dotenv").config();
 const server = process.env.REACT_APP_SERVER_URL;
 
-console.log(document.documentElement)
 const FixPosition = styled.div`
     display: flex;
     flex-direction: column;

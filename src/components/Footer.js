@@ -1,8 +1,7 @@
-import { withRouter, Route, useHistory } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import React from 'react';
 import styled from 'styled-components';
 import oc from 'open-color';
-import { Link } from 'react-router-dom';
 
 const FixPosition = styled.div`
     display: flex;

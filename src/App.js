@@ -12,8 +12,6 @@ import UpdateDetailPage from "./pages/UpdateDetailPage";
 import UpdateSelectionPage from "./pages/UpdateSelectionPage";
 import UpdateUserPage from "./pages/UpdateUserPage";
 import PageNotFound from "./pages/PageNotFound";
-
-import { useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
   Switch,
@@ -22,15 +20,13 @@ import {
 } from "react-router-dom";
 
 function App() {
-  const state = useSelector((state) => state);
-  //localStorage.clear();
 
   return (
     <Router>
       <Route
         render={() => {
           const pathname = window.location.pathname;
-          //console.log(pathname)
+
           const isTrue = pathname !== '/signup' &&
             pathname !== '/updateuser';
           if (isTrue) {
@@ -41,7 +37,7 @@ function App() {
       <Route
         render={() => {
           const pathname = window.location.pathname;
-          //console.log(pathname)
+
           const isTrue = pathname === '/landing' ||
             pathname === '/updateuser' ||
             pathname === '/register' ||

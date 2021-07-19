@@ -21,20 +21,16 @@ const Map = styled.div`
     position: relative;
 `;
 
-const Region = styled.div `
-    display: flex;
-    align-items: center;
-    position: absolute;
-`;
-
 const SearchBar = styled.div`
-    float: left;
     border-radius: 3px;
     border: 3px solid black;
     background: white;
     width: 220px;
     height: 50px;
+    position: absolute;
     z-index: 10;
+    right: 20px;
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,10 +51,9 @@ const Selections = styled.div`
     margin: 0px 50px 0 30px;
     background: white;
     box-shadow: rgb(180 180 180) -1px 1px 8px;
-    border: 2px solid ${oc.gray[3]};
-    border-radius: 10px;
+    border-radius: 20px;
     width: 320px;
-    height: 640px;
+    height: 650px;
     border-radius: 10px;
     position: absolute;
     padding: 20px;
@@ -135,7 +130,7 @@ const ContentBox_Places = styled.div`
 
 const SearchResults = styled.div`
     margin: 0px 0px 0 340px;
-    background: ${oc.gray[8]};
+    background: ${oc.gray[7]};
     border-radius: 10px;
     width: 200px;
     height: 600px;
@@ -147,7 +142,6 @@ const SearchResults = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: rgb(180 180 180) -1px 1px 8px;
 `;
 
 const SelectCategory = styled.select`
@@ -166,8 +160,10 @@ const SelectRegion = styled.select`
     font-weight: 600;
     width: 80px;
     height: 30px;
+    position: absolute;
     z-index: 10;
-    float: left;
+    right: 260px;
+    margin-top: 30px; 
 `;
 
 const Place = styled.div`
@@ -226,7 +222,7 @@ const Selection = styled.div`
     }
 
     &:hover {
-        background: ${oc.gray[7]};
+        background: black;
         display: flex;
         justify-content:center;
         align-items: center;
@@ -291,7 +287,7 @@ function RegisterPage() {
     }
 
     const onDragEnter = (event) => {
-        console.log('ondragenter:', event)    
+  
     }
 
     const onDragOver = (event) => {
@@ -330,7 +326,7 @@ function RegisterPage() {
     const [placeMarkers, setPlaceMarkers] =useState([]);
     const [inputText, setInputText] = useState('');
     const [inputDate, setInputDate] = useState('');
-    const categories = [[null, '선택', null], ["restaurant", "음식점", "FD6"], ["mall", "쇼핑몰", "MT1"], ["cafe", "카페", "CE7"], ["park", "관광명소", "AT4"], ["exhibition", "문화공간", "CT1"]];
+    const categories = [[null, '선택', null], ["restaurant", "음식점", "FD6"], ["mall", "백화점", "MT1"], ["cafe", "카페", "CE7"], ["park", "관광명소", "AT4"], ["exhibition", "문화시설", "CT1"]];
     const categoryOptions = categories.map(category => {
         return <option value={category[2]}>{category[1]}</option>;
     });
@@ -389,11 +385,6 @@ function RegisterPage() {
             'Content-Type': 'application/json',
             withCredentials: true,
         })
-        // axios({
-        //     method: 'GET',
-        //     url: `https://dapi.kakao.com/v2/local/search/keyword.json?query='스타'&category_group_code=${category}`,
-        //     headers: { Authorization: `KakaoAK ${KakaoRestAPIKey}` },
-        //   })
         .then(res => {
             setPlaces(res.data.items);
         })
@@ -406,7 +397,6 @@ function RegisterPage() {
 
     const onChangeDate = (event) => {
         setInputDate(event.target.value);
-        console.log(inputDate)
     }
 
     const handleRefresh = () => {
@@ -431,9 +421,6 @@ function RegisterPage() {
                 let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
                 setLatLng([result[0].y, result[0].x]);
 
-                console.log(keyword, `region: {y: ${result[0].y}, x: ${result[0].x}}`)
-
-                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
                 map.setCenter(coords);
             }
         });
@@ -456,7 +443,6 @@ function RegisterPage() {
                     withCredentials: true,
                 })
                     .then(res => {
-                        console.log(res)
                         axios
                             .put(`${server}/mypage`, {
                                 userId: userInfo.id,
@@ -466,7 +452,6 @@ function RegisterPage() {
                                 }
                             })
                             .then(res => {
-                                console.log('mypage', res.data)
                                 dispatch(setCards([...res.data.myCardsInfo, ...res.data.taggedCardsInfo]));
                             })
                             .then(res => {
@@ -611,21 +596,19 @@ function RegisterPage() {
 
     return (
         <>
-            <Region id="region_search_bar">
-                <SelectRegion onChange={(e) => handleSearchRegion(e)}>
+            <SelectRegion onChange={(e) => handleSearchRegion(e)}>
                     {regionOptions}
-                </SelectRegion>
-                <SearchBar className="inputForm">
-                    <input
-                        id='keyword'
-                        type='text'
-                        placeholder='지역을 검색하세요'
-                        onChange={onChangeKeyword}
-                        onKeyDown={(e) => handleEnter(e)}
-                        value={inputText} />
-                    <img onClick={handleSearchRegion} src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMjMuMTExIDIwLjA1OGwtNC45NzctNC45NzdjLjk2NS0xLjUyIDEuNTIzLTMuMzIyIDEuNTIzLTUuMjUxIDAtNS40Mi00LjQwOS05LjgzLTkuODI5LTkuODMtNS40MiAwLTkuODI4IDQuNDEtOS44MjggOS44M3M0LjQwOCA5LjgzIDkuODI5IDkuODNjMS44MzQgMCAzLjU1Mi0uNTA1IDUuMDIyLTEuMzgzbDUuMDIxIDUuMDIxYzIuMTQ0IDIuMTQxIDUuMzg0LTEuMDk2IDMuMjM5LTMuMjR6bS0yMC4wNjQtMTAuMjI4YzAtMy43MzkgMy4wNDMtNi43ODIgNi43ODItNi43ODJzNi43ODIgMy4wNDIgNi43ODIgNi43ODItMy4wNDMgNi43ODItNi43ODIgNi43ODItNi43ODItMy4wNDMtNi43ODItNi43ODJ6bTIuMDEtMS43NjRjMS45ODQtNC41OTkgOC42NjQtNC4wNjYgOS45MjIuNzQ5LTIuNTM0LTIuOTc0LTYuOTkzLTMuMjk0LTkuOTIyLS43NDl6Ii8+PC9zdmc+" />
-                </SearchBar>
-            </Region>
+            </SelectRegion>
+            <SearchBar className="inputForm">
+                <input
+                    id='keyword'
+                    type='text'
+                    placeholder='지역을 검색하세요'
+                    onChange={onChangeKeyword}
+                    onKeyDown={(e) => handleEnter(e)}
+                    value={inputText} />
+                <img onClick={handleSearchRegion} src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMjMuMTExIDIwLjA1OGwtNC45NzctNC45NzdjLjk2NS0xLjUyIDEuNTIzLTMuMzIyIDEuNTIzLTUuMjUxIDAtNS40Mi00LjQwOS05LjgzLTkuODI5LTkuODMtNS40MiAwLTkuODI4IDQuNDEtOS44MjggOS44M3M0LjQwOCA5LjgzIDkuODI5IDkuODNjMS44MzQgMCAzLjU1Mi0uNTA1IDUuMDIyLTEuMzgzbDUuMDIxIDUuMDIxYzIuMTQ0IDIuMTQxIDUuMzg0LTEuMDk2IDMuMjM5LTMuMjR6bS0yMC4wNjQtMTAuMjI4YzAtMy43MzkgMy4wNDMtNi43ODIgNi43ODItNi43ODJzNi43ODIgMy4wNDIgNi43ODIgNi43ODItMy4wNDMgNi43ODItNi43ODIgNi43ODItNi43ODItMy4wNDMtNi43ODItNi43ODJ6bTIuMDEtMS43NjRjMS45ODQtNC41OTkgOC42NjQtNC4wNjYgOS45MjIuNzQ5LTIuNTM0LTIuOTc0LTYuOTkzLTMuMjk0LTkuOTIyLS43NDl6Ii8+PC9zdmc+" />
+            </SearchBar>
             <Search_wrap>
                 <Selections>
                     <h2 style={{margin: 5}}>오늘 뭐하지?</h2><br/>
