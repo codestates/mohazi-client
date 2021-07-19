@@ -292,7 +292,6 @@ function MyPage() {
 
     const handleShowCardDetails = (event) => {
         const cardId = Number(event.target.id);
-        let card = dailyCards.filter(el => el.dailyCards_id === cardId);
 
         axios
             .put(`${server}/dailycardinfo`, {

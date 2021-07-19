@@ -164,7 +164,6 @@ function SignupPage() {
   }
 
   function handleBgClick(event) {
-    //console.log(event.target.classList)
     if (event.target.classList.contains("black_bg")) {
       document.querySelector('.modal_wrap').style.display = 'none';
       document.querySelector('.black_bg').style.display = 'none';
@@ -237,7 +236,6 @@ function SignupPage() {
         })
         .catch((e) => {
           alert('이미 존재하는 이메일입니다');
-          console.log(e)
         })
 
     }
