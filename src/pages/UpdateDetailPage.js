@@ -566,7 +566,6 @@ function UpdateDetailPage() {
     const { dailyCard, userInfo, isLogin } = useSelector((state) => state)
     const [isLoading, setIsLoading] = useState(false);
     const [ photo, setPhoto ] = useState(JSON.parse(dailyCard.photo));
-    const [ friends, setFriend ] = useState(dailyCard.friends);
     const [imgBase64, setImgBase64] = useState("");
     const [imgFile, setImgFile] = useState(null);
     const [memo, setMemo] = useState(dailyCard.memo);
@@ -583,7 +582,7 @@ function UpdateDetailPage() {
 
     
     useEffect(() => {
-        setFriend(dailyCard.friends);
+        //setFriend(dailyCard.friends);
     },[dailyCard.friends]);
     
       
@@ -608,6 +607,8 @@ function UpdateDetailPage() {
 
     const PhotoUpload = (event) => {
 
+        console.log('a');
+
         const options = {
             maxSizeMB: 0.2,
             maxWidthOrHeight: 1920,
@@ -631,6 +632,7 @@ function UpdateDetailPage() {
                                 },
                             })
                         .then((res) => {
+                            console.log(res);
                             setPhoto([...photo, res.data.key]);
                             setIsLoading(false);
                         })
@@ -674,6 +676,7 @@ function UpdateDetailPage() {
     };
 
     const PhotoDelete = (e, index) => {
+
         let Div = document.querySelector(`#PhotoImg${index}`).src.split('/')[3];
 
         const set = photo.slice(0);
@@ -694,11 +697,7 @@ function UpdateDetailPage() {
     }
 
 
-    const FriendPhotoDelete = (e, index, el) => {
-
-        const set = friends.slice(0);
-        set.splice(index, 1);
-
+    const FriendPhotoDelete = (e, el) => {
         axios
             .put(`${server}/deletefriend`, {
                 userId: el.id,
@@ -710,7 +709,19 @@ function UpdateDetailPage() {
                 },
             })
             .then((res) => {
-                setFriend(set);
+                axios
+                .put(`${server}/dailycardinfo`,{
+                    dailyCardId: dailyCard.dailyCards_id,
+
+                    headers: {
+                        'Content-Type': 'application/json',
+                        withCredentials: true,
+                    },
+                })
+                .then((res) => {
+                    console.log(res);
+                    dispatch(setCard(res.data.data))           
+                });
             })
     }
 
@@ -776,15 +787,13 @@ function UpdateDetailPage() {
     }
 
     useEffect(() => {
-   
-    }, [friends])
-
-    useEffect(() => {
         if(!isLogin) {
             history.push('/pagenotfound');
         }
     },[]);
 
+
+    console.log(dailyCard);
     return (
         <Body>
             <DetailBody id="DetailBody">
@@ -875,7 +884,7 @@ function UpdateDetailPage() {
                                 if (el.photo !== null) {
                                     return (
                                         <Friend id="Friend">
-                                            <FriendPhotoBtn onClick={FriendPhotoDelete}>X</FriendPhotoBtn>
+                                            <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, el)}>X</FriendPhotoBtn>
                                             <FriendPhoto index={index}>
                                                 <FriendPhotoImg src={s3ImageURl + '/' + el.photo} />
                                             </FriendPhoto>
@@ -885,9 +894,10 @@ function UpdateDetailPage() {
                                         </Friend>
                                     )
                                 } else {
+                                    console.log(el)
                                     return (
                                         <Friend id="Friend">
-                                            <FriendPhotoBtn onClick={FriendPhotoDelete}>X</FriendPhotoBtn>
+                                            <FriendPhotoBtn onClick={(e) => FriendPhotoDelete(e, el)}>X</FriendPhotoBtn>
                                             <FriendPhoto index={index}>
                                                 <FriendPhotoImg src="/img/default_avatar.png" />
                                             </FriendPhoto>
