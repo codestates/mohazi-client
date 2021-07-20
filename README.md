@@ -63,4 +63,5 @@
 <br>
 
 ## Tech-Stack 🛠️
-![techStack](https://user-images.githubusercontent.com/79883862/126104599-2487cd55-99ea-48da-9d79-892ad5d1c742.png)
+![Mohazi_System_Architecture_3](https://user-images.githubusercontent.com/71033487/126250864-112202ee-9926-4378-8f15-231550124331.png)
+
