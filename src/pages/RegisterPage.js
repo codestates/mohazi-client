@@ -326,7 +326,7 @@ function RegisterPage() {
     const [placeMarkers, setPlaceMarkers] =useState([]);
     const [inputText, setInputText] = useState('');
     const [inputDate, setInputDate] = useState('');
-    const categories = [[null, '선택', null], ["restaurant", "음식점", "FD6"], ["mall", "백화점", "MT1"], ["cafe", "카페", "CE7"], ["park", "관광명소", "AT4"], ["exhibition", "문화시설", "CT1"]];
+    const categories = [[null, '선택', null], ["restaurant", "음식점", "FD6"], ["market", "마켓", "MT1"], ["cafe", "카페", "CE7"], ["tourist_attraction", "관광명소", "AT4"], ["exhibition", "문화시설", "CT1"]];
     const categoryOptions = categories.map(category => {
         return <option value={category[2]}>{category[1]}</option>;
     });

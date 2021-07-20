@@ -233,7 +233,6 @@ function LandingPage() {
                     withCredentials: true,
                 })
             .then((res) => {
-                console.log(res.data.recommendations);
                 setSelections(res.data.recommendations);
             })
             .catch((e) => console.log(e))
@@ -244,10 +243,6 @@ function LandingPage() {
     }
 
     function goRegister(categoryCode) {
-        //const {x,y} = el;
-        //console.log(el)
-        //console.log(x,y)
-
         //사용자 위치
         dispatch(areaUpdate(region));
         //선택한 카테고리
@@ -274,8 +269,7 @@ function LandingPage() {
           navigator.geolocation.getCurrentPosition(function(position) {
            region.y = position.coords.latitude;
            region.x = position.coords.longitude;
-           console.log(region)
-
+           
           }, function(error) {
             console.error(error);
           }, {
